@@ -1,3 +1,5 @@
+create database if not exists WarmUpProject;
+
 Create Table Personnel(
 	personnel_id int auto_increment primary key,
     first_name varchar(50),
@@ -25,18 +27,19 @@ Create Table Location(
 );
 
 Create Table LocationPhone(
-	location_id_fk int auto_increment primary key,
+	location_id_fk int primary key,
     phone_number int,
-    foreign key(location_id_fk) references Location
+    foreign key(location_id_fk) references Location(location_id)
 );
 
 Create Table PersonnelLocationDate(
-	personnel_id_fk int auto_increment primary key,
-    location_id_fk int auto_increment primary key,
-    start_date date primary key,
+	personnel_id_fk int,
+    location_id_fk int,
+    start_date date,
     end_date date,
-    foreign key(personnel_id_fk) references Personnel,
-    foreign key(location_id_fk) references Location
+    primary key (personnel_id_fk, location_id_fk, start_date),
+    foreign key(personnel_id_fk) references Personnel(personnel_id),
+    foreign key(location_id_fk) references Location(location_id)
 );
 
 Create Table FamilyMember(
@@ -53,7 +56,7 @@ Create Table FamilyMember(
     postal_code varchar(6),
     email_address varchar(50),
     location_id_fK int,
-    foreign key(location_id_fK) references Location
+    foreign key(location_id_fK) references Location(location_id)
 );
 
 Create Table ClubMember(
@@ -72,7 +75,7 @@ Create Table ClubMember(
     city varchar(50),
     province varchar(2),
     postal_code varchar(6),
-    foreign key(family_memeber_id_fk) references FamilyMember
+    foreign key(family_memeber_id_fk) references FamilyMember(family_member_id)
 );
 
 Create Table Payment(
@@ -83,5 +86,5 @@ Create Table Payment(
     method varchar(10),
     effective_date date,
     installment int,
-    foreign key(member_id_fk) references ClubMember
+    foreign key(member_id_fk) references ClubMember(member_id)
 );
