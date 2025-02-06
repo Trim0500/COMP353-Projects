@@ -23,7 +23,8 @@ Create Table Location(
     type varchar(50),
     address varchar(100),
     province varchar(2),
-    capacity int
+    capacity int,
+    website varchar(50)
 );
 
 Create Table LocationPhone(
