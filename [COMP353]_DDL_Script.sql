@@ -64,7 +64,7 @@ Create Table FamilyMember(
 );
 
 Create Table ClubMember(
-	member_id int primary key,
+	member_id int primary key auto_increment,
     family_member_id_fk int,
     relationship_type varchar(20),
     first_name varchar(50),
@@ -83,7 +83,7 @@ Create Table ClubMember(
 );
 
 Create Table Payment(
-	payment_id int primary key,
+	payment_id int primary key auto_increment,
     member_id_fk int,
     date date,
     amount float(5,2),
