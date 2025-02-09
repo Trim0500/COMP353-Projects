@@ -65,7 +65,7 @@ Create Table FamilyMember(
 
 Create Table ClubMember(
 	member_id int primary key,
-    family_memeber_id_fk int,
+    family_member_id_fk int,
     relationship_type varchar(20),
     first_name varchar(50),
     last_name varchar(50),
@@ -79,7 +79,7 @@ Create Table ClubMember(
     city varchar(50),
     province varchar(2),
     postal_code varchar(6),
-    foreign key(family_memeber_id_fk) references FamilyMember(family_member_id)
+    foreign key(family_member_id_fk) references FamilyMember(family_member_id)
 );
 
 Create Table Payment(
