@@ -1,7 +1,7 @@
 create database if not exists WarmUpProject;
 
 Create Table Personnel(
-	personnel_id int primary key,
+	personnel_id int primary key auto_increment,
     first_name varchar(50),
     last_name varchar(50),
     date_of_birth date,
@@ -18,7 +18,7 @@ Create Table Personnel(
 );
 
 Create Table Location(
-	location_id int primary key,
+	location_id int primary key auto_increment,
     name varchar(50),
     city varchar(50),
     postal_code varchar(6),
@@ -47,7 +47,7 @@ Create Table PersonnelLocationDate(
 );
 
 Create Table FamilyMember(
-	family_member_id int primary key,
+	family_member_id int primary key auto_increment,
 	first_name varchar(50),
     last_name varchar(50),
     date_of_birth date,
