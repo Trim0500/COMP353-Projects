@@ -31,7 +31,7 @@ INSERT INTO Personnel(first_name, last_name, date_of_birth,
 social_sec_number, med_card_number, phone_number, address, city, province, postal_code, email_address, role,
 mandate)
 VALUES 
-	("Ana", "Amari", "1978-05-03", 184817362, 482163928, "5143729845", "1825 Saint-Denis St", "Montréal", "QC", "H2X3K4", "aamari@gmail.com", "Captain", "Treasurer"),
+	("Ana", "Amari", "1978-05-03", 184817362, 482163928, "5143729845", "1825 Saint-Denis St", "Montréal", "QC", "H2X3K4", "aamari@gmail.com", "Captain", "Salaried"),
 	("Elizabeth", "Caledonia", "1995-06-17", 284721039, 183614736, "4387781256", "6780 Sherbrooke St W", "Montréal", "QC", "H4B1P8", "ecaledonia@gmail.com", "General Manager", "Salaried"),
 	("Jean-Baptiste", "Augustin", "1992-08-25", 582947182, 193753713, "5146498802", "9122 Wellington St", "Montréal", "QC", "H4G1X3", "jbaugustin@gmail.com", "Deputy Manager", "Salaried"),
 	("Brigitte", "Lindholm", "1995-06-17", 119847274, 189371731, "5143929345", "3425 Park Ave", "Montréal", "QC", "H2X2H6", "blindholm@gmail.com", "Secretary", "Salaried"),
