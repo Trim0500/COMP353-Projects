@@ -1,7 +1,7 @@
 create database if not exists WarmUpProject;
 
 Create Table Personnel(
-	personnel_id int auto_increment primary key,
+	personnel_id int primary key,
     first_name varchar(50),
     last_name varchar(50),
     date_df_birth date,
@@ -16,7 +16,7 @@ Create Table Personnel(
 );
 
 Create Table Location(
-	location_id int auto_increment primary key,
+	location_id int primary key,
     name varchar(50),
     city varchar(50),
     postal_code varchar(6),
@@ -28,8 +28,9 @@ Create Table Location(
 );
 
 Create Table LocationPhone(
-	location_id_fk int primary key,
+	location_id_fk int,
     phone_number int,
+    primary key(location_id_fk, phone_number),
     foreign key(location_id_fk) references Location(location_id)
 );
 
@@ -44,7 +45,7 @@ Create Table PersonnelLocationDate(
 );
 
 Create Table FamilyMember(
-	family_member_id int auto_increment primary key,
+	family_member_id int primary key,
 	first_name varchar(50),
     last_name varchar(50),
     date_of_birth date,
@@ -61,7 +62,7 @@ Create Table FamilyMember(
 );
 
 Create Table ClubMember(
-	member_id int auto_increment primary key,
+	member_id int primary key,
     family_memeber_id_fk int,
     relationship_type varchar(20),
     first_name varchar(50),
@@ -80,7 +81,7 @@ Create Table ClubMember(
 );
 
 Create Table Payment(
-	payment_id int auto_increment primary key,
+	payment_id int primary key,
     member_id_fk int,
     date date,
     amount float(5,2),
