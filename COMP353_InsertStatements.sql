@@ -100,3 +100,27 @@ VALUES
     (28, 10, "2017-04-19", NULL),
     (29, 10, "2015-02-23", NULL),
     (30, 10, "2014-05-30", NULL);
+    
+INSERT INTO FamilyMember(family_member_id, first_name, last_name, date_of_birth, social_sec_number, med_card_number, phone_number, address, city,
+    province, postal_code, email_address, location_id_fk) 
+    VALUES
+(1, 'Brooke', 'Michael', '1975-01-05', 396390019, 724980798, '2508346174', '983 Freeman Station Harrismouth, KY 00837', 'Victoria', 'BC', 'V8T1A1', 'bryce75@gmail.com', 2),
+(2, 'Thomas', 'Gibson', '1989-12-01', 659972022, 449799927, '5149039162', '91082 Patricia Drives Suite 790 Brittneyhaven, MS 39674', 'Montreal', 'QC', 'H3A1A2', 'allisonhobbs@green.com', 7),
+(3, 'Monica', 'Lopez', '1982-03-11', 917953430, 126964055, '4167776094', '17284 Hahn Via West Susan, CO 96170', 'Toronto', 'ON', 'M5A1A1', 'richardburke@hill.org', 10),
+(4, 'Kimberly', 'Moreno', '1945-01-30', 407171497, 563357273, '6134569199', '03829 Kimberly Camp Suite 901 Port Michaelmouth, OR 07724', 'Ottawa', 'ON', 'K1A0B1', 'huntangela@finley.com', 8),
+(5, 'Stephanie', 'Lewis', '1965-01-22', 682364860, 349687078, '6135675584', '09615 Amber Village Patricktown, CO 19256', 'Ottawa', 'ON', 'K2P2V9', 'sboyd@maldonado.info', 2),
+(6, 'David', 'Martinez', '1990-06-15', 521239482, 148220473, '6047362920', '7732 Wingate Court Unit 2527 Glendaleville, BC 89034', 'Vancouver', 'BC', 'V5K0A1', 'leslie99@taylor.com', 3),
+(7, 'Charlotte', 'Smith', '1985-09-20', 135746908, 324758920, '4168776354', '4168 Bryant Expressway Apt. 722 Hamiltonville, ON 07136', 'Toronto', 'ON', 'M5V3C6', 'richard@davis.com', 4),
+(8, 'John', 'Taylor', '1972-11-12', 458302913, 952302183, '5147722445', '7754 Greendale Ave. Apt. 875 Ricardoville, QC 22343', 'Montreal', 'QC', 'H2X1Y4', 'john.taylor@taylor.com', 5),
+(9, 'Sophia', 'Martinez', '2001-04-27', 369029837, 532786495, '4168225687', '2352 Mountain Rd. North Michelleview, ON 29948', 'Toronto', 'ON', 'M4C1E1', 'sophiamart@peterson.net', 6),
+(10, 'Ethan', 'Harris', '1995-10-11', 741963285, 269423871, '6045276923', '5501 Cloud Dr. Victoria Heights, BC 03327', 'Victoria', 'BC', 'V8W3G4', 'ethanh@jones.org', 9),
+(11, 'Emma', 'Clark', '1988-08-30', 365172704, 147828630, '2503450720', '9470 Whitefish Blvd. Rockyton, BC 67428', 'Victoria', 'BC', 'V9A1A4', 'emmaclark@scott.net', 10),
+(12, 'James', 'Rodriguez', '1993-02-19', 539182471, 822365719, '6132378932', '2309 Dawn Dr. Ottawa Creek, ON 34792', 'Ottawa', 'ON', 'K1G1X2', 'jamesrodr@williams.com', 3),
+(13, 'Grace', 'Davis', '1980-01-03', 761453209, 330852117, '4166657273', '9982 Ferry Rd. South Rosedale, ON 11256', 'Toronto', 'ON', 'M6K3C6', 'grace.davis@davis.com', 7),
+(14, 'Liam', 'Garcia', '1977-03-21', 583634092, 761293848, '2504532722', '4664 Drew Blvd. Nanaimo, BC 12157', 'Vancouver', 'BC', 'V6G1H6', 'liamgarcia@yahoo.com', 5),
+(15, 'Olivia', 'Hernandez', '2000-09-27', 647390180, 591874382, '4169937486', '8051 Shorter St. West Maltonsburg, ON 02627', 'Toronto', 'ON', 'L5G4X6', 'olivia.hernandez@gmail.com', 4),
+(16, 'Benjamin', 'Wilson', '1987-06-05', 765493128, 924752697, '6133478281', '9359 Crystal Dr. Hillardown, ON 01492', 'Ottawa', 'ON', 'K1A0M7', 'benjaminw@taylor.com', 6),
+(17, 'Lucas', 'Lee', '1983-11-16', 429083902, 740829382, '5149448352', '8957 Fort Ave. Grangeside, QC 81992', 'Montreal', 'QC', 'H3Z1X7', 'lucas.lee@king.com', 1),
+(18, 'Amelia', 'Young', '1998-12-04', 381270491, 186929274, '2509751014', '7133 Riverdale St. Oceanview, BC 42819', 'Vancouver', 'BC', 'V6X1A3', 'amelia.young@robinson.com', 9),
+(19, 'Mason', 'King', '1979-04-23', 617890354, 974289753, '6132746592', '5271 West Rd. Brookfield, ON 25958', 'Ottawa', 'ON', 'K2P1A1', 'masonking@smith.org', 2),
+(20, 'Avery', 'Scott', '1996-01-14', 240918303, 925817664, '6048459671', '6177 Cedar Grove Dr. Redwood, BC 36679', 'Vancouver', 'BC', 'V5S2A4', 'avery@hughes.com', 10);
