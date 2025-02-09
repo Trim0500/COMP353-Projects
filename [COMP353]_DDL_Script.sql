@@ -6,7 +6,7 @@ Create Table Personnel(
     last_name varchar(50),
     date_df_birth date,
     social_sec_number int not null,
-    phone_number int,
+    phone_number char(10),
     city varchar(50),
     province varchar(2),
     postal_code varchar(6),
@@ -29,7 +29,7 @@ Create Table Location(
 
 Create Table LocationPhone(
 	location_id_fk int,
-    phone_number int,
+    phone_number char(10),
     primary key(location_id_fk, phone_number),
     foreign key(location_id_fk) references Location(location_id)
 );
@@ -51,7 +51,7 @@ Create Table FamilyMember(
     date_of_birth date,
     social_sec_number int not null,
     med_card_number int not null,
-    phone_number int,
+    phone_number char(10),
     address varchar(100),
     city varchar(50),
     province varchar(2),
@@ -72,7 +72,7 @@ Create Table ClubMember(
     weight float(5,2),
     social_sec_number int not null,
     med_card_number int not null,
-    phone_number int,
+    phone_number char(10),
     address varchar(100),
     city varchar(50),
     province varchar(2),

@@ -10,6 +10,22 @@ VALUES
     (8, "MYVC Victoria", "Victoria", "V8W1E5", "Branch", "851 Broughton St", "BC", 200, "myvc.ca/location/victoria"),
     (9, "MYVC Vancouver", "Vancouver", "V5Z3X7", "Branch", "555 W 12th Ave", "BC", 215, "myvc.ca/location/vancouver"),
     (10, "MYVC Surrey", "Surrey", "V3T2X3", "Branch", "10642 King George Blvd", "BC", 290, "myvc.ca/location/surrey");
-select * from Location;
+
+INSERT INTO LocationPhone(location_id_fk, phone_number)
+VALUES
+	(1, "5141234567"),
+    (1, "5146784322"),
+    (2, "5147891012"),
+    (2, "4389105678"),
+    (3, "514112131"),
+    (3, "5142238899"),
+    (4, "4387651234"),
+    (5, "4165557890"),
+    (6, "6473216543"),
+    (7, "4378762109"),
+    (8, "6044329988"),
+    (9, "7789012345"),
+    (10, "2366785555");
     
+
 	
