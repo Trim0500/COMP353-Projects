@@ -28,34 +28,45 @@ WHERE
 # province, and status (active or inactive). The results should be displayed sorted in
 # ascending order by location name, then by age.
 # ----------------------------------------
-
 SELECT 
-	location_id_fk, member_id, first_name, last_name, age, city, province
-FROM 
+	Location.name, MemberPaymentSQ.member_id, MemberPaymentSQ.first_name, MemberPaymentSQ.last_name, 
+    MemberPaymentSQ.age, MemberPaymentSQ.city, MemberPaymentSQ.province,
+	CASE WHEN (YearAmountPaid>=100 AND MemberPaymentSQ.age <=18) THEN 1 ELSE 0 END AS IsActive
+FROM
 	(
 		SELECT 
-			fm.location_id_fk, cm.member_id, cm.first_name, cm.last_name, TIMESTAMPDIFF(YEAR, cm.date_of_birth, CURDATE()) AS age, cm.city, cm.province 
+			location_id_fk, member_id, first_name, last_name, age, city, province, YearAmountPaid
 		FROM 
-			ClubMember AS cm 
+			(
+				SELECT 
+					fm.location_id_fk, cm.member_id, cm.first_name, cm.last_name, TIMESTAMPDIFF(YEAR, cm.date_of_birth, CURDATE()) AS age, cm.city, cm.province 
+				FROM 
+					ClubMember AS cm 
+				JOIN 
+					FamilyMember fm 
+				ON 
+					cm.family_member_id_fk = fm.family_member_id
+			) AS MemberSQ
 		JOIN 
-			FamilyMember fm 
-        ON 
-			cm.family_member_id_fk = fm.family_member_id
-	) AS MemberSQ
+			(
+				SELECT 
+					member_id_fk, SUM(amount) as YearAmountPaid
+				FROM
+					Payment
+				WHERE 
+					YEAR(effective_date) = YEAR(CURDATE())
+				GROUP BY member_id_fk
+			) AS PaymentSQ
+		ON 
+			member_id = member_id_fk
+	) AS MemberPaymentSQ
 JOIN 
-	(
-		SELECT 
-			member_id_fk, SUM(amount) as YearAmountPaid
-		FROM
-			Payment
-		WHERE 
-			YEAR(effective_date) = YEAR(CURDATE())
-		GROUP BY member_id_fk
-	) AS PaymentSQ
-ON 
-	member_id = member_id_fk
-WHERE
-	YearAmountPaid >= 100 AND age <=18;
+	Location
+ON
+	location_id = MemberPaymentSQ.location_id_fK
+ORDER BY
+	Location.name ASC, age ASC;
+    
 
 # Query 7
 # ----------------------------------------
