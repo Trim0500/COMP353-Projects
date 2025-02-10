@@ -9,7 +9,7 @@ set @PaymentMemberID = 1;
 select 
 	date as 'PaymentDate',
     amount as 'PaymentAmount',
-    format(date, 'yyyy') as 'PaymentYear'
+    date_format(date, '%Y') as 'PaymentYear'
 from Payment
 where member_id_fk = @PaymentMemberID
 order by date;
@@ -29,5 +29,5 @@ select
         else 0.00
 	end as 'DonationsAmount'
 from Payment
-where format(effective_date, 'yyyy') = '2024'
+where date_format(effective_date, '%Y') = '2024'
 group by member_id_fk;
