@@ -6,16 +6,19 @@
 # number, address, city, province, postal code, email address, role (General manager,
 # deputy manager, Coach, etc.) and mandate (Volunteer or Salaried).
 
-SET @LocationId = 1;
+
+SET @LOCATION_ID = 1;
 SELECT 
 	p.first_name, p.last_name, p.date_of_birth, p.social_sec_number, p.med_card_number, p.phone_number, p.address, p.city, p.province, p.postal_code, 
 	p.email_address, p.role, p.mandate, pld.location_id_fk
 FROM 
-	Personnel as p JOIN PersonnelLocationDate as pld 
+	Personnel as p 
+	JOIN 
+		PersonnelLocationDate as pld 
 WHERE
 	p.personnel_id = pld.personnel_id_fk AND 
     pld.end_date IS NULL AND
-    pld.location_id_fk = CAST(@LocationId AS UNSIGNED);
+    pld.location_id_fk = @LOCATION_ID;
 
 # Query 4
 # ----------------------------------------
@@ -25,6 +28,34 @@ WHERE
 # province, and status (active or inactive). The results should be displayed sorted in
 # ascending order by location name, then by age.
 # ----------------------------------------
+
+SELECT 
+	location_id_fk, member_id, first_name, last_name, age, city, province
+FROM 
+	(
+		SELECT 
+			fm.location_id_fk, cm.member_id, cm.first_name, cm.last_name, TIMESTAMPDIFF(YEAR, cm.date_of_birth, CURDATE()) AS age, cm.city, cm.province 
+		FROM 
+			ClubMember AS cm 
+		JOIN 
+			FamilyMember fm 
+        ON 
+			cm.family_member_id_fk = fm.family_member_id
+	) AS MemberSQ
+JOIN 
+	(
+		SELECT 
+			member_id_fk, SUM(amount) as YearAmountPaid
+		FROM
+			Payment
+		WHERE 
+			YEAR(effective_date) = YEAR(CURDATE())
+		GROUP BY member_id_fk
+	) AS PaymentSQ
+ON 
+	member_id = member_id_fk
+WHERE
+	YearAmountPaid >= 100 AND age <=18;
 
 # Query 7
 # ----------------------------------------
