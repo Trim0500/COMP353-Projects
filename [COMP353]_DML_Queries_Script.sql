@@ -1,3 +1,83 @@
+# Query 1
+# ----------------------------------------
+# Get complete details for every location in the system. 
+# Details include address, city, province, postal code, phone number, web address, type (Head, Branch), 
+# capacity, general manager name, number of personnel, and the number of club members associated with that location. 
+# The results should be displayed sorted in ascending order by Province, then by city.
+
+SELECT DISTINCT
+    l.location_id,
+    l.address,
+    l.city,
+    l.province,
+    l.postal_code AS "postal code",
+    l.website,
+    l.type,
+    l.capacity,
+    ph.phone_number AS "phone number",
+    ( -- Count of active personnel at this location
+		SELECT COUNT(DISTINCT pr.personnel_id)
+		FROM Personnel pr 
+		JOIN PersonnelLocationDate pld ON pld.personnel_id_fk = pr.personnel_id
+		WHERE pld.location_id_fk = l.location_id 
+		AND pld.end_date IS NULL -- Condition for personnel to be considered active
+	) AS "number of active personnel",
+    ( -- Count of active members at this location
+		SELECT COUNT(DISTINCT cm.member_id)
+		FROM ClubMember cm
+		JOIN FamilyMember fm ON fm.family_member_id = cm.family_member_id_fk
+		WHERE fm.location_id_fk = l.location_id
+		AND ( -- Condition for members to be considered active (payments from last year total to over $100), both 2024 and 2025 accepted
+				SELECT SUM(p.amount) 
+				FROM Payment p 
+				WHERE p.member_id_fk = cm.member_id 
+				AND (YEAR(p.effective_date) = 2024 OR YEAR(p.effective_date) = 2025)
+				GROUP BY p.member_id_fk
+			) >= 100.00
+    ) AS "number of active members",
+    -- NOTE: queries for general manager assume only one general manager per location
+    ( -- General manager first name
+		SELECT pr.first_name 
+		FROM Personnel pr 
+		JOIN PersonnelLocationDate pld ON pr.personnel_id = pld.personnel_id_fk
+		WHERE pld.location_id_fk = l.location_id
+		AND pr.role = "General Manager"
+		LIMIT 1
+	) AS "general manager first name",
+    ( -- General manager last name
+		SELECT pr.last_name 
+		FROM Personnel pr 
+		JOIN PersonnelLocationDate pld ON pr.personnel_id = pld.personnel_id_fk
+		WHERE pld.location_id_fk = l.location_id
+		AND pr.role = "General Manager" 
+        LIMIT 1
+	) AS "general manager last name"
+FROM Location l
+JOIN LocationPhone ph ON l.location_id = ph.location_id_fk
+ORDER BY l.province ASC, l.city ASC;
+
+# Query 2
+# ----------------------------------------
+# For a given location, provide a report that lists for every family member who is currently registered in the location, 
+# the number of related active club members. Information includes family members’ first name, 
+# last name, and the number of active club members that are associated with the family member.
+
+SELECT 
+	fm.first_name,
+	fm.last_name,
+    COUNT(cm.member_id)
+FROM FamilyMember fm
+JOIN ClubMember cm ON fm.family_member_id = cm.family_member_id_fk
+WHERE fm.location_id_fk = 1 -- Arbitrary location ID
+AND ( -- Subquery to filter for active members (sum of payments for the current year is at least $100), both 2024 and 2025 accepted
+	SELECT SUM(p.amount) FROM Payment p 
+    WHERE p.member_id_fk = cm.member_id 
+    AND (YEAR(p.effective_date) = '2024' OR YEAR(p.effective_date) = '2025')
+    GROUP BY p.member_id_fk
+    ) >= 100.00
+GROUP BY fm.family_member_id;
+
+
 # Query 3
 # ----------------------------------------
 # For a given location, provide a report that displays information about the personnel
