@@ -154,13 +154,16 @@ ORDER BY
 # Information includes date of payment, amount of payment, and year of payment. The results should be displayed sorted in ascending order by date.
 # ----------------------------------------
 
-set @PaymentMemberID = 1;
+set @PaymentMemberID = 12;
 
 select 
-	date as 'PaymentDate',
-    amount as 'PaymentAmount',
-    format(date, 'yyyy') as 'PaymentYear'
-from Payment
+	C.first_name as "MemberFirstName",
+    C.last_name as "MemberLastName",
+    P.date as 'PaymentDate',
+    P.amount as 'PaymentAmount',
+    date_format(P.date, '%Y') as 'PaymentYear'
+from Payment P
+join ClubMember C on P.member_id_fk = C.member_id
 where member_id_fk = @PaymentMemberID
 order by date;
 
@@ -170,14 +173,17 @@ order by date;
 # ----------------------------------------
 
 select 
+	C.first_name as "MemberFirstName",
+    C.last_name as "MemberLastName",
 	case
-		when sum(amount) > 100.00 then 100.00
-        else sum(amount)
+		when sum(P.amount) > 100.00 then 100.00
+        else sum(P.amount)
 	end as 'MembershipFeesAmount',
     case
-		when sum(amount) > 100.00 then sum(amount) - 100.00
+		when sum(P.amount) > 100.00 then sum(P.amount) - 100.00
         else 0.00
 	end as 'DonationsAmount'
-from Payment
-where format(effective_date, 'yyyy') = '2024'
+from Payment P
+join ClubMember C on P.member_id_fk = C.member_id
+where date_format(effective_date, '%Y') = '2024'
 group by member_id_fk;
