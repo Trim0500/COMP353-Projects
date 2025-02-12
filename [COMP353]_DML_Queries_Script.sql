@@ -177,6 +177,28 @@ SELECT
 FROM ClubMember AS Wunderfizz
 WHERE family_member_id_fk = 3;
 
+# Query 6
+# ----------------------------------------
+# For a given location select family members that have active clum members associated with them and who are personnels at that same location
+# Information includes first name, last name and phone number
+# ----------------------------------------
+
+Set @location = 10;
+
+SELECT DISTINCT
+	FM.first_name,
+	FM.last_name,
+	FM.phone_number
+FROM FamilyMember as FM
+Join Personnel On Personnel.social_sec_number = FM.social_sec_number
+Join (
+	SELECT Payment.member_id_fk as 'MemberIDFK', ClubMember.family_member_id_fk as 'FamilyMemberIDFK', sum(amount) as 'ClubMemberAmount' from Payment 
+	JOIN ClubMember ON Payment.member_id_fk = ClubMember.member_id 
+	WHERE effective_date > '2024-01-01'
+	GROUP BY Payment.member_id_fk, ClubMember.family_member_id_fk
+) X on FM.family_member_id = X.FamilyMemberIDFK and X.ClubMemberAmount >= 100.00
+WHERE FM.location_id_fk = @location;	
+
 # Query 7
 # ----------------------------------------
 # For a given club member, give details of all payments for the membership fees.
