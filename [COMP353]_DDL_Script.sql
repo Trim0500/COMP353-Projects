@@ -79,6 +79,8 @@ CREATE TABLE ClubMember(
     city VARCHAR(50),
     province VARCHAR(2),
     postal_code VARCHAR(6),
+    join_date DATE,
+    progress_report TEXT,
     FOREIGN KEY(family_member_id_fk) REFERENCES FamilyMember(family_member_id)
 );
 
