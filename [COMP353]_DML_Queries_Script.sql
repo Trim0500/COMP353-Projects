@@ -6,7 +6,6 @@
 # The results should be displayed sorted in ascending order by Province, then by city.
 
 SELECT DISTINCT
-    l.location_id,
     l.address,
     l.city,
     l.province,
