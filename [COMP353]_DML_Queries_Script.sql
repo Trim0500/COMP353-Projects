@@ -179,11 +179,11 @@ WHERE family_member_id_fk = 3;
 
 # Query 6
 # ----------------------------------------
-# For a given location select family members that have active clum members associated with them and who are personnels at that same location
+# For a given location select family members that have active club members associated with them and who are personnels at that same location
 # Information includes first name, last name and phone number
 # ----------------------------------------
 
-Set @location = 10;
+Set @location = 1;
 
 SELECT DISTINCT
 	FM.first_name,
