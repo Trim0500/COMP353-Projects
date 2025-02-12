@@ -99,7 +99,7 @@ VALUES
     (28, 10, "2011-01-28", "2017-04-18"),
     (28, 10, "2017-04-19", NULL),
     (29, 10, "2015-02-23", NULL),
-    (30, 10, "2014-05-30", NULL);
+    (30, 1, "2014-05-30", NULL);
     
 INSERT INTO FamilyMember(first_name, last_name, date_of_birth, social_sec_number, med_card_number, phone_number, address, city,
     province, postal_code, email_address, location_id_fk) 
@@ -123,7 +123,7 @@ INSERT INTO FamilyMember(first_name, last_name, date_of_birth, social_sec_number
 	('Kim', 'Jiwoo', '1983-11-16', 429083902, 740829382, '5149448352', '8957 Fort Ave. Grangeside', 'Montréal', 'QC', 'H3Z1X7', 'kjiwoo@gmail.com', 1),
 	('Park', 'Chaewon', '1998-12-04', 381270491, 186929274, '2509751014', '7133 Riverdale St.', 'Vancouver', 'BC', 'V6X1A3', 'pchaewon@gmail.com', 9),
 	('Olivia', 'Hye', '1979-04-23', 617890354, 974289753, '6132746592', '5271 West Rd. Brookfield', 'Ottawa', 'ON', 'K2P1A1', 'ohye@gmail.com', 2),
-	('Torbjörn', 'Lindholm', '1967-01-14', 163749271, 195473311, '6044329191', '19 Westminster', 'Vancouver', 'BC', 'V3J16X', 'tlindholm@gmail.com', 10);
+	('Torbjörn', 'Lindholm', '1967-01-14', 163749271, 195473311, '6044329191', '19 Westminster', 'Vancouver', 'BC', 'V3J16X', 'tlindholm@gmail.com', 1);
 
 INSERT INTO ClubMember(family_member_id_fk, first_name, last_name, relationship_type, date_of_birth, height, weight, social_sec_number, med_card_number,
 phone_number, address, city, province, postal_code, join_date, progress_report)
