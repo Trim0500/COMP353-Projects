@@ -146,6 +146,36 @@ ON
 ORDER BY
 	Location.name ASC, age ASC;
     
+# Query 5
+# ----------------------------------------
+# For a given family member, give details of every club member associated with that family member
+# Information includes member id, first and last name, date of birth, socia security number, medicare card number
+# phone number, address, city, province, postal code, relationship type and status
+
+SELECT
+	member_id,
+    first_name,
+    last_name,
+    date_of_birth,
+    social_sec_number,
+    med_card_number,
+    phone_number,
+    address,
+    city,
+    province,
+    postal_code,
+    relationship_type,
+    (SELECT
+    CASE
+	WHEN sum(amount) >= 100 AND effective_date > '2024-01-01' THEN "active"
+        ELSE "inactive"
+    END
+    FROM Payment
+    JOIN ClubMember ON Payment.member_id_fk = Wunderfizz.member_id
+    GROUP BY Payment.member_id_fk
+    ) AS 'status'
+FROM ClubMember AS Wunderfizz
+WHERE family_member_id_fk = 3;
 
 # Query 7
 # ----------------------------------------
