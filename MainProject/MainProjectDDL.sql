@@ -88,6 +88,8 @@ CREATE TABLE ClubMember
     progress_report TEXT,
     is_active BOOLEAN,
     family_member_id_fk INT,
+    primary_relationship VARCHAR(20),
+    secondary_relationship VARCHAR(20),
     FOREIGN KEY (family_member_id_fk) REFERENCES FamilyMember(id)
 );
 
@@ -139,3 +141,14 @@ CREATE TABLE SessionData
     FOREIGN KEY(team_formation_id_fk) REFERENCES TeamFormation(id),
     FOREIGN KEY(session_id_fk) REFERENCES Session(id)
 );
+
+CREATE TABLE LogEmail
+(
+	recipient VARCHAR(50),
+    delivery_date_time VARCHAR(50),
+    sender VARCHAR(50),
+    subject VARCHAR(255),
+    body TEXT,
+    PRIMARY KEY(recipient, delivery_date_time)
+);
+
