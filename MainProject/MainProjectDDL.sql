@@ -1,6 +1,5 @@
 CREATE DATABASE IF NOT EXISTS MainProject;
 
-#LOCATION
 CREATE TABLE Location 
 (
 	id INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,7 +19,6 @@ CREATE TABLE LocationPhone
     phone_number CHAR(10)
 );
 
-#PEOPLE
 CREATE TABLE Personnel
 (
 	id INT AUTO_INCREMENT PRIMARY KEY,
@@ -91,4 +89,15 @@ CREATE TABLE ClubMember
     is_active BOOLEAN,
     family_member_id_fk INT,
     FOREIGN KEY (family_member_id_fk) REFERENCES FamilyMember(id)
+);
+
+CREATE TABLE Payment
+(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    amount DECIMAL(5, 2),
+    paymentDate DATE,
+    effectiveDate DATE,
+    method VARCHAR(10),
+    cmn_fk INT,
+    FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn)
 );
