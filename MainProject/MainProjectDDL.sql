@@ -1,0 +1,74 @@
+CREATE DATABASE IF NOT EXISTS MainProject;
+
+#LOCATION
+CREATE TABLE Location 
+(
+	id INT PRIMARY KEY,
+    type varchar(10),
+    name VARCHAR(50),
+    postal_code VARCHAR(6),
+    province CHAR(2),
+    address VARCHAR(255),
+    city VARCHAR(50),
+    website_url VARCHAR(255),
+    capacity INT
+);
+    
+CREATE TABLE LocationPhone 
+(
+	location_id_fk INT,
+    phone_number CHAR(10)
+);
+
+#PEOPLE
+CREATE TABLE Personnel
+(
+	id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    dob DATE,
+    social_sec_num CHAR(9) NOT NULL UNIQUE,
+    med_card_num CHAR(12) UNIQUE,
+    phone_number CHAR(10),
+    city VARCHAR(50),
+    province CHAR(2),
+    postal_code CHAR(6),
+    email VARCHAR(50),
+    mandate VARCHAR(10)
+);
+
+CREATE TABLE PersonnelLocation
+(
+	personnel_id_fk INT,
+    location_id_fk INT,
+    start_date DATE,
+    end_date DATE,
+    role VARCHAR(50),
+    PRIMARY KEY (personnel_id_fk, location_id_fk),
+    FOREIGN KEY (personnel_id_fk) REFERENCES Personnel(id),
+    FOREIGN KEY (location_id_fk) REFERENCES Location(id)
+);
+
+CREATE TABLE FamilyMember
+(
+	id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    dob DATE,
+    social_sec_number CHAR(9) NOT NULL UNIQUE,
+    med_card_num CHAR(12) UNIQUE,
+    city VARCHAR(50),
+    province VARCHAR(2),
+    phone_number CHAR(10),
+    postal_code CHAR(6)
+);
+
+CREATE TABLE SecondaryFamilyMember
+(
+	primary_family_member_id_fk INT,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    phone_number CHAR(10),
+    PRIMARY KEY(primary_family_member_id_fk, first_name, last_name),
+    FOREIGN KEY(primary_family_member_id_fk) REFERENCES FamilyMember(id)
+);
