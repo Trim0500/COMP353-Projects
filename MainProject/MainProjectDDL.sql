@@ -135,7 +135,7 @@ CREATE TABLE TeamMember
 );
 
 CREATE TABLE Session
-(file:///home/icarus/Desktop/git-repo/COMP353-Warm-up-Project/MainProject/PROJECTERFINAL2-6.pdf
+(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     event_date_time DATETIME,
     location_id_fk INT,
