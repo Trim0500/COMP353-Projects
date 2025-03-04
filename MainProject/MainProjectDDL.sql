@@ -101,3 +101,24 @@ CREATE TABLE Payment
     cmn_fk INT,
     FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn)
 );
+
+CREATE TABLE TeamFormation
+(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50),
+    captain_id_fk INT,
+    location_id_fk INT,
+    FOREIGN KEY(captain_id_fk) REFERENCES ClubMember(cmn),
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id)
+);
+
+CREATE TABLE TeamMember #PlaysFor
+(
+	team_formation_id_fk INT,
+    cmn_fk INT,
+    role VARCHAR(50),
+    assignment_date_time DATETIME,
+    PRIMARY KEY(team_formation_id_fk, cmn_fk),
+    FOREIGN KEY(team_formation_id_fk) REFERENCES TeamFormation(id),
+    FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn)
+);
