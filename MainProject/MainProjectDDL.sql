@@ -3,7 +3,7 @@ CREATE DATABASE IF NOT EXISTS MainProject;
 #LOCATION
 CREATE TABLE Location 
 (
-	id INT PRIMARY KEY,
+	id INT AUTO_INCREMENT PRIMARY KEY,
     type varchar(10),
     name VARCHAR(50),
     postal_code VARCHAR(6),
@@ -23,7 +23,7 @@ CREATE TABLE LocationPhone
 #PEOPLE
 CREATE TABLE Personnel
 (
-	id INT PRIMARY KEY,
+	id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     dob DATE,
@@ -51,11 +51,11 @@ CREATE TABLE PersonnelLocation
 
 CREATE TABLE FamilyMember
 (
-	id INT PRIMARY KEY,
+	id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     dob DATE,
-    social_sec_number CHAR(9) NOT NULL UNIQUE,
+    social_sec_num CHAR(9) NOT NULL UNIQUE,
     med_card_num CHAR(12) UNIQUE,
     city VARCHAR(50),
     province VARCHAR(2),
@@ -71,4 +71,24 @@ CREATE TABLE SecondaryFamilyMember
     phone_number CHAR(10),
     PRIMARY KEY(primary_family_member_id_fk, first_name, last_name),
     FOREIGN KEY(primary_family_member_id_fk) REFERENCES FamilyMember(id)
+);
+
+CREATE TABLE ClubMember
+(
+	cmn INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    dob DATE,
+    height DECIMAL(5,2),
+    weight DECIMAL(5,2),
+    social_sec_num CHAR(9) NOT NULL UNIQUE,
+    med_card_num CHAR(12) UNIQUE,
+    phone_number CHAR(10),
+    city VARCHAR(50),
+    province VARCHAR(2),
+    postal_code CHAR(6),
+    progress_report TEXT,
+    is_active BOOLEAN,
+    family_member_id_fk INT,
+    FOREIGN KEY (family_member_id_fk) REFERENCES FamilyMember(id)
 );
