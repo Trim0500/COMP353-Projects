@@ -122,3 +122,20 @@ CREATE TABLE TeamMember #PlaysFor
     FOREIGN KEY(team_formation_id_fk) REFERENCES TeamFormation(id),
     FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn)
 );
+
+CREATE TABLE Session
+(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+    event_date_time DATETIME,
+    location_id_fk INT
+);
+
+CREATE TABLE SessionData
+(
+	team_formation_id_fk INT,
+    session_id_fk INT,
+    score INT,
+    PRIMARY KEY(team_formation_id_fk, session_id_fk),
+    FOREIGN KEY(team_formation_id_fk) REFERENCES TeamFormation(id),
+    FOREIGN KEY(session_id_fk) REFERENCES Session(id)
+);
