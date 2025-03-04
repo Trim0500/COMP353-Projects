@@ -61,6 +61,15 @@ CREATE TABLE FamilyMember
     postal_code CHAR(6)
 );
 
+CREATE TABLE FamilyMemberLocation
+(
+	location_id_fk INT,
+    family_member_id_fk INT,
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id),
+    FOREIGN KEY(family_member_id_fk) REFERENCES FamilyMember(id),
+    PRIMARY KEY(location_id_fk, family_member_id_fk)
+);
+
 CREATE TABLE SecondaryFamilyMember
 (
 	primary_family_member_id_fk INT,
@@ -114,7 +123,7 @@ CREATE TABLE TeamFormation
     FOREIGN KEY(location_id_fk) REFERENCES Location(id)
 );
 
-CREATE TABLE TeamMember #PlaysFor
+CREATE TABLE TeamMember
 (
 	team_formation_id_fk INT,
     cmn_fk INT,
@@ -129,10 +138,11 @@ CREATE TABLE Session
 (
 	id INT AUTO_INCREMENT PRIMARY KEY,
     event_date_time DATETIME,
-    location_id_fk INT
+    location_id_fk INT,
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id)
 );
 
-CREATE TABLE SessionData
+CREATE TABLE TeamSession
 (
 	team_formation_id_fk INT,
     session_id_fk INT,
