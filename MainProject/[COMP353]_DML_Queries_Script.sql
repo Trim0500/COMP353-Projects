@@ -36,11 +36,11 @@ Insert Into ClubMember (first_name,last_name,dob,height,weight,social_sec_num,me
 Values ('Walhart','The Conq','2012-04-19',190.5,165.3,'987654321','CONW00020004','4383338256','Valm','VM','W4L1H3','Some Skill...',1,1,"Other","Other");
 
 Select *
-From SecondaryFamilyMember;
+From ClubMember;
 
-Update SecondaryFamilyMember
-Set first_name = 'Dick', last_name = 'Tree'
-Where id = 1;
+Update ClubMember
+Set first_name = 'Hugh', last_name = 'Mungus'
+Where cmn = 1;
 
-Delete From SecondaryFamilyMember
-Where id = 10;
+Delete From ClubMember
+Where cmn = 10;
