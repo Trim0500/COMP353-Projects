@@ -69,3 +69,31 @@ WHERE CM.is_active = 1 AND
         HAVING SUM(amount) >= 100.00
     ) <= 3
 ORDER BY CM.cmn;
+
+-- Query 11: For a given period of time, give a report on the teams’ formations for all the locations.
+-- 				For each location, the report should include the location name, the total number of training sessions, the total number of players in the training sessions, the total number of game sessions, the total number of players in the game sessions.
+-- 				Results should only include locations that have at least two game sessions.
+-- 				Results should be displayed sorted in descending order by the total number of game sessions.
+-- 				For example, the period of time could be from Jan. 1 st, 2025 to Mar. 31st, 2025.
+
+SET @startDate = '2025-01-01';
+
+SET @endDate = '2025-03-31';
+
+SELECT
+	L.name AS 'LocationName',
+    COUNT(S.id) AS 'SessionsAtLocation',
+    (SELECT COUNT(DISTINCT TM.cmn_fk)
+		FROM Session s
+        JOIN TeamSession TS ON s.id = TS.session_id_fk
+        JOIN TeamFormation TF ON TS.team_formation_id_fk = TF.id
+        JOIN TeamMember TM ON TF.id = TM.team_formation_id_fk
+        WHERE s.location_id_fk = L.id
+        GROUP BY s.id
+	) AS 'PlayersInSession'
+FROM Location L
+JOIN Session S ON L.id = S.location_id_fk
+WHERE date_format(S.event_date_time, '%Y-%M-%d') >= @startDate AND date_format(S.event_date_time, '%Y-%M-%d') <= @endDate
+GROUP BY L.id, L.name
+HAVING COUNT(S.id) >= 2
+ORDER BY SessionsAtLocation Desc;
