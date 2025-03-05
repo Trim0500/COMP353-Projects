@@ -94,35 +94,3 @@ CREATE TABLE Payment(
     installment INT,
     FOREIGN KEY(member_id_fk) REFERENCES ClubMember(member_id)
 );
-
--- Query 12: Get a report on all active club members who have never been assigned to any formation team session.
--- 				The list should include the club member’s membership number, first name, last name, age, date of joining the club, phone number, email and current location name.
--- 				The results should be displayed sorted in ascending order by location name then by club membership number.
-
-SELECT 
-	CM.cmn AS 'MembershipNumber',
-    CM.first_name AS 'MemberFirstName',
-    CM.last_name AS 'MemberLastName',
-    year(now()) - year(CM.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(CM.dob, '%m%d')) AS 'Age',
-    (
-		SELECT MAX(paymentDate)
-		FROM Payment
-        WHERE cmn_fk = CM.cmn
-        GROUP BY effectiveDate
-        ORDER BY effectiveDate
-        LIMIT 1
-    ) AS 'JoinDate',
-    CM.phone_number AS 'MemberPhone',
-    -- email,
-    (
-		SELECT GROUP_CONCAT(L.name ORDER BY L.name SEPARATOR ', ')
-        FROM Location L
-        JOIN FamilyMemberLocation FML ON L.id = FML.location_id_fk
-        WHERE FML.family_member_id_fk = CM.family_member_id_fk
-        GROUP BY FML.family_member_id_fk
-    ) AS 'LocationNames'
-FROM ClubMember CM
-LEFT JOIN TeamMember TM ON CM.cmn = TM.cmn_fk
-WHERE CM.is_active = 1
-HAVING COUNT(TM.cmn_fk) = 0
-ORDER BY LocationNames, CM.cmn;
