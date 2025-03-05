@@ -67,4 +67,5 @@ WHERE CM.is_active = 1 AND
         WHERE cmn_fk = CM.cmn
         GROUP BY effectiveDate
         HAVING SUM(amount) >= 100.00
-    ) <= 3;
+    ) <= 3
+ORDER BY CM.cmn;
