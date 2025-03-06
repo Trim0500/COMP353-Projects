@@ -96,6 +96,7 @@ CREATE TABLE ClubMember
     city VARCHAR(50),
     province VARCHAR(2),
     postal_code CHAR(6),
+    address VARCHAR(255),
     progress_report TEXT,
     is_active BOOLEAN,
     family_member_id_fk INT,
