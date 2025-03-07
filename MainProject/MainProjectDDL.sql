@@ -53,6 +53,7 @@ CREATE TABLE FamilyMember
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     dob DATE,
+    email VARCHAR(50),
     social_sec_num CHAR(9) NOT NULL UNIQUE,
     med_card_num CHAR(12) UNIQUE,
     city VARCHAR(50),
@@ -86,6 +87,7 @@ CREATE TABLE ClubMember
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     dob DATE,
+    email VARCHAR(50),
     height DECIMAL(5,2),
     weight DECIMAL(5,2),
     social_sec_num CHAR(9) NOT NULL UNIQUE,
@@ -94,6 +96,7 @@ CREATE TABLE ClubMember
     city VARCHAR(50),
     province VARCHAR(2),
     postal_code CHAR(6),
+    address VARCHAR(255),
     progress_report TEXT,
     is_active BOOLEAN,
     family_member_id_fk INT,
@@ -137,6 +140,7 @@ CREATE TABLE TeamMember
 CREATE TABLE Session
 (
 	id INT AUTO_INCREMENT PRIMARY KEY,
+    event_type VARCHAR(20),
     event_date_time DATETIME,
     location_id_fk INT,
     FOREIGN KEY(location_id_fk) REFERENCES Location(id)
