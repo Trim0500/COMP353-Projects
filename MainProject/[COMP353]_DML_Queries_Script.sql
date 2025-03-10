@@ -176,16 +176,24 @@ ORDER BY P.first_name ASC, P.last_name ASC, 'start date' ASC;
 -- 				Results should include the club member’ first name, last name, telephone number, email address, deactivation date, last location name and last role when deactivated. 
 -- 				Results should be displayed sorted in ascending order by location name, then by role, then by first name then by last name.
 
-SELECT CM.first_name, CM.last_name, CM.phone_number, CM.email, CM.DATE_ADD(year, 18, dob), (
+SELECT CM.first_name, CM.last_name, CM.phone_number, CM.email, DATE_ADD(dob, INTERVAL 18 YEAR), 
+(
 	SELECT GROUP_CONCAT(L.name ORDER BY L.name SEPARATOR ', ')
     	FROM Location L
     	JOIN FamilyMemberLocation FML ON L.id = FML.location_id_fk
     	WHERE FML.family_member_id_fk = CM.family_member_id_fk
     	GROUP BY FML.family_member_id_fk
-) AS 'last location name', (
+) AS 'last location name', 
+(
 	SELECT TM.role FROM TeamMember TM 
-    	WHERE MAX(assignment_date_time) = TM.assignment_date_time
+		WHERE CM.cmn = TM.cmn_fk AND TM.assignment_date_time = 
+        (
+        SELECT MAX(assignment_date_time)
+			FROM TeamMember TM2
+            WHERE TM.cmn_fk = TM2.cmn_fk
+        )
 ) AS 'latest role'
 FROM ClubMember CM
+ORDER BY 'last location name' ASC, 'latest role' ASC, CM.first_name ASC, CM.last_name ASC;
 ORDER BY 'last location name' ASC, 'latest role' ASC, CM.first_name ASC, CM.last_name ASC;
 
