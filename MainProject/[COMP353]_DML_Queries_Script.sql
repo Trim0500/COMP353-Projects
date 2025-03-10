@@ -150,3 +150,21 @@ LEFT JOIN TeamMember TM ON CM.cmn = TM.cmn_fk
 WHERE CM.is_active = 1
 HAVING COUNT(TM.cmn_fk) = 0
 ORDER BY LocationNames, CM.cmn;
+
+-- Query 18: Get a report on all club members who were deactivated by the system because they became over 18 years old.
+-- 				Results should include the club member’ first name, last name, telephone number, email address, deactivation date, last location name and last role when deactivated. 
+-- 				Results should be displayed sorted in ascending order by location name, then by role, then by first name then by last name.
+
+SELECT CM.first_name, CM.last_name, CM.phone_number, CM.email, CM.DATEADD(year, 18, dob), (
+	SELECT GROUP_CONCAT(L.name ORDER BY L.name SEPARATOR ', ')
+    	FROM Location L
+    	JOIN FamilyMemberLocation FML ON L.id = FML.location_id_fk
+    	WHERE FML.family_member_id_fk = CM.family_member_id_fk
+    	GROUP BY FML.family_member_id_fk
+) AS 'last location name', (
+	SELECT TM.role FROM TeamMember TM 
+    	WHERE MAX(assignment_date_time) = TM.assignment_date_time
+) AS 'latest role'
+FROM ClubMember CM
+ORDER BY 'last location name' ASC, 'latest role' ASC, CM.first_name ASC, CM.last_name ASC;
+
