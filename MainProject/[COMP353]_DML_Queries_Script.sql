@@ -151,11 +151,21 @@ WHERE CM.is_active = 1
 HAVING COUNT(TM.cmn_fk) = 0
 ORDER BY LocationNames, CM.cmn;
 
+-- Query 17: Get a report of all the personnel who were treasurer of the club at least once or is currently a treasurer of the club.
+-- 				The report should include the treasurer’s first name, last name, start date as a treasurer and last date as treasurer. If last date as treasurer is null means that the personnel is the current treasurer of the club.
+-- 				 Results should be displayed sorted in ascending order by first name then by last name then by start date as a treasurer.
+
+SELECT P.first_name, P.last_name, PL.start_date AS 'start date', PL.end_date AS 'end date'
+FROM Personnel P
+JOIN PersonnelLocation PL ON P.id = PL.personnel_id_fk
+WHERE PL.role = 'treasurer'
+ORDER BY P.first_name ASC, P.last_name ASC, 'start date' ASC;
+
 -- Query 18: Get a report on all club members who were deactivated by the system because they became over 18 years old.
 -- 				Results should include the club member’ first name, last name, telephone number, email address, deactivation date, last location name and last role when deactivated. 
 -- 				Results should be displayed sorted in ascending order by location name, then by role, then by first name then by last name.
 
-SELECT CM.first_name, CM.last_name, CM.phone_number, CM.email, CM.DATEADD(year, 18, dob), (
+SELECT CM.first_name, CM.last_name, CM.phone_number, CM.email, CM.DATE_ADD(year, 18, dob), (
 	SELECT GROUP_CONCAT(L.name ORDER BY L.name SEPARATOR ', ')
     	FROM Location L
     	JOIN FamilyMemberLocation FML ON L.id = FML.location_id_fk
