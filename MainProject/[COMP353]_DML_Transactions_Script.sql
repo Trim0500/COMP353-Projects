@@ -8,3 +8,12 @@ VALUES ('Head','MYVC HQ','G6H5M7','QC','4803 Broadcast Drive','Montreal','somebo
         ('Branch','MYVC Branch 4','G6H5M6','QC','4807 Broadcast Drive','Montreal','thatboguswebsite.com',10),
         ('Branch','Trimaloo Branch','J2X5S8','QC','32 rue Rene','Saint-Jean-sur-Richelieu','agent.nexone.ca',15),
         ('Branch','Merski Branch','G6H5M5','QC','1515 Sainte-Catherine St W','Montreal','aboguswebsite.com',35);
+
+INSERT INTO LocationPhone
+VALUES (1,'4385265985'),
+		(2,'5146866801'),
+        (3,'3432628383'),
+        (4,'5147094066'),
+        (5,'3333334444'),
+        (6,'4388858146'),
+        (7,'3320170519');
