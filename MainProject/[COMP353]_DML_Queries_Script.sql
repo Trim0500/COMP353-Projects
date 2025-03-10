@@ -45,6 +45,17 @@ WHERE cmn = 1;
 Delete FROM ClubMember
 WHERE cmn = 10;
 
+-- Query 5: CRUD for TeamFormation
+INSERT INTO TeamFormation VALUES (0, 'Super Spinners', 0, 0);
+
+UPDATE TeamFormation
+SET name = 'Frisbee Champs'
+WHERE id = 0;
+
+SELECT * FROM TeamFormation;
+
+DELETE FROM TeamFormation WHERE id = 0;
+
 -- Query 10: Get details of club members who are currently active and have been associated with at least three different locations and are members for at most three years.
 -- 				Details include Club membership number, first name and last name.
 -- 				Results should be displayed sorted in ascending order by club membership number.
