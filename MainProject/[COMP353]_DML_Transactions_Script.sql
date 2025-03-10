@@ -101,3 +101,8 @@ VALUES ('Donkey','Kong','1981-07-09','503124158','680969607','5068994178','Kongo
 		('Nathalie', 'Bergeron', '1988-09-27', '785412369', '698745239', '4384567890', 'Brossard', 'QC', 'J4W3K6', 'nathalie.b@email.com', 'volunteer'),
 		('Patrick', 'Giroux', '1995-06-15', '965874123', '125478963', '4187896541', 'Victoriaville', 'QC', 'G6P4X8', 'patrick.g@email.com', 'paid'),
 		('Catherine', 'Dion', '1999-01-30', '745698321', '369874128', '5149874563', 'Shawinigan', 'QC', 'G9N2K7', 'catherine.d@email.com', 'volunteer');
+
+INSERT INTO ClubMember (first_name, last_name, dob, email, height, weight, social_sec_num, med_card_num, phone_number, city, province, postal_code, address, progress_report, is_active, family_member_id_fk, primary_relationship, secondary_relationship)
+VALUES ('Cotton', 'Joe', '2012-10-03', 'Gegagedigedagedago@yahoo.com', 157.48, 160.00, '437022223', '648492359553', '5147585160', 'Montreal', 'Quebec', 'H3H2P2', '6354 Boardfish Road', 'Needs to lose weight', 1, 3, 'nephew', 'nephew'),
+	   ('Julia', 'Himenez', '2010-03-10', 'JHarmony@googleplus.com', 160.34, 125.00, '439238588', '892748374776', '5142398475', 'Montreal', 'Quebec', 'H3H2P4', '12317 Hirani Lane', 'Very good at volleyball!', 1, 4, 'daughter', 'grand-daughter');
+
