@@ -72,6 +72,8 @@ VALUES
 (10, 3, "2023-01-01", null),
 (10, 7, "2023-01-01", null);
 
+ALTER TABLE Personnel AUTO_INCREMENT = 1;
+
 INSERT INTO Personnel (first_name,last_name,dob,social_sec_num,med_card_num,phone_number,city,province,postal_code,email,mandate)
 VALUES ('Donkey','Kong','1981-07-09','503124158','680969607','5068994178','Kongo Bongo','DC','G7H5M5','konkey@dong.com','paid'),
 		('Diddy','Kong','1994-11-21','503124159','680969608','5068994179','Kongo Bongo','DC','G7H5M6','kiddy@dong.com','paid'),
