@@ -72,6 +72,30 @@ VALUES
 (10, 3, "2023-01-01", null),
 (10, 7, "2023-01-01", null);
 
+INSERT INTO Session (event_type, event_date_time, location_id_fk)
+VALUES
+("training", "2024-12-10 18:00:00", 1),
+("training", "2025-01-01 18:00:00", 1),
+("training", "2025-02-10 18:00:00", 1),
+("game", "2025-03-09 18:00:00", 1),
+("game", "2025-03-10 18:00:00", 1),
+("training", "2024-11-24 18:00:00", 2),
+("training", "2025-02-11 18:00:00", 2),
+("training", "2025-02-19 18:00:00", 2),
+("game", "2025-02-08 18:00:00", 2),
+("game", "2025-03-01 18:00:00", 2),
+("training", "2025-03-10 18:00:00", 3),
+("game", "2025-01-10 18:00:00", 3),
+("game", "2025-01-11 18:00:00", 3),
+("game", "2025-03-02 18:00:00", 4),
+("game", "2025-03-03 18:00:00", 4),
+("training", "2025-02-01 18:00:00", 5),
+("training", "2025-02-02 18:00:00", 5),
+("game", "2025-03-13 18:00:00", 5),
+("game", "2025-03-14 18:00:00", 5),
+("training", "2023-10-31 18:00:00", 6),
+("training", "2022-10-31 18:00:00", 7);
+
 ALTER TABLE Personnel AUTO_INCREMENT = 1;
 
 INSERT INTO Personnel (first_name,last_name,dob,social_sec_num,med_card_num,phone_number,city,province,postal_code,email,mandate)
