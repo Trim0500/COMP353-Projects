@@ -126,6 +126,13 @@ VALUES ('Donkey','Kong','1981-07-09','503124158','680969607','5068994178','Kongo
 		('Patrick', 'Giroux', '1995-06-15', '965874123', '125478963', '4187896541', 'Victoriaville', 'QC', 'G6P4X8', 'patrick.g@email.com', 'paid'),
 		('Catherine', 'Dion', '1999-01-30', '745698321', '369874128', '5149874563', 'Shawinigan', 'QC', 'G9N2K7', 'catherine.d@email.com', 'volunteer');
 
+INSERT INTO PersonnelLocation
+VALUES (1,1,'2021-01-01',null,'General Manager'),
+		(2,1,'2021-01-01',null,'Deputy Manager'),
+        (3,1,'2021-01-01',null,'Treasurer'),
+        (4,1,'2021-01-01',null,'Secretary'),
+        (5,1,'2021-01-01',null,'Admin');
+
 ALTER TABLE ClubMember AUTO_INCREMENT = 1;
 
 INSERT INTO ClubMember (first_name, last_name, dob, email, height, weight, social_sec_num, med_card_num, phone_number, city, province, postal_code, address, progress_report, is_active, family_member_id_fk, primary_relationship, secondary_relationship)
