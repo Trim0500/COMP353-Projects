@@ -2,21 +2,21 @@ ALTER TABLE Location AUTO_INCREMENT = 1;
 
 INSERT INTO Location (type,name,postal_code,province,address,city,website_url,capacity)
 VALUES ('Head','MYVC HQ','G6H5M7','QC','4803 Broadcast Drive','Montreal','someboguswebsite.com',50),
-		('Branch','MYVC Branch 1','G6H5M8','QC','4804 Broadcast Drive','Montreal','someotherboguswebsite.com',25),
-        ('Branch','MYVC Branch 2','G6H5M9','QC','4805 Broadcast Drive','Montreal','anotherboguswebsite.com',20),
-        ('Branch','MYVC Branch 3','G6H5M7','QC','4806 Broadcast Drive','Montreal','thisboguswebsite.com',30),
-        ('Branch','MYVC Branch 4','G6H5M6','QC','4807 Broadcast Drive','Montreal','thatboguswebsite.com',10),
-        ('Branch','Trimaloo Branch','J2X5S8','QC','32 rue Rene','Saint-Jean-sur-Richelieu','agent.nexone.ca',15),
-        ('Branch','Merski Branch','G6H5M5','QC','1515 Sainte-Catherine St W','Montreal','aboguswebsite.com',35);
+	('Branch','MYVC Branch 1','G6H5M8','QC','4804 Broadcast Drive','Montreal','someotherboguswebsite.com',25),
+	('Branch','MYVC Branch 2','G6H5M9','QC','4805 Broadcast Drive','Montreal','anotherboguswebsite.com',20),
+	('Branch','MYVC Branch 3','G6H5M7','QC','4806 Broadcast Drive','Montreal','thisboguswebsite.com',30),
+	('Branch','MYVC Branch 4','G6H5M6','QC','4807 Broadcast Drive','Montreal','thatboguswebsite.com',10),
+	('Branch','Trimaloo Branch','J2X5S8','QC','32 rue Rene','Saint-Jean-sur-Richelieu','agent.nexone.ca',15),
+	('Branch','Merski Branch','G6H5M5','QC','1515 Sainte-Catherine St W','Montreal','aboguswebsite.com',35);
 
 INSERT INTO LocationPhone
 VALUES (1,'4385265985'),
-		(2,'5146866801'),
-        (3,'3432628383'),
-        (4,'5147094066'),
-        (5,'3333334444'),
-        (6,'4388858146'),
-        (7,'3320170519');
+	(2,'5146866801'),
+	(3,'3432628383'),
+	(4,'5147094066'),
+	(5,'3333334444'),
+	(6,'4388858146'),
+	(7,'3320170519');
 
 INSERT INTO FamilyMember (first_name, last_name, dob, email, social_sec_num, med_card_num, city, province, phone_number, postal_code)
 VALUES 
@@ -72,6 +72,8 @@ VALUES
 (10, 3, "2023-01-01", null),
 (10, 7, "2023-01-01", null);
 
+ALTER TABLE Session AUTO_INCREMENT = 1;
+
 INSERT INTO Session (event_type, event_date_time, location_id_fk)
 VALUES
 ("training", "2024-12-10 18:00:00", 1),
@@ -100,59 +102,59 @@ ALTER TABLE Personnel AUTO_INCREMENT = 1;
 
 INSERT INTO Personnel (first_name,last_name,dob,social_sec_num,med_card_num,phone_number,city,province,postal_code,email,mandate)
 VALUES ('Donkey','Kong','1981-07-09','503124158','680969607','5068994178','Kongo Bongo','DC','G7H5M5','konkey@dong.com','paid'),
-		('Diddy','Kong','1994-11-21','503124159','680969608','5068994179','Kongo Bongo','DC','G7H5M6','kiddy@dong.com','paid'),
-        ('Dixie','Kong','1995-12-04','503124157','680969609','5068994177','Kongo Bongo','DC','G7H5M7','kixie@dong.com','paid'),
-        ('Kiddy','Kong','1996-11-01','503124156','680969610','5068994176','Kongo Bongo','DC','G7H5M8','kiddy@kong.com','paid'),
-        ('King','Kong','2005-12-04','503124155','680969611','5068994175','Kongo Bongo','DC','G7H5M9','king@kong.com','volunteer'),
-        ('Funky','Kong','1994-11-21','503124154','680969612','5068994174','Kongo Bongo','DC','G7H5N0','kunky@fong.com','volunteer'),
-        ('Cranky','Kong','1994-11-21','503124153','680969613','5068994173','Kongo Bongo','DC','G7H5N1','kranky@cong.com','volunteer'),
-        ('Some1','Personnel','1994-11-20','503124152','680969614','5068994171','Kongo Bongo','DC','G7H5N2','some@email.com','paid'),
-        ('Jean', 'Tremblay', '1994-11-20', '503124151', '680969615', '5068994170', 'Montreal', 'QC', 'H3B1X8', 'jean.t@email.com', 'paid'),
-		('Sophie', 'Lavoie', '1987-05-14', '402315678', '785412369', '6014785963', 'Quebec City', 'QC', 'G1A0A2', 'sophie.l@email.com', 'volunteer'),
-		('Marc', 'Bouchard', '1990-08-25', '512478963', '632587412', '7203659874', 'Laval', 'QC', 'H7N3Y6', 'marc.b@email.com', 'paid'),
-		('Isabelle', 'Gagnon', '1992-11-30', '698745123', '874125963', '9876543210', 'Gatineau', 'QC', 'J8X3X5', 'isabelle.g@email.com', 'volunteer'),
-		('Luc', 'Côté', '1985-03-17', '325698741', '745698231', '6541237890', 'Longueuil', 'QC', 'J4K2V2', 'luc.c@email.com', 'paid'),
-		('Marie', 'Fortin', '1993-07-22', '478563214', '369874521', '8745213698', 'Sherbrooke', 'QC', 'J1H5B9', 'marie.f@email.com', 'volunteer'),
-		('Philippe', 'Pelletier', '1996-12-10', '365214789', '987452136', '3698741256', 'Saguenay', 'QC', 'G7H5N2', 'philippe.p@email.com', 'paid'),
-		('Élise', 'Desjardins', '1989-06-18', '478596321', '521478963', '3214785962', 'Trois-Rivières', 'QC', 'G8T1V2', 'elise.d@email.com', 'volunteer'),
-		('Maxime', 'Roy', '1995-09-05', '698745236', '874125632', '9876541236', 'Drummondville', 'QC', 'J2B6V4', 'maxime.r@email.com', 'paid'),
-		('Caroline', 'Lévesque', '1984-04-29', '325698742', '745698232', '6541237891', 'Saint-Jean-sur-Richelieu', 'QC', 'J3B2W5', 'caroline.l@email.com', 'volunteer'),
-		('François', 'Dubois', '1991-02-14', '478563215', '369874522', '8745213699', 'Saint-Jérôme', 'QC', 'J7Z4M2', 'francois.d@email.com', 'paid'),
-		('Julie', 'Mercier', '1998-07-09', '365214790', '987452137', '3698741257', 'Granby', 'QC', 'J2G3V7', 'julie.m@email.com', 'volunteer'),
-		('Olivier', 'Beaulieu', '1986-11-11', '478596322', '521478964', '3214785963', 'Chicoutimi', 'QC', 'G7H1Y4', 'olivier.b@email.com', 'paid'),
-		('Camille', 'Simard', '1997-10-15', '698745237', '874125633', '9876541237', 'Blainville', 'QC', 'J7C4G6', 'camille.s@email.com', 'volunteer'),
-        ('Alexandre', 'Morin', '1992-04-12', '569874123', '321478965', '4507891234', 'Terrebonne', 'QC', 'J6X4H5', 'alexandre.m@email.com', 'paid'),
-		('Nathalie', 'Bergeron', '1988-09-27', '785412369', '698745239', '4384567890', 'Brossard', 'QC', 'J4W3K6', 'nathalie.b@email.com', 'volunteer'),
-		('Patrick', 'Giroux', '1995-06-15', '965874123', '125478963', '4187896541', 'Victoriaville', 'QC', 'G6P4X8', 'patrick.g@email.com', 'paid'),
-		('Catherine', 'Dion', '1999-01-30', '745698321', '369874128', '5149874563', 'Shawinigan', 'QC', 'G9N2K7', 'catherine.d@email.com', 'volunteer');
+	('Diddy','Kong','1994-11-21','503124159','680969608','5068994179','Kongo Bongo','DC','G7H5M6','kiddy@dong.com','paid'),
+	('Dixie','Kong','1995-12-04','503124157','680969609','5068994177','Kongo Bongo','DC','G7H5M7','kixie@dong.com','paid'),
+	('Kiddy','Kong','1996-11-01','503124156','680969610','5068994176','Kongo Bongo','DC','G7H5M8','kiddy@kong.com','paid'),
+	('King','Kong','2005-12-04','503124155','680969611','5068994175','Kongo Bongo','DC','G7H5M9','king@kong.com','volunteer'),
+	('Funky','Kong','1994-11-21','503124154','680969612','5068994174','Kongo Bongo','DC','G7H5N0','kunky@fong.com','volunteer'),
+	('Cranky','Kong','1994-11-21','503124153','680969613','5068994173','Kongo Bongo','DC','G7H5N1','kranky@cong.com','volunteer'),
+	('Some1','Personnel','1994-11-20','503124152','680969614','5068994171','Kongo Bongo','DC','G7H5N2','some@email.com','paid'),
+	('Jean', 'Tremblay', '1994-11-20', '503124151', '680969615', '5068994170', 'Montreal', 'QC', 'H3B1X8', 'jean.t@email.com', 'paid'),
+	('Sophie', 'Lavoie', '1987-05-14', '402315678', '785412369', '6014785963', 'Quebec City', 'QC', 'G1A0A2', 'sophie.l@email.com', 'volunteer'),
+	('Marc', 'Bouchard', '1990-08-25', '512478963', '632587412', '7203659874', 'Laval', 'QC', 'H7N3Y6', 'marc.b@email.com', 'paid'),
+	('Isabelle', 'Gagnon', '1992-11-30', '698745123', '874125963', '9876543210', 'Gatineau', 'QC', 'J8X3X5', 'isabelle.g@email.com', 'volunteer'),
+	('Luc', 'Côté', '1985-03-17', '325698741', '745698231', '6541237890', 'Longueuil', 'QC', 'J4K2V2', 'luc.c@email.com', 'paid'),
+	('Marie', 'Fortin', '1993-07-22', '478563214', '369874521', '8745213698', 'Sherbrooke', 'QC', 'J1H5B9', 'marie.f@email.com', 'volunteer'),
+	('Philippe', 'Pelletier', '1996-12-10', '365214789', '987452136', '3698741256', 'Saguenay', 'QC', 'G7H5N2', 'philippe.p@email.com', 'paid'),
+	('Élise', 'Desjardins', '1989-06-18', '478596321', '521478963', '3214785962', 'Trois-Rivières', 'QC', 'G8T1V2', 'elise.d@email.com', 'volunteer'),
+	('Maxime', 'Roy', '1995-09-05', '698745236', '874125632', '9876541236', 'Drummondville', 'QC', 'J2B6V4', 'maxime.r@email.com', 'paid'),
+	('Caroline', 'Lévesque', '1984-04-29', '325698742', '745698232', '6541237891', 'Saint-Jean-sur-Richelieu', 'QC', 'J3B2W5', 'caroline.l@email.com', 'volunteer'),
+	('François', 'Dubois', '1991-02-14', '478563215', '369874522', '8745213699', 'Saint-Jérôme', 'QC', 'J7Z4M2', 'francois.d@email.com', 'paid'),
+	('Julie', 'Mercier', '1998-07-09', '365214790', '987452137', '3698741257', 'Granby', 'QC', 'J2G3V7', 'julie.m@email.com', 'volunteer'),
+	('Olivier', 'Beaulieu', '1986-11-11', '478596322', '521478964', '3214785963', 'Chicoutimi', 'QC', 'G7H1Y4', 'olivier.b@email.com', 'paid'),
+	('Camille', 'Simard', '1997-10-15', '698745237', '874125633', '9876541237', 'Blainville', 'QC', 'J7C4G6', 'camille.s@email.com', 'volunteer'),
+	('Alexandre', 'Morin', '1992-04-12', '569874123', '321478965', '4507891234', 'Terrebonne', 'QC', 'J6X4H5', 'alexandre.m@email.com', 'paid'),
+	('Nathalie', 'Bergeron', '1988-09-27', '785412369', '698745239', '4384567890', 'Brossard', 'QC', 'J4W3K6', 'nathalie.b@email.com', 'volunteer'),
+	('Patrick', 'Giroux', '1995-06-15', '965874123', '125478963', '4187896541', 'Victoriaville', 'QC', 'G6P4X8', 'patrick.g@email.com', 'paid'),
+	('Catherine', 'Dion', '1999-01-30', '745698321', '369874128', '5149874563', 'Shawinigan', 'QC', 'G9N2K7', 'catherine.d@email.com', 'volunteer');
 
 INSERT INTO PersonnelLocation
 VALUES (1,1,'2021-01-01',null,'General Manager'),
-		(2,1,'2021-01-01',null,'Deputy Manager'),
-		(3,1,'2021-01-01',null,'Treasurer'),
-		(4,1,'2021-01-01',null,'Secretary'),
-		(5,1,'2021-01-01',null,'Admin')
-		(6,2,'2022-01-01',null,'Admin'),
-		(7,2,'2022-01-01',null,'Treasurer'),
-		(8,2,'2022-06-01',null,'Coach'),
-		(9,2,'2022-06-01',null,'Assistant Coach'),
-		(10,3,'2022-01-01',null,'Admin'),
-		(11,3,'2022-01-01',null,'Treasurer'),
-		(12,3,'2022-09-01',null,'Coach'),
-		(13,3,'2022-09-01',null,'Assistant Coach'),
-		(14,4,'2023-01-01',null,'Admin'),
-		(15,4,'2023-01-01',null,'Treasurer'),
-		(16,4,'2023-01-01',null,'Coach'),
-		(17,4,'2023-01-01',null,'Assistant Coach'),
-		(18,5,'2024-01-01',null,'Admin'),
-		(19,5,'2024-01-01',null,'Treasurer'),
-		(20,5,'2024-03-01',null,'Coach'),
-		(21,5,'2024-03-01',null,'Assistant Coach'),
-		(22,1,'2022-06-01',null,'Coach'),
-		(23,1,'2022-06-01',null,'Assistant Coach')
-		(24,1,'2021-01-01','2023-01-25','Admin'),
-		(25,6,'2025-01-01',null,'Admin'),
-		(26,7,'2025-01-01',null,'Admin');
+	(2,1,'2021-01-01',null,'Deputy Manager'),
+	(3,1,'2021-01-01',null,'Treasurer'),
+	(4,1,'2021-01-01',null,'Secretary'),
+	(5,1,'2021-01-01',null,'Admin')
+	(6,2,'2022-01-01',null,'Admin'),
+	(7,2,'2022-01-01',null,'Treasurer'),
+	(8,2,'2022-06-01',null,'Coach'),
+	(9,2,'2022-06-01',null,'Assistant Coach'),
+	(10,3,'2022-01-01',null,'Admin'),
+	(11,3,'2022-01-01',null,'Treasurer'),
+	(12,3,'2022-09-01',null,'Coach'),
+	(13,3,'2022-09-01',null,'Assistant Coach'),
+	(14,4,'2023-01-01',null,'Admin'),
+	(15,4,'2023-01-01',null,'Treasurer'),
+	(16,4,'2023-01-01',null,'Coach'),
+	(17,4,'2023-01-01',null,'Assistant Coach'),
+	(18,5,'2024-01-01',null,'Admin'),
+	(19,5,'2024-01-01',null,'Treasurer'),
+	(20,5,'2024-03-01',null,'Coach'),
+	(21,5,'2024-03-01',null,'Assistant Coach'),
+	(22,1,'2022-06-01',null,'Coach'),
+	(23,1,'2022-06-01',null,'Assistant Coach')
+	(24,1,'2021-01-01','2023-01-25','Admin'),
+	(25,6,'2025-01-01',null,'Admin'),
+	(26,7,'2025-01-01',null,'Admin');
 
 ALTER TABLE ClubMember AUTO_INCREMENT = 1;
 
