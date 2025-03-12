@@ -129,32 +129,32 @@ VALUES ('Donkey','Kong','1981-07-09','503124158','680969607','5068994178','Kongo
 	('Catherine', 'Dion', '1999-01-30', '745698321', '369874128', '5149874563', 'Shawinigan', 'QC', 'G9N2K7', 'catherine.d@email.com', 'volunteer');
 
 INSERT INTO PersonnelLocation
-VALUES (1,1,'2021-01-01',null,'General Manager'),
-	(2,1,'2021-01-01',null,'Deputy Manager'),
-	(3,1,'2021-01-01',null,'Treasurer'),
-	(4,1,'2021-01-01',null,'Secretary'),
-	(5,1,'2021-01-01',null,'Admin')
-	(6,2,'2022-01-01',null,'Admin'),
-	(7,2,'2022-01-01',null,'Treasurer'),
-	(8,2,'2022-06-01',null,'Coach'),
-	(9,2,'2022-06-01',null,'Assistant Coach'),
-	(10,3,'2022-01-01',null,'Admin'),
-	(11,3,'2022-01-01',null,'Treasurer'),
-	(12,3,'2022-09-01',null,'Coach'),
-	(13,3,'2022-09-01',null,'Assistant Coach'),
-	(14,4,'2023-01-01',null,'Admin'),
-	(15,4,'2023-01-01',null,'Treasurer'),
-	(16,4,'2023-01-01',null,'Coach'),
-	(17,4,'2023-01-01',null,'Assistant Coach'),
-	(18,5,'2024-01-01',null,'Admin'),
-	(19,5,'2024-01-01',null,'Treasurer'),
-	(20,5,'2024-03-01',null,'Coach'),
-	(21,5,'2024-03-01',null,'Assistant Coach'),
-	(22,1,'2022-06-01',null,'Coach'),
-	(23,1,'2022-06-01',null,'Assistant Coach')
+VALUES (1,1,'2017-01-01',null,'General Manager'),
+	(2,1,'2017-01-01',null,'Deputy Manager'),
+	(3,1,'2017-01-01',null,'Treasurer'),
+	(4,1,'2017-01-01',null,'Secretary'),
+	(5,1,'2017-01-01',null,'Admin'),
+	(6,2,'2019-01-01',null,'Admin'),
+	(7,2,'2019-01-01',null,'Treasurer'),
+	(8,2,'2019-06-01',null,'Coach'),
+	(9,2,'2019-06-01',null,'Assistant Coach'),
+	(10,3,'2017-01-01',null,'Admin'),
+	(11,3,'2017-01-01',null,'Treasurer'),
+	(12,3,'2017-09-01',null,'Coach'),
+	(13,3,'2017-09-01',null,'Assistant Coach'),
+	(14,4,'2018-01-01',null,'Admin'),
+	(15,4,'2018-01-01',null,'Treasurer'),
+	(16,4,'2018-01-01',null,'Coach'),
+	(17,4,'2018-01-01',null,'Assistant Coach'),
+	(18,5,'2018-01-01',null,'Admin'),
+	(19,5,'2018-01-01',null,'Treasurer'),
+	(20,5,'2018-03-01',null,'Coach'),
+	(21,5,'2018-03-01',null,'Assistant Coach'),
+	(22,1,'2017-06-01',null,'Coach'),
+	(23,1,'2017-06-01',null,'Assistant Coach'),
 	(24,1,'2021-01-01','2023-01-25','Admin'),
 	(25,6,'2025-01-01',null,'Admin'),
-	(26,7,'2025-01-01',null,'Admin');
+	(26,7,'2023-01-01',null,'Admin');
 
 ALTER TABLE ClubMember AUTO_INCREMENT = 1;
 
