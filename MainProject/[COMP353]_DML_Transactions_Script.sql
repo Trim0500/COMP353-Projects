@@ -182,3 +182,25 @@ VALUES ('Cotton', 'Joe', '2012-10-03', 'Gegagedigedagedago@yahoo.com', 157.48, 1
        ('Élodie', 'Roy', '2004-03-17', 'elodie.roy@example.com', 178.00, 165.90, '323567890', '234567890123', '5145553233', 'Montreal', 'QC', 'H3C2M5', '1717 Rue Saint-Urbain', 'Great vertical jump, strong in defense.', 0, 3, 'cousin', 'cousin'),
        ('Thomas', 'Lévesque', '2015-09-09', 'thomas.levesque@example.com', 140.31, 95.63, '434678901', '345678901234', '5145554344', 'Montreal', 'QC', 'H4A3N6', '1818 Rue Saint-Antoine', 'Energetic but lacks discipline.', 0, 1, 'nephew', 'nephew'),
        ('Léa', 'Bélanger', '2010-10-20', 'lea.belanger@example.com', 168.00, 145.12, '545789012', '456789012345', '5145555455', 'Montreal', 'QC', 'H5A4P7', '1919 Rue Saint-Hubert', 'Balanced skill set, improving leadership.', 0, 5, 'niece', 'granddaughter');
+
+INSERT INTO TeamFormation (name,captain_id_fk,location_id_fk)
+VALUES ('Altean Army',1,1),
+	('Archanean League',1,1),
+	('The Deliverance',2,1),
+	('Pilgrimage Misfits',3,1),
+	('Lycian League',4,1),
+	('Golden Deer',5,1),
+	('Banner of the Crest of Flames',6,1),
+	('Kronos Island Giants',5,2),
+	('Area Island Dragons',1,2),
+	('Chaos Island Crusaders',2,2),
+	('Rhea Island Nomads',5,2),
+	('Ouranos Island Champions',5,2),
+	('Production Destruction',9,5),
+	('Security Lockdown',9,5),
+	('Queens of Spin',4,5),
+	('Big Bad Wolves',4,5),
+	('My Team',10,3),
+	('Enemy Team',3,3),
+	('Spetsnaz',7,4),
+	('SEALs',10,7);
