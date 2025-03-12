@@ -66,9 +66,11 @@ CREATE TABLE FamilyMemberLocation
 (
 	location_id_fk INT,
     family_member_id_fk INT,
+    start_date DATE,
+    end_date DATE,
     FOREIGN KEY(location_id_fk) REFERENCES Location(id),
     FOREIGN KEY(family_member_id_fk) REFERENCES FamilyMember(id),
-    PRIMARY KEY(location_id_fk, family_member_id_fk)
+    PRIMARY KEY(location_id_fk, family_member_id_fk, start_date)
 );
 
 CREATE TABLE SecondaryFamilyMember
@@ -77,6 +79,7 @@ CREATE TABLE SecondaryFamilyMember
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     phone_number CHAR(10),
+    relationship_to_primary VARCHAR(20),
     PRIMARY KEY(primary_family_member_id_fk, first_name, last_name),
     FOREIGN KEY(primary_family_member_id_fk) REFERENCES FamilyMember(id)
 );
