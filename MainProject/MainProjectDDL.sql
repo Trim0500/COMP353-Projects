@@ -16,7 +16,8 @@ CREATE TABLE Location
 CREATE TABLE LocationPhone 
 (
 	location_id_fk INT,
-    phone_number CHAR(10)
+    phone_number CHAR(10),
+    PRIMARY KEY(location_id_fk, phone_number)
 );
 
 CREATE TABLE Personnel
