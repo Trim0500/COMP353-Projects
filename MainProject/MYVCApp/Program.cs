@@ -10,7 +10,7 @@ var configuration = builder.Configuration;
 var appDataConnectionString = builder.Configuration.GetConnectionString("AppDataConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(opt =>
 {
-    opt.UseSqlServer(appDataConnectionString);
+    opt.UseMySQL(appDataConnectionString);
 });
 
 var app = builder.Build();
