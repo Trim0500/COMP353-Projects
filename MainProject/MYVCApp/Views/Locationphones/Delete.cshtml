@@ -9,9 +9,10 @@
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <h4>Locationphone</h4>
+
     <hr />
-    <dl class="row">
-    </dl>
+    <h5>Location ID: @Model.LocationIdFk</h5>
+    <h5>Location Phone: @Model.PhoneNumber</h5>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="LocationIdFk" />

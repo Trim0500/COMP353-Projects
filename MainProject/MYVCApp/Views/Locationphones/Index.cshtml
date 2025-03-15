@@ -26,6 +26,7 @@
             <td>@item.PhoneNumber</td>
             <td>
                 <a asp-controller="Locationphones" asp-action="details" asp-route-location="@item.LocationIdFk" asp-route-phone="@item.PhoneNumber">Details</a>
+                <a asp-controller="Locationphones" asp-action="delete" asp-route-location="@item.LocationIdFk" asp-route-phone="@item.PhoneNumber">Delete</a>
             </td>
         </tr>
 }

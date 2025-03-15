@@ -28,6 +28,7 @@ namespace MYVCApp.Controllers
                           Problem("Entity set 'ApplicationDbContext.Locationphones'  is null.");
         }
 
+        [HttpGet]
         [Route("{location}/{phone}")]
         public async Task<IActionResult> Details(int location, string phone)
         {
@@ -47,7 +48,6 @@ namespace MYVCApp.Controllers
             return View(locationphone);
         }
 
-        // GET: Locationphones/Create
         [HttpGet]
         [Route("Locationphones/Create")]
         public IActionResult Create()
@@ -55,32 +55,37 @@ namespace MYVCApp.Controllers
             return View();
         }
 
-        // POST: Locationphones/Create
         [HttpPost]
         [Route("Locationphones/Create")]
         public async Task<IActionResult> Create(Locationphone locationphone)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(locationphone);
-                await _context.SaveChangesAsync();
-                TempData[TempDataHelper.Success] = String.Format("Successfully created LocationPhone: {0} - {1}", locationphone.LocationIdFk, locationphone.PhoneNumber);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(locationphone);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = String.Format("Successfully created LocationPhone: {0} - {1}", locationphone.LocationIdFk, locationphone.PhoneNumber);
+                }
             }
-            TempData[TempDataHelper.Error] = "Creation failed";
-            return View("Index");
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Creation failed: " + ex.Message;
+            }
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Locationphones/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        [Route("{location}/{phone}/Delete")]
+        public async Task<IActionResult> Delete(int location, string phone)
         {
-            if (id == null || _context.Locationphones == null)
+            if (location < 0 || phone == null || _context.Locationphones == null)
             {
                 return NotFound();
             }
 
             var locationphone = await _context.Locationphones
-                .FirstOrDefaultAsync(m => m.LocationIdFk == id);
+                .FirstOrDefaultAsync(m => m.LocationIdFk == location && m.PhoneNumber == phone);
             if (locationphone == null)
             {
                 return NotFound();
@@ -91,20 +96,34 @@ namespace MYVCApp.Controllers
 
         // POST: Locationphones/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("{location}/{phone}/Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int location, string phone)
         {
             if (_context.Locationphones == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Locationphones'  is null.");
             }
-            var locationphone = await _context.Locationphones.FindAsync(id);
-            if (locationphone != null)
+            var locationphone = await _context.Locationphones
+            .FirstOrDefaultAsync(m => m.LocationIdFk == location && m.PhoneNumber == phone);
+            try
             {
-                _context.Locationphones.Remove(locationphone);
+                if (locationphone != null)
+                {
+                    _context.Locationphones.Remove(locationphone);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = String.Format("Successfully Deleted LocationPhone: {0} - {1}", locationphone.LocationIdFk, locationphone.PhoneNumber);
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Deletion Failed: Nonexistant Item";
+                }
             }
-            
-            await _context.SaveChangesAsync();
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Deletion Failed: " + ex.Message;
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
