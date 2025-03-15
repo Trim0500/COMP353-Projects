@@ -183,6 +183,36 @@ VALUES ('Cotton', 'Joe', '2012-10-03', 'Gegagedigedagedago@yahoo.com', 157.48, 1
        ('Thomas', 'Lévesque', '2015-09-09', 'thomas.levesque@example.com', 140.31, 95.63, '434678901', '345678901234', '5145554344', 'Montreal', 'QC', 'H4A3N6', '1818 Rue Saint-Antoine', 'Energetic but lacks discipline.', 0, 1, 'nephew', 'nephew'),
        ('Léa', 'Bélanger', '2010-10-20', 'lea.belanger@example.com', 168.00, 145.12, '545789012', '456789012345', '5145555455', 'Montreal', 'QC', 'H5A4P7', '1919 Rue Saint-Hubert', 'Balanced skill set, improving leadership.', 0, 5, 'niece', 'granddaughter');
 
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS insert_into_club_member_location $$
+
+CREATE PROCEDURE insert_into_club_member_location()
+
+BEGIN
+	DECLARE maxCMN INT DEFAULT 0;
+    DECLARE increment INT DEFAULT 1;
+    
+	SET maxCMN = (SELECT MAX(cmn) FROM ClubMember);
+    
+    WHILE (increment <= maxCMN) DO
+		INSERT INTO ClubMemberLocation
+        SELECT
+			location_id_fk,
+			CM.cmn AS cmn_fk,
+			start_date,
+			end_date
+		FROM FamilyMemberLocation FML
+		JOIN FamilyMember FM ON FML.family_member_id_fk = FM.id
+		JOIN ClubMember CM ON FM.id = CM.family_member_id_fk AND CM.cmn = increment
+		WHERE FML.end_date IS NULL;
+                
+		SET increment = increment + 1;
+    END WHILE;
+END $$
+
+CALL insert_into_club_member_location();
+
 INSERT INTO TeamFormation (name,captain_id_fk,location_id_fk)
 VALUES ('Altean Army',1,1),
 	('Archanean League',1,1),
