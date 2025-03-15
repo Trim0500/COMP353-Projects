@@ -4,24 +4,28 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>LocationPhone - List</h1>
+
+<partial name="TempDataPartial"></partial>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-controller="Locationphones">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th></th>
+            <th>Location</th>
+            <th>PhoneNumber</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>@item.LocationIdFk</td>
+            <td>@item.PhoneNumber</td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a asp-controller="Locationphones" asp-action="details" asp-route-location="@item.LocationIdFk" asp-route-phone="@item.PhoneNumber">Details</a>
             </td>
         </tr>
 }

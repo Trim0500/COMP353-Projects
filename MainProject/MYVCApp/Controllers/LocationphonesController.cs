@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -27,16 +28,17 @@ namespace MYVCApp.Controllers
                           Problem("Entity set 'ApplicationDbContext.Locationphones'  is null.");
         }
 
-        // GET: Locationphones/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [Route("{location}/{phone}")]
+        public async Task<IActionResult> Details(int location, string phone)
         {
-            if (id == null || _context.Locationphones == null)
+            if (location < 0|| phone == null || _context.Locationphones == null)
             {
                 return NotFound();
             }
 
             var locationphone = await _context.Locationphones
-                .FirstOrDefaultAsync(m => m.LocationIdFk == id);
+                .FirstOrDefaultAsync(m => m.LocationIdFk == location && m.PhoneNumber == phone);
+
             if (locationphone == null)
             {
                 return NotFound();
@@ -46,76 +48,27 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Locationphones/Create
+        [HttpGet]
+        [Route("Locationphones/Create")]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: Locationphones/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LocationIdFk,PhoneNumber")] Locationphone locationphone)
+        [Route("Locationphones/Create")]
+        public async Task<IActionResult> Create(Locationphone locationphone)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(locationphone);
                 await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = String.Format("Successfully created LocationPhone: {0} - {1}", locationphone.LocationIdFk, locationphone.PhoneNumber);
                 return RedirectToAction(nameof(Index));
             }
-            return View(locationphone);
-        }
-
-        // GET: Locationphones/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Locationphones == null)
-            {
-                return NotFound();
-            }
-
-            var locationphone = await _context.Locationphones.FindAsync(id);
-            if (locationphone == null)
-            {
-                return NotFound();
-            }
-            return View(locationphone);
-        }
-
-        // POST: Locationphones/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LocationIdFk,PhoneNumber")] Locationphone locationphone)
-        {
-            if (id != locationphone.LocationIdFk)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(locationphone);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LocationphoneExists(locationphone.LocationIdFk))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(locationphone);
+            TempData[TempDataHelper.Error] = "Creation failed";
+            return View("Index");
         }
 
         // GET: Locationphones/Delete/5

@@ -2,7 +2,48 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1>MYVC_GUI</h1>
+
+<h2>Location</h2>
+<div class="display-flex">
+    <a class="btn btn-info" asp-controller="Locations">Location</a>
+    <a class="btn btn-info" asp-controller="Locationphones">LocationPhone</a> <!--TODO: FIX-->
+</div>
+
+<h2>Personnel</h2>
+<div class="display-flex">
+    <a class="btn btn-info" asp-controller="Personnels">Personnel</a>
+    <a class="btn btn-info" asp-controller="Personnellocations">PersonnelLocation</a> <!--TODO: FIX Create/Edit/Details/Delete-->
+</div>
+
+<h2>Club Members</h2>
+<div class="display-flex">
+    <a class="btn btn-info" asp-controller="Clubmembers">ClubMember</a>
+    <a class="btn btn-info" asp-controller="Payments">Payment</a>
+</div>
+
+<h2>Family Members</h2>
+<div class="display-flex">
+    <a class="btn btn-info" asp-controller="Familymembers">FamilyMember</a>
+    <a class="btn btn-info" asp-controller="Familymemberlocations">FamilyMemberLocation</a> <!--TODO: FIX Create/Edit/Details/Delete-->
+    <a class="btn btn-info" asp-controller="Secondaryfamilymembers">SecondaryFamilyMember</a> <!--TODO: FIX Create/Edit/Details/Delete-->
+</div>
+
+<h2>Team/Session</h2>
+<div class="display-flex">
+    <a class="btn btn-info" asp-controller="Sessions">Session</a>
+    <a class="btn btn-info" asp-controller="Teamsessions">TeamSession</a> <!--TODO: FIX Create/Edit/Details/Delete-->
+    <a class="btn btn-info" asp-controller="Teamformations">TeamFormation</a>
+    <a class="btn btn-info" asp-controller="Teammembers">TeamMember</a> <!--TODO: FIX Create/Edit/Details/Delete-->
+</div>
+
+<h2>LogEmail</h2>
+<div class="display-flex">
+    <a class="btn btn-info" asp-controller="Logemails">LogEmail</a>
+</div>
+
+<h2></h2>
+<div class="display-flex">
+    <a class="btn btn-info" asp-controller=""></a>
+    <a class="btn btn-info" asp-controller=""></a>
 </div>

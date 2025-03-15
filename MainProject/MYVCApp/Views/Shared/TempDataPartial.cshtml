@@ -1,0 +1,16 @@
+﻿@using MYVCApp.Helpers;
+
+@if (TempData[TempDataHelper.Success] != null)
+{
+    <div class="alert alert-success">@TempData[TempDataHelper.Success]</div>
+}
+
+@if (TempData[TempDataHelper.Warning] != null)
+{
+    <div class="alert alert-warning">@TempData[TempDataHelper.Warning]</div>
+}
+
+@if (TempData[TempDataHelper.Error] != null)
+{
+    <div class="alert alert-danger">@TempData[TempDataHelper.Error]</div>
+}
