@@ -21,6 +21,7 @@ namespace MYVCApp.Models
         [MaxLength(50)]
         public string? Name { get; set; }
         [MaxLength(6)]
+        [MinLength(6)]
         public string? PostalCode { get; set; }
         [MaxLength(2)]
         public string? Province { get; set; }

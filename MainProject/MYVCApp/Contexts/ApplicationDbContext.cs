@@ -251,7 +251,8 @@ namespace MYVCApp.Contexts
 
                 entity.Property(e => e.PostalCode)
                     .HasMaxLength(6)
-                    .HasColumnName("postal_code");
+                    .HasColumnName("postal_code")
+                    .IsFixedLength();
 
                 entity.Property(e => e.Province)
                     .HasMaxLength(2)

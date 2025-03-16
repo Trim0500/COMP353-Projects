@@ -61,16 +61,24 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Type,Name,PostalCode,Province,Address,City,WebsiteUrl,Capacity")] Location location)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(location);
-                await _context.SaveChangesAsync();
-                TempData[TempDataHelper.Success] = "Successfully added location " + location.Name;
+                if (ModelState.IsValid)
+                {
+                    _context.Add(location);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully added location " + location.Name;
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Addition Failed - State Invalid";
+                }
             }
-            else
+            catch(Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Addition Failed";
+                TempData[TempDataHelper.Error] = "Addition Failed - Error " +  ex.Message;
             }
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -102,27 +110,40 @@ namespace MYVCApp.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(location);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        _context.Update(location);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = "Successfully edited location" + location.Name;
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        if (!LocationExists(location.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            TempData[TempDataHelper.Error] = "Error occured while editing: " + ex.Message;
+                            throw;
+                        }
+                    }
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!LocationExists(location.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    TempData[TempDataHelper.Error] = "Error: State invalid";
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(location);
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error occured while editing: " + ex.Message;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Locations/Delete/5
@@ -148,17 +169,26 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Locations == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Locations'  is null.");
+                if (_context.Locations == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Locations'  is null.");
+                }
+                var location = await _context.Locations.FindAsync(id);
+                if (location != null)
+                {
+                    _context.Locations.Remove(location);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = "Successfully deleted location" + location.Name;
             }
-            var location = await _context.Locations.FindAsync(id);
-            if (location != null)
+            catch(Exception ex)
             {
-                _context.Locations.Remove(location);
+                TempData[TempDataHelper.Error] = "Error occured while deleting: " + ex.Message;
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

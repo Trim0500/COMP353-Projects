@@ -5,7 +5,7 @@ CREATE TABLE Location
 	id INT AUTO_INCREMENT PRIMARY KEY,
     type varchar(10),
     name VARCHAR(50),
-    postal_code VARCHAR(6),
+    postal_code CHAR(6),
     province CHAR(2),
     address VARCHAR(255),
     city VARCHAR(50),
@@ -17,6 +17,7 @@ CREATE TABLE LocationPhone
 (
 	location_id_fk INT,
     phone_number CHAR(10),
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id) ON DELETE CASCADE,
     PRIMARY KEY(location_id_fk, phone_number)
 );
 
@@ -44,8 +45,8 @@ CREATE TABLE PersonnelLocation
     end_date DATE,
     role VARCHAR(50),
     PRIMARY KEY (personnel_id_fk, location_id_fk),
-    FOREIGN KEY (personnel_id_fk) REFERENCES Personnel(id),
-    FOREIGN KEY (location_id_fk) REFERENCES Location(id)
+    FOREIGN KEY (personnel_id_fk) REFERENCES Personnel(id) ON DELETE CASCADE,
+    FOREIGN KEY (location_id_fk) REFERENCES Location(id) ON DELETE CASCADE
 );
 
 CREATE TABLE FamilyMember
@@ -69,8 +70,8 @@ CREATE TABLE FamilyMemberLocation
     family_member_id_fk INT,
     start_date DATE,
     end_date DATE,
-    FOREIGN KEY(location_id_fk) REFERENCES Location(id),
-    FOREIGN KEY(family_member_id_fk) REFERENCES FamilyMember(id),
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id) ON DELETE CASCADE,
+    FOREIGN KEY(family_member_id_fk) REFERENCES FamilyMember(id) ON DELETE CASCADE,
     PRIMARY KEY(location_id_fk, family_member_id_fk, start_date)
 );
 
@@ -82,7 +83,7 @@ CREATE TABLE SecondaryFamilyMember
     phone_number CHAR(10),
     relationship_to_primary VARCHAR(20),
     PRIMARY KEY(primary_family_member_id_fk, first_name, last_name),
-    FOREIGN KEY(primary_family_member_id_fk) REFERENCES FamilyMember(id)
+    FOREIGN KEY(primary_family_member_id_fk) REFERENCES FamilyMember(id) ON DELETE CASCADE
 );
 
 CREATE TABLE ClubMember
@@ -106,7 +107,7 @@ CREATE TABLE ClubMember
     family_member_id_fk INT,
     primary_relationship VARCHAR(20),
     secondary_relationship VARCHAR(20),
-    FOREIGN KEY (family_member_id_fk) REFERENCES FamilyMember(id)
+    FOREIGN KEY (family_member_id_fk) REFERENCES FamilyMember(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Payment
@@ -117,7 +118,7 @@ CREATE TABLE Payment
     effectiveDate DATE,
     method VARCHAR(10),
     cmn_fk INT,
-    FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn)
+    FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn) ON DELETE CASCADE
 );
 
 CREATE TABLE TeamFormation
@@ -126,8 +127,8 @@ CREATE TABLE TeamFormation
     name VARCHAR(50),
     captain_id_fk INT,
     location_id_fk INT,
-    FOREIGN KEY(captain_id_fk) REFERENCES ClubMember(cmn),
-    FOREIGN KEY(location_id_fk) REFERENCES Location(id)
+    FOREIGN KEY(captain_id_fk) REFERENCES ClubMember(cmn) ON DELETE CASCADE,
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id) ON DELETE CASCADE
 );
 
 CREATE TABLE TeamMember
@@ -147,7 +148,7 @@ CREATE TABLE Session
     event_type VARCHAR(20),
     event_date_time DATETIME,
     location_id_fk INT,
-    FOREIGN KEY(location_id_fk) REFERENCES Location(id)
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id) ON DELETE CASCADE
 );
 
 CREATE TABLE TeamSession
@@ -156,8 +157,8 @@ CREATE TABLE TeamSession
     session_id_fk INT,
     score INT,
     PRIMARY KEY(team_formation_id_fk, session_id_fk),
-    FOREIGN KEY(team_formation_id_fk) REFERENCES TeamFormation(id),
-    FOREIGN KEY(session_id_fk) REFERENCES Session(id)
+    FOREIGN KEY(team_formation_id_fk) REFERENCES TeamFormation(id) ON DELETE CASCADE,
+    FOREIGN KEY(session_id_fk) REFERENCES Session(id) ON DELETE CASCADE
 );
 
 CREATE TABLE LogEmail
