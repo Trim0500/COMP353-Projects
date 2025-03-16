@@ -47,6 +47,8 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Personnellocations/Create
+        [HttpGet]
+        [Route("Personnellocations/Create")]
         public IActionResult Create()
         {
             ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id");

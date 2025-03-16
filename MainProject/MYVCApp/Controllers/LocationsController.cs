@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -46,6 +47,8 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Locations/Create
+        [HttpGet]
+        [Route("Locations/Create")]
         public IActionResult Create()
         {
             return View();
@@ -62,9 +65,13 @@ namespace MYVCApp.Controllers
             {
                 _context.Add(location);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData[TempDataHelper.Success] = "Successfully added location " + location.Name;
             }
-            return View(location);
+            else
+            {
+                TempData[TempDataHelper.Error] = "Addition Failed";
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Locations/Edit/5
