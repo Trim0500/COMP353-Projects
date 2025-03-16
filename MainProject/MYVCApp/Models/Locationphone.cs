@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MYVCApp.Models
 {
@@ -8,8 +9,8 @@ namespace MYVCApp.Models
     {
         public int LocationIdFk { get; set; }
 
-        [MaxLength(10)]
-        [MinLength(10)]
         public string PhoneNumber { get; set; } = null!;
+
+        public virtual Location? LocationIdFkNavigation { get; set; }
     }
 }

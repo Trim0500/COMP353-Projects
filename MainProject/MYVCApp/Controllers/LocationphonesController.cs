@@ -20,25 +20,25 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Locationphones
+        // GET: Locationphones1
         public async Task<IActionResult> Index()
         {
-              return _context.Locationphones != null ? 
-                          View(await _context.Locationphones.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Locationphones'  is null.");
+            var applicationDbContext = _context.Locationphones.Include(l => l.LocationIdFkNavigation);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        [HttpGet]
+        // GET: Locationphones1/Details/5
         [Route("{location}/{phone}")]
         public async Task<IActionResult> Details(int location, string phone)
         {
-            if (location < 0|| phone == null || _context.Locationphones == null)
+            if (location < 0 || phone == null || _context.Locationphones == null)
             {
                 return NotFound();
             }
 
             var locationphone = await _context.Locationphones
-                .FirstOrDefaultAsync(m => m.LocationIdFk == location && m.PhoneNumber == phone);
+                .Include(l => l.LocationIdFkNavigation)
+                .FirstOrDefaultAsync(m => m.LocationIdFk == location);
 
             if (locationphone == null)
             {
@@ -48,17 +48,22 @@ namespace MYVCApp.Controllers
             return View(locationphone);
         }
 
+
         [HttpGet]
         [Route("Locationphones/Create")]
         public IActionResult Create()
         {
+            ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id");
             return View();
         }
 
         [HttpPost]
         [Route("Locationphones/Create")]
-        public async Task<IActionResult> Create(Locationphone locationphone)
+        public async Task<IActionResult> Create([Bind("LocationIdFk,PhoneNumber")] Locationphone locationphone)
         {
+            var errors = ModelState.Values.SelectMany(v => v.Errors)
+                               .Select(e => e.ErrorMessage)
+                               .ToList();
             try
             {
                 if (ModelState.IsValid)
@@ -67,8 +72,12 @@ namespace MYVCApp.Controllers
                     await _context.SaveChangesAsync();
                     TempData[TempDataHelper.Success] = String.Format("Successfully created LocationPhone: {0} - {1}", locationphone.LocationIdFk, locationphone.PhoneNumber);
                 }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Creation failed, state invalid";
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData[TempDataHelper.Error] = "Creation failed: " + ex.Message;
             }
@@ -94,7 +103,6 @@ namespace MYVCApp.Controllers
             return View(locationphone);
         }
 
-        // POST: Locationphones/Delete/5
         [HttpPost, ActionName("Delete")]
         [Route("{location}/{phone}/Delete")]
         [ValidateAntiForgeryToken]
@@ -119,7 +127,7 @@ namespace MYVCApp.Controllers
                     TempData[TempDataHelper.Error] = "Deletion Failed: Nonexistant Item";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData[TempDataHelper.Error] = "Deletion Failed: " + ex.Message;
             }

@@ -20,15 +20,15 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Locations
+        // GET: Locations1
         public async Task<IActionResult> Index()
         {
-              return _context.Locations != null ? 
-                          View(await _context.Locations.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Locations'  is null.");
+            return _context.Locations != null ?
+                        View(await _context.Locations.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Locations'  is null.");
         }
 
-        // GET: Locations/Details/5
+        // GET: Locations1/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Locations == null)
@@ -46,7 +46,7 @@ namespace MYVCApp.Controllers
             return View(location);
         }
 
-        // GET: Locations/Create
+        // GET: Locations1/Create
         [HttpGet]
         [Route("Locations/Create")]
         public IActionResult Create()
@@ -54,10 +54,11 @@ namespace MYVCApp.Controllers
             return View();
         }
 
-        // POST: Locations/Create
+        // POST: Locations1/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Locations/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Type,Name,PostalCode,Province,Address,City,WebsiteUrl,Capacity")] Location location)
         {
@@ -67,22 +68,19 @@ namespace MYVCApp.Controllers
                 {
                     _context.Add(location);
                     await _context.SaveChangesAsync();
-                    TempData[TempDataHelper.Success] = "Successfully added location " + location.Name;
-                }
-                else
-                {
-                    TempData[TempDataHelper.Error] = "Addition Failed - State Invalid";
+                    TempData[TempDataHelper.Success] = "Successfully created Location with ID " + location.Id;
+                    return RedirectToAction(nameof(Index));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Addition Failed - Error " +  ex.Message;
+                TempData[TempDataHelper.Error] = "Error creating Location: " + ex.Message;
+                return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
+            return View(location);
         }
 
-        // GET: Locations/Edit/5
+        // GET: Locations1/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Locations == null)
@@ -98,7 +96,7 @@ namespace MYVCApp.Controllers
             return View(location);
         }
 
-        // POST: Locations/Edit/5
+        // POST: Locations1/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -110,43 +108,32 @@ namespace MYVCApp.Controllers
                 return NotFound();
             }
 
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    try
+                    _context.Update(location);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully edited location with ID " + location.Id;
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LocationExists(location.Id))
                     {
-                        _context.Update(location);
-                        await _context.SaveChangesAsync();
-                        TempData[TempDataHelper.Success] = "Successfully edited location" + location.Name;
+                        return NotFound();
                     }
-                    catch (DbUpdateConcurrencyException ex)
+                    else
                     {
-                        if (!LocationExists(location.Id))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            TempData[TempDataHelper.Error] = "Error occured while editing: " + ex.Message;
-                            throw;
-                        }
+                        throw;
                     }
                 }
-                else
-                {
-                    TempData[TempDataHelper.Error] = "Error: State invalid";
-                }
-            }
-            catch(Exception ex)
-            {
-                TempData[TempDataHelper.Error] = "Error occured while editing: " + ex.Message;
-            }
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+            }
+            return View(location);
         }
 
-        // GET: Locations/Delete/5
+        // GET: Locations1/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Locations == null)
@@ -164,7 +151,7 @@ namespace MYVCApp.Controllers
             return View(location);
         }
 
-        // POST: Locations/Delete/5
+        // POST: Locations1/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -182,11 +169,11 @@ namespace MYVCApp.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                TempData[TempDataHelper.Success] = "Successfully deleted location" + location.Name;
+                TempData[TempDataHelper.Success] = "Successfully deleted location with ID " + id;
             }
             catch(Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Error occured while deleting: " + ex.Message;
+                TempData[TempDataHelper.Error] = "Error deleting: " + ex.Message;
             }
 
             return RedirectToAction(nameof(Index));
@@ -194,7 +181,7 @@ namespace MYVCApp.Controllers
 
         private bool LocationExists(int id)
         {
-          return (_context.Locations?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Locations?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

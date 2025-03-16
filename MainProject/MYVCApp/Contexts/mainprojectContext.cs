@@ -37,7 +37,7 @@ namespace MYVCApp.Contexts
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySQL("Server=127.0.0.1;port=3306;Database=mainproject;uid=root;pwd=1234");
+                optionsBuilder.UseMySQL("Server=127.0.0.1;Port=3306;Database=mainproject;Uid=root;Pwd=1234;");
             }
         }
 
@@ -135,6 +135,7 @@ namespace MYVCApp.Contexts
                 entity.HasOne(d => d.FamilyMemberIdFkNavigation)
                     .WithMany(p => p.Clubmembers)
                     .HasForeignKey(d => d.FamilyMemberIdFk)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("clubmember_ibfk_1");
             });
 
@@ -219,13 +220,11 @@ namespace MYVCApp.Contexts
                 entity.HasOne(d => d.FamilyMemberIdFkNavigation)
                     .WithMany(p => p.Familymemberlocations)
                     .HasForeignKey(d => d.FamilyMemberIdFk)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("familymemberlocation_ibfk_2");
 
                 entity.HasOne(d => d.LocationIdFkNavigation)
                     .WithMany(p => p.Familymemberlocations)
                     .HasForeignKey(d => d.LocationIdFk)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("familymemberlocation_ibfk_1");
             });
 
@@ -281,6 +280,11 @@ namespace MYVCApp.Contexts
                     .HasMaxLength(10)
                     .HasColumnName("phone_number")
                     .IsFixedLength();
+
+                entity.HasOne(d => d.LocationIdFkNavigation)
+                    .WithMany(p => p.Locationphones)
+                    .HasForeignKey(d => d.LocationIdFk)
+                    .HasConstraintName("locationphone_ibfk_1");
             });
 
             modelBuilder.Entity<Logemail>(entity =>
@@ -340,6 +344,7 @@ namespace MYVCApp.Contexts
                 entity.HasOne(d => d.CmnFkNavigation)
                     .WithMany(p => p.Payments)
                     .HasForeignKey(d => d.CmnFk)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("payment_ibfk_1");
             });
 
@@ -433,13 +438,11 @@ namespace MYVCApp.Contexts
                 entity.HasOne(d => d.LocationIdFkNavigation)
                     .WithMany(p => p.Personnellocations)
                     .HasForeignKey(d => d.LocationIdFk)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("personnellocation_ibfk_2");
 
                 entity.HasOne(d => d.PersonnelIdFkNavigation)
                     .WithMany(p => p.Personnellocations)
                     .HasForeignKey(d => d.PersonnelIdFk)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("personnellocation_ibfk_1");
             });
 
@@ -472,7 +475,6 @@ namespace MYVCApp.Contexts
                 entity.HasOne(d => d.PrimaryFamilyMemberIdFkNavigation)
                     .WithMany(p => p.Secondaryfamilymembers)
                     .HasForeignKey(d => d.PrimaryFamilyMemberIdFk)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("secondaryfamilymember_ibfk_1");
             });
 
@@ -497,6 +499,7 @@ namespace MYVCApp.Contexts
                 entity.HasOne(d => d.LocationIdFkNavigation)
                     .WithMany(p => p.Sessions)
                     .HasForeignKey(d => d.LocationIdFk)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("session_ibfk_1");
             });
 
@@ -521,11 +524,13 @@ namespace MYVCApp.Contexts
                 entity.HasOne(d => d.CaptainIdFkNavigation)
                     .WithMany(p => p.Teamformations)
                     .HasForeignKey(d => d.CaptainIdFk)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("teamformation_ibfk_1");
 
                 entity.HasOne(d => d.LocationIdFkNavigation)
                     .WithMany(p => p.Teamformations)
                     .HasForeignKey(d => d.LocationIdFk)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("teamformation_ibfk_2");
             });
 
@@ -581,13 +586,11 @@ namespace MYVCApp.Contexts
                 entity.HasOne(d => d.SessionIdFkNavigation)
                     .WithMany(p => p.Teamsessions)
                     .HasForeignKey(d => d.SessionIdFk)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("teamsession_ibfk_2");
 
                 entity.HasOne(d => d.TeamFormationIdFkNavigation)
                     .WithMany(p => p.Teamsessions)
                     .HasForeignKey(d => d.TeamFormationIdFk)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("teamsession_ibfk_1");
             });
 

@@ -9,6 +9,7 @@ namespace MYVCApp.Models
         public Location()
         {
             Familymemberlocations = new HashSet<Familymemberlocation>();
+            Locationphones = new HashSet<Locationphone>();
             Personnellocations = new HashSet<Personnellocation>();
             Sessions = new HashSet<Session>();
             Teamformations = new HashSet<Teamformation>();
@@ -21,7 +22,6 @@ namespace MYVCApp.Models
         [MaxLength(50)]
         public string? Name { get; set; }
         [MaxLength(6)]
-        [MinLength(6)]
         public string? PostalCode { get; set; }
         [MaxLength(2)]
         public string? Province { get; set; }
@@ -31,9 +31,11 @@ namespace MYVCApp.Models
         public string? City { get; set; }
         [MaxLength(255)]
         public string? WebsiteUrl { get; set; }
+
         public int? Capacity { get; set; }
 
         public virtual ICollection<Familymemberlocation> Familymemberlocations { get; set; }
+        public virtual ICollection<Locationphone> Locationphones { get; set; }
         public virtual ICollection<Personnellocation> Personnellocations { get; set; }
         public virtual ICollection<Session> Sessions { get; set; }
         public virtual ICollection<Teamformation> Teamformations { get; set; }
