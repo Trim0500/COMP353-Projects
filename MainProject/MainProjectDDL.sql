@@ -103,8 +103,10 @@ CREATE TABLE ClubMember
     progress_report TEXT NOT NULL,
     is_active BOOLEAN,
     family_member_id_fk INT,
-    primary_relationship VARCHAR(20),
+    primary_relationship VARCHAR(20) NOT NULL,
     secondary_relationship VARCHAR(20),
+    CONSTRAINT CHECK (primary_relationship IN ('Father', 'Mother', 'Grandfather', 'Grandmother', 'Uncle', 'Aunt', 'Tutor', 'Partner', 'Friend', 'Other')),
+    CONSTRAINT CHECK (secondary_relationship IN ('Father', 'Mother', 'Grandfather', 'Grandmother', 'Uncle', 'Aunt', 'Tutor', 'Partner', 'Friend', 'Other'))
     FOREIGN KEY (family_member_id_fk) REFERENCES FamilyMember(id)
 );
 
