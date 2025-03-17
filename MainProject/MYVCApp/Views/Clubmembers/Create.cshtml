@@ -82,10 +82,10 @@
                 <input asp-for="ProgressReport" class="form-control" />
                 <span asp-validation-for="ProgressReport" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="IsActive" class="control-label"></label>
-                <input asp-for="IsActive" class="form-control" />
-                <span asp-validation-for="IsActive" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
             </div>
             <div class="form-group">
                 <label asp-for="FamilyMemberIdFk" class="control-label"></label>

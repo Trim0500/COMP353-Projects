@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MYVCApp.Models
 {
@@ -27,7 +28,8 @@ namespace MYVCApp.Models
         public string? PostalCode { get; set; }
         public string? Address { get; set; }
         public string? ProgressReport { get; set; }
-        public bool? IsActive { get; set; }
+        [Required]
+        public bool IsActive { get; set; }
         public int? FamilyMemberIdFk { get; set; }
         public string? PrimaryRelationship { get; set; }
         public string? SecondaryRelationship { get; set; }

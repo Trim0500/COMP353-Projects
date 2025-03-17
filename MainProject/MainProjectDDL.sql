@@ -103,7 +103,7 @@ CREATE TABLE ClubMember
     postal_code CHAR(6),
     address VARCHAR(255),
     progress_report TEXT,
-    is_active BOOLEAN,
+    is_active BOOLEAN NOT NULL,
     family_member_id_fk INT,
     primary_relationship VARCHAR(20),
     secondary_relationship VARCHAR(20),

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -59,14 +60,23 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Cmn,FirstName,LastName,Dob,Email,Height,Weight,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Address,ProgressReport,IsActive,FamilyMemberIdFk,PrimaryRelationship,SecondaryRelationship")] Clubmember clubmember)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(clubmember);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(clubmember);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully created ClubMember with ID " + clubmember.Cmn;
+                    return RedirectToAction(nameof(Index));
+                }
+                ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id", clubmember.FamilyMemberIdFk);
+                return View(clubmember);
             }
-            ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id", clubmember.FamilyMemberIdFk);
-            return View(clubmember);
+            catch(Exception ex) 
+            {
+                TempData[TempDataHelper.Error] = "Error creating ClubMember: " + ExceptionFormatter.GetFullMessage(ex);
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Clubmembers/Edit/5
@@ -93,32 +103,46 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Cmn,FirstName,LastName,Dob,Email,Height,Weight,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Address,ProgressReport,IsActive,FamilyMemberIdFk,PrimaryRelationship,SecondaryRelationship")] Clubmember clubmember)
         {
-            if (id != clubmember.Cmn)
+            try
             {
-                return NotFound();
-            }
+                if (id != clubmember.Cmn)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(clubmember);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = "Successfully edited ClubMember with ID" + id;
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!ClubmemberExists(clubmember.Cmn))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error: State invalid.";
+                }
+                ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id", clubmember.FamilyMemberIdFk);
+            }
+            catch(Exception ex)
             {
-                try
-                {
-                    _context.Update(clubmember);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ClubmemberExists(clubmember.Cmn))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                TempData[TempDataHelper.Error] = "Error updating ClubMember: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id", clubmember.FamilyMemberIdFk);
+
             return View(clubmember);
         }
 
@@ -146,17 +170,25 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Clubmembers == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Clubmembers'  is null.");
+                if (_context.Clubmembers == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Clubmembers'  is null.");
+                }
+                var clubmember = await _context.Clubmembers.FindAsync(id);
+                if (clubmember != null)
+                {
+                    _context.Clubmembers.Remove(clubmember);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = "Successfully deleted ClubMember with ID " + id;
             }
-            var clubmember = await _context.Clubmembers.FindAsync(id);
-            if (clubmember != null)
+            catch(Exception ex)
             {
-                _context.Clubmembers.Remove(clubmember);
+                TempData[TempDataHelper.Error] = "Error deleting ClubMember: " + ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
