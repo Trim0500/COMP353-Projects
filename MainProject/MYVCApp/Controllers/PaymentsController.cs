@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -59,13 +60,27 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Amount,PaymentDate,EffectiveDate,Method,CmnFk")] Payment payment)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(payment);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(payment);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully created Payment with ID " + payment.Id;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error creating Payment: State invalid";
+                }
+                ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn", payment.CmnFk);
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating Payment: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn", payment.CmnFk);
+
             return View(payment);
         }
 
@@ -93,32 +108,45 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,PaymentDate,EffectiveDate,Method,CmnFk")] Payment payment)
         {
-            if (id != payment.Id)
+            try
             {
-                return NotFound();
-            }
+                if (id != payment.Id)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(payment);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = "Successfully edited Payment with ID " + payment.Id;
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!PaymentExists(payment.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error updating Payment: State invalid";
+                }
+                ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn", payment.CmnFk);
+            }
+            catch(Exception ex)
             {
-                try
-                {
-                    _context.Update(payment);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PaymentExists(payment.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                TempData[TempDataHelper.Error] = "Error editing Payment: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn", payment.CmnFk);
             return View(payment);
         }
 
@@ -146,17 +174,26 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Payments == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Payments'  is null.");
+
+                if (_context.Payments == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Payments'  is null.");
+                }
+                var payment = await _context.Payments.FindAsync(id);
+                if (payment != null)
+                {
+                    _context.Payments.Remove(payment);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = "Successfully deleted Payment with ID " + payment.Id;
             }
-            var payment = await _context.Payments.FindAsync(id);
-            if (payment != null)
+            catch(Exception ex)
             {
-                _context.Payments.Remove(payment);
+                TempData[TempDataHelper.Error] = "Error deleting Payment: " + ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
