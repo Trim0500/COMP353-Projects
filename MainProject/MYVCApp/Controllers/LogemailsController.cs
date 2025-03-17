@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -27,16 +28,18 @@ namespace MYVCApp.Controllers
                           Problem("Entity set 'ApplicationDbContext.Logemails'  is null.");
         }
 
-        // GET: Logemails/Details/5
-        public async Task<IActionResult> Details(string id)
+        [HttpGet]
+        [Route("Logemails/{recipient}/{ddt}")]
+        public async Task<IActionResult> Details(string recipient, DateTime ddt)
         {
-            if (id == null || _context.Logemails == null)
+            if (_context.Logemails == null)
             {
                 return NotFound();
             }
 
             var logemail = await _context.Logemails
-                .FirstOrDefaultAsync(m => m.Recipient == id);
+                .FirstOrDefaultAsync(m => m.Recipient == recipient && m.DeliveryDateTime == ddt);
+
             if (logemail == null)
             {
                 return NotFound();
@@ -58,24 +61,41 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Recipient,DeliveryDateTime,Sender,Subject,Body")] Logemail logemail)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(logemail);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(logemail);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = String.Format("Successfully created LogEmail {0}/{1}", logemail.Recipient, logemail.DeliveryDateTime);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error creating LogEmail: State invalid";
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating LogEmail: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(logemail);
         }
 
-        // GET: Logemails/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        [HttpGet]
+        [Route("Logemails/{recipient}/{ddt}/Edit")]
+        public async Task<IActionResult> Edit(string recipient, DateTime ddt)
         {
-            if (id == null || _context.Logemails == null)
+            if (_context.Logemails == null)
             {
                 return NotFound();
             }
 
-            var logemail = await _context.Logemails.FindAsync(id);
+            var logemail = await _context.Logemails
+                .FirstOrDefaultAsync(m => m.Recipient == recipient && m.DeliveryDateTime == ddt);
+
             if (logemail == null)
             {
                 return NotFound();
@@ -87,47 +107,58 @@ namespace MYVCApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Logemails/{recipient}/{ddt}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Recipient,DeliveryDateTime,Sender,Subject,Body")] Logemail logemail)
+        public async Task<IActionResult> Edit([Bind("Recipient,DeliveryDateTime,Sender,Subject,Body")] Logemail logemail)
         {
-            if (id != logemail.Recipient)
+            try
             {
-                return NotFound();
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(logemail);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = String.Format("Successfully edited LogEmail {0}/{1}", logemail.Recipient, logemail.DeliveryDateTime);
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!LogemailExists(logemail.Recipient))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error editing LogEmail: State invalid";
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error editing LogEmail: " + ExceptionFormatter.GetFullMessage(ex);
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(logemail);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LogemailExists(logemail.Recipient))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
             return View(logemail);
         }
 
-        // GET: Logemails/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        [HttpGet]
+        [Route("Logemails/{recipient}/{ddt}/Delete")]
+        public async Task<IActionResult> Delete(string recipient, DateTime ddt)
         {
-            if (id == null || _context.Logemails == null)
+            if (_context.Logemails == null)
             {
                 return NotFound();
             }
 
             var logemail = await _context.Logemails
-                .FirstOrDefaultAsync(m => m.Recipient == id);
+                .FirstOrDefaultAsync(m => m.Recipient == recipient && m.DeliveryDateTime == ddt);
+
             if (logemail == null)
             {
                 return NotFound();
@@ -136,22 +167,34 @@ namespace MYVCApp.Controllers
             return View(logemail);
         }
 
-        // POST: Logemails/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("Logemails/{recipient}/{ddt}/Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(string recipient, DateTime ddt)
         {
-            if (_context.Logemails == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Logemails'  is null.");
+                if (_context.Logemails == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Logemails'  is null.");
+                }
+
+                var logemail = await _context.Logemails
+                    .FirstOrDefaultAsync(m => m.Recipient == recipient && m.DeliveryDateTime == ddt);
+
+                if (logemail != null)
+                {
+                    _context.Logemails.Remove(logemail);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = String.Format("Successfully deleted LogEmail {0}/{1}", logemail.Recipient, logemail.DeliveryDateTime);
             }
-            var logemail = await _context.Logemails.FindAsync(id);
-            if (logemail != null)
+            catch (Exception ex)
             {
-                _context.Logemails.Remove(logemail);
+                TempData[TempDataHelper.Error] = "Error deleting LogEmail: " + ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

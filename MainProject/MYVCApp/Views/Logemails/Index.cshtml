@@ -4,7 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>LogEmails - List</h1>
+
+<partial name="TempDataPartial"></partial>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,6 +14,12 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Recipient)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeliveryDateTime)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Sender)
             </th>
@@ -28,6 +36,12 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Recipient)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryDateTime)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Sender)
             </td>
             <td>
@@ -37,9 +51,9 @@
                 @Html.DisplayFor(modelItem => item.Body)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a asp-controller="Logemails" asp-action="details" asp-route-recipient="@item.Recipient" asp-route-ddt="@item.DeliveryDateTime">Details</a>
+                <a asp-controller="Logemails" asp-action="edit" asp-route-recipient="@item.Recipient" asp-route-ddt="@item.DeliveryDateTime">Edit</a>
+                <a asp-controller="Logemails" asp-action="delete" asp-route-recipient="@item.Recipient" asp-route-ddt="@item.DeliveryDateTime">Delete</a>
             </td>
         </tr>
 }
