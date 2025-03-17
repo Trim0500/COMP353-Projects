@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -27,9 +28,11 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Familymemberlocations/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        [Route("Familymemberlocations/{familymember}/{location}/{startdate}")]
+        public async Task<IActionResult> Details(int familymember, int location, DateTime startdate)
         {
-            if (id == null || _context.Familymemberlocations == null)
+            if (familymember < 0 || location < 0 || _context.Familymemberlocations == null)
             {
                 return NotFound();
             }
@@ -37,7 +40,8 @@ namespace MYVCApp.Controllers
             var familymemberlocation = await _context.Familymemberlocations
                 .Include(f => f.FamilyMemberIdFkNavigation)
                 .Include(f => f.LocationIdFkNavigation)
-                .FirstOrDefaultAsync(m => m.LocationIdFk == id);
+                .FirstOrDefaultAsync(m => m.LocationIdFk == location && m.FamilyMemberIdFk == familymember && m.StartDate == startdate);
+
             if (familymemberlocation == null)
             {
                 return NotFound();
@@ -47,6 +51,8 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Familymemberlocations/Create
+        [HttpGet]
+        [Route("Familymemberlocations/Create")]
         public IActionResult Create()
         {
             ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id");
@@ -58,13 +64,27 @@ namespace MYVCApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Familymemberlocations/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("LocationIdFk,FamilyMemberIdFk,StartDate,EndDate")] Familymemberlocation familymemberlocation)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(familymemberlocation);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(familymemberlocation);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = String.Format("Successfully created FamilyMemberLocation {0}/{1}/{2}", familymemberlocation.FamilyMemberIdFk, familymemberlocation.LocationIdFk, familymemberlocation.StartDate);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error creating FamilyMemberLocation: State invalid";
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating FamilyMemberLocation " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id", familymemberlocation.FamilyMemberIdFk);
@@ -72,15 +92,21 @@ namespace MYVCApp.Controllers
             return View(familymemberlocation);
         }
 
-        // GET: Familymemberlocations/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        [Route("Familymemberlocations/{familymember}/{location}/{startdate}/Edit")]
+        public async Task<IActionResult> Edit(int familymember, int location, DateTime startdate)
         {
-            if (id == null || _context.Familymemberlocations == null)
+            if (familymember < 0 || location < 0 || _context.Familymemberlocations == null)
             {
                 return NotFound();
             }
 
-            var familymemberlocation = await _context.Familymemberlocations.FindAsync(id);
+            //var familymemberlocation = await _context.Familymemberlocations.FindAsync(id);
+            var familymemberlocation = await _context.Familymemberlocations
+                .Include(f => f.FamilyMemberIdFkNavigation)
+                .Include(f => f.LocationIdFkNavigation)
+                .FirstOrDefaultAsync(f => f.LocationIdFk == location && f.FamilyMemberIdFk == familymember && f.StartDate == startdate);
+
             if (familymemberlocation == null)
             {
                 return NotFound();
@@ -94,43 +120,55 @@ namespace MYVCApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Familymemberlocations/{familymember}/{location}/{startdate}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LocationIdFk,FamilyMemberIdFk,StartDate,EndDate")] Familymemberlocation familymemberlocation)
+        public async Task<IActionResult> Edit([Bind("LocationIdFk,FamilyMemberIdFk,StartDate,EndDate")] Familymemberlocation familymemberlocation)
         {
-            if (id != familymemberlocation.LocationIdFk)
+            try
             {
-                return NotFound();
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(familymemberlocation);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = String.Format("Successfully edited FamilyMemberLocation {0}/{1}/{2}", familymemberlocation.FamilyMemberIdFk, familymemberlocation.LocationIdFk, familymemberlocation.StartDate);
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!FamilymemberlocationExists(familymemberlocation.LocationIdFk))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error editing FamilyMemberLocation: State invalid";
+                }
+                ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id", familymemberlocation.FamilyMemberIdFk);
+                ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id", familymemberlocation.LocationIdFk);
             }
-
-            if (ModelState.IsValid)
+            catch(Exception ex)
             {
-                try
-                {
-                    _context.Update(familymemberlocation);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FamilymemberlocationExists(familymemberlocation.LocationIdFk))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                TempData[TempDataHelper.Error] = "Error editing FamilyMemberLocation: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id", familymemberlocation.FamilyMemberIdFk);
-            ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id", familymemberlocation.LocationIdFk);
+
             return View(familymemberlocation);
         }
 
         // GET: Familymemberlocations/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        [Route("Familymemberlocations/{familymember}/{location}/{startdate}/Delete")]
+        public async Task<IActionResult> Delete(int familymember, int location, DateTime startdate)
         {
-            if (id == null || _context.Familymemberlocations == null)
+            if (familymember < 0 || location < 0 || _context.Familymemberlocations == null)
             {
                 return NotFound();
             }
@@ -138,7 +176,8 @@ namespace MYVCApp.Controllers
             var familymemberlocation = await _context.Familymemberlocations
                 .Include(f => f.FamilyMemberIdFkNavigation)
                 .Include(f => f.LocationIdFkNavigation)
-                .FirstOrDefaultAsync(m => m.LocationIdFk == id);
+                .FirstOrDefaultAsync(m => m.LocationIdFk == location && m.FamilyMemberIdFk == familymember && m.StartDate == startdate);
+
             if (familymemberlocation == null)
             {
                 return NotFound();
@@ -149,20 +188,35 @@ namespace MYVCApp.Controllers
 
         // POST: Familymemberlocations/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("Familymemberlocations/{familymember}/{location}/{startdate}/Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int familymember, int location, DateTime startdate)
         {
-            if (_context.Familymemberlocations == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Familymemberlocations'  is null.");
+                if (_context.Familymemberlocations == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Familymemberlocations'  is null.");
+                }
+
+                var familymemberlocation = await _context.Familymemberlocations
+                    .Include(f => f.FamilyMemberIdFkNavigation)
+                    .Include(f => f.LocationIdFkNavigation)
+                    .FirstOrDefaultAsync(m => m.LocationIdFk == location && m.FamilyMemberIdFk == familymember && m.StartDate == startdate);
+
+                if (familymemberlocation != null)
+                {
+                    _context.Familymemberlocations.Remove(familymemberlocation);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = String.Format("Successfully deleted FamilyMemberLocation {0}/{1}/{2}", familymemberlocation.FamilyMemberIdFk, familymemberlocation.LocationIdFk, familymemberlocation.StartDate);
             }
-            var familymemberlocation = await _context.Familymemberlocations.FindAsync(id);
-            if (familymemberlocation != null)
+            catch (Exception ex)
             {
-                _context.Familymemberlocations.Remove(familymemberlocation);
+                TempData[TempDataHelper.Error] = "Error deleting FamilyMemberLocation: " + ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

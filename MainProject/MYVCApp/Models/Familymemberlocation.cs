@@ -10,7 +10,7 @@ namespace MYVCApp.Models
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
 
-        public virtual Familymember FamilyMemberIdFkNavigation { get; set; } = null!;
-        public virtual Location LocationIdFkNavigation { get; set; } = null!;
+        public virtual Familymember? FamilyMemberIdFkNavigation { get; set; } = null!;
+        public virtual Location? LocationIdFkNavigation { get; set; } = null!;
     }
 }
