@@ -4,7 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>TeamMembers - List</h1>
+
+<partial name="TempDataPartial"></partial>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,16 +15,16 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.CmnFk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamFormationIdFk)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Role)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AssignmentDateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CmnFkNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TeamFormationIdFkNavigation)
             </th>
             <th></th>
         </tr>
@@ -31,21 +33,21 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.CmnFk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeamFormationIdFk)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Role)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AssignmentDateTime)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CmnFkNavigation.Cmn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TeamFormationIdFkNavigation.Id)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a asp-controller="Teammembers" asp-action="Details" asp-route-cmn="@item.CmnFk" asp-route-teamformation="@item.TeamFormationIdFk">Details</a>
+                <a asp-controller="Teammembers" asp-action="Edit" asp-route-cmn="@item.CmnFk" asp-route-teamformation="@item.TeamFormationIdFk">Edit</a>
+                <a asp-controller="Teammembers" asp-action="Delete" asp-route-cmn="@item.CmnFk" asp-route-teamformation="@item.TeamFormationIdFk">Delete</a>
             </td>
         </tr>
 }

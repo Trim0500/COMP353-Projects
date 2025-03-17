@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -26,10 +27,11 @@ namespace MYVCApp.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Teammembers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        [Route("Teammembers/{cmn}/{teamformation}")]
+        public async Task<IActionResult> Details(int cmn, int teamformation)
         {
-            if (id == null || _context.Teammembers == null)
+            if (cmn < 0 || teamformation < 0 || _context.Teammembers == null)
             {
                 return NotFound();
             }
@@ -37,7 +39,8 @@ namespace MYVCApp.Controllers
             var teammember = await _context.Teammembers
                 .Include(t => t.CmnFkNavigation)
                 .Include(t => t.TeamFormationIdFkNavigation)
-                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == id);
+                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == teamformation && m.CmnFk == cmn);
+
             if (teammember == null)
             {
                 return NotFound();
@@ -47,6 +50,7 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Teammembers/Create
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn");
@@ -61,26 +65,45 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TeamFormationIdFk,CmnFk,Role,AssignmentDateTime")] Teammember teammember)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(teammember);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(teammember);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = String.Format("Successfully created TeamMember {0}/{1}", teammember.CmnFk, teammember.TeamFormationIdFk);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error creating TeamMember: State invalid";
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating TeamMember: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn", teammember.CmnFk);
             ViewData["TeamFormationIdFk"] = new SelectList(_context.Teamformations, "Id", "Id", teammember.TeamFormationIdFk);
             return View(teammember);
         }
 
-        // GET: Teammembers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        [Route("Teammembers/{cmn}/{teamformation}/Edit")]
+        public async Task<IActionResult> Edit(int cmn, int teamformation)
         {
-            if (id == null || _context.Teammembers == null)
+            if (cmn < 0 || teamformation < 0 || _context.Teammembers == null)
             {
                 return NotFound();
             }
 
-            var teammember = await _context.Teammembers.FindAsync(id);
+            var teammember = await _context.Teammembers
+                .Include(t => t.CmnFkNavigation)
+                .Include(t => t.TeamFormationIdFkNavigation)
+                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == teamformation && m.CmnFk == cmn);
+
             if (teammember == null)
             {
                 return NotFound();
@@ -94,32 +117,41 @@ namespace MYVCApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Teammembers/{cmn}/{teamformation}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TeamFormationIdFk,CmnFk,Role,AssignmentDateTime")] Teammember teammember)
+        public async Task<IActionResult> Edit([Bind("TeamFormationIdFk,CmnFk,Role,AssignmentDateTime")] Teammember teammember)
         {
-            if (id != teammember.TeamFormationIdFk)
+            try
             {
-                return NotFound();
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(teammember);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = String.Format("Sucessfully edited TeamMember {0}/{1}", teammember.CmnFk, teammember.TeamFormationIdFk);
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!TeammemberExists(teammember.TeamFormationIdFk))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error editing TeamMember: State invalid";
+                }
             }
-
-            if (ModelState.IsValid)
+            catch(Exception ex)
             {
-                try
-                {
-                    _context.Update(teammember);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TeammemberExists(teammember.TeamFormationIdFk))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                TempData[TempDataHelper.Error] = "Error editing TeamMember: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn", teammember.CmnFk);
@@ -127,10 +159,11 @@ namespace MYVCApp.Controllers
             return View(teammember);
         }
 
-        // GET: Teammembers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        [Route("Teammembers/{cmn}/{teamformation}/Delete")]
+        public async Task<IActionResult> Delete(int cmn, int teamformation)
         {
-            if (id == null || _context.Teammembers == null)
+            if (cmn < 0 || teamformation < 0 || _context.Teammembers == null)
             {
                 return NotFound();
             }
@@ -138,7 +171,8 @@ namespace MYVCApp.Controllers
             var teammember = await _context.Teammembers
                 .Include(t => t.CmnFkNavigation)
                 .Include(t => t.TeamFormationIdFkNavigation)
-                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == id);
+                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == teamformation && m.CmnFk == cmn);
+
             if (teammember == null)
             {
                 return NotFound();
@@ -147,22 +181,35 @@ namespace MYVCApp.Controllers
             return View(teammember);
         }
 
-        // POST: Teammembers/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("Teammembers/{cmn}/{teamformation}/Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int cmn, int teamformation)
         {
-            if (_context.Teammembers == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Teammembers'  is null.");
+                if (_context.Teammembers == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Teammembers'  is null.");
+                }
+                var teammember = await _context.Teammembers
+                    .Include(t => t.CmnFkNavigation)
+                    .Include(t => t.TeamFormationIdFkNavigation)
+                    .FirstOrDefaultAsync(m => m.TeamFormationIdFk == teamformation && m.CmnFk == cmn);
+
+                if (teammember != null)
+                {
+                    _context.Teammembers.Remove(teammember);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = String.Format("Sucessfully deleted TeamMember {0}/{1}", teammember.CmnFk, teammember.TeamFormationIdFk);
             }
-            var teammember = await _context.Teammembers.FindAsync(id);
-            if (teammember != null)
+            catch (Exception ex)
             {
-                _context.Teammembers.Remove(teammember);
+                TempData[TempDataHelper.Error] = "Error deleting TeamMember: " + ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
