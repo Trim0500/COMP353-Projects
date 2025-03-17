@@ -100,13 +100,23 @@ CREATE TABLE ClubMember
     province VARCHAR(2),
     postal_code CHAR(6),
     address VARCHAR(255),
-    progress_report TEXT,
+    progress_report TEXT NOT NULL,
     is_active BOOLEAN,
     family_member_id_fk INT,
     primary_relationship VARCHAR(20),
     secondary_relationship VARCHAR(20),
     FOREIGN KEY (family_member_id_fk) REFERENCES FamilyMember(id)
 );
+
+DELIMITER //
+CREATE TRIGGER validate_club_member
+BEFORE INSERT ON ClubMember FOR EACH ROW
+BEGIN
+	IF (year(now()) - year(NEW.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(NEW.dob, '%m%d')) < 11 OR
+		year(now()) - year(NEW.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(NEW.dob, '%m%d')) >= 18) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Age must be >= 11 and < 18';
+	END IF;
+END //
 
 CREATE TABLE ClubMemberLocation
 (
