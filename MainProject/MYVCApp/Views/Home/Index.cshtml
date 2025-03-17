@@ -2,48 +2,44 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h1>MYVC_GUI</h1>
+<h1>MYVC_GUI - Menu</h1>
+
+<hr />
 
 <h2>Location</h2>
-<div class="display-flex">
-    <a class="btn btn-info" asp-controller="Locations">Location</a>
-    <a class="btn btn-info" asp-controller="Locationphones">LocationPhone</a> <!--TODO: FIX-->
+<div class="display-flex mb-5">
+    <a class="btn btn-primary" asp-controller="Locations">Location</a>
+    <a class="btn btn-secondary" asp-controller="Locationphones">LocationPhone</a>
 </div>
 
 <h2>Personnel</h2>
-<div class="display-flex">
-    <a class="btn btn-info" asp-controller="Personnels">Personnel</a>
-    <a class="btn btn-info" asp-controller="Personnellocations">PersonnelLocation</a> <!--TODO: FIX Create/Edit/Details/Delete-->
+<div class="display-flex mb-5">
+    <a class="btn btn-primary" asp-controller="Personnels">Personnel</a>
+    <a class="btn btn-secondary" asp-controller="Personnellocations">PersonnelLocation</a>
 </div>
 
 <h2>Club Members</h2>
-<div class="display-flex">
-    <a class="btn btn-info" asp-controller="Clubmembers">ClubMember</a>
-    <a class="btn btn-info" asp-controller="Payments">Payment</a>
+<div class="display-flex mb-5">
+    <a class="btn btn-primary" asp-controller="Clubmembers">ClubMember</a>
+    <a class="btn btn-primary" asp-controller="Payments">Payment</a>
 </div>
 
 <h2>Family Members</h2>
-<div class="display-flex">
-    <a class="btn btn-info" asp-controller="Familymembers">FamilyMember</a>
-    <a class="btn btn-info" asp-controller="Familymemberlocations">FamilyMemberLocation</a> <!--TODO: FIX Create/Edit/Details/Delete-->
-    <a class="btn btn-info" asp-controller="Secondaryfamilymembers">SecondaryFamilyMember</a> <!--TODO: FIX Create/Edit/Details/Delete-->
+<div class="display-flex mb-5">
+    <a class="btn btn-primary" asp-controller="Familymembers">FamilyMember</a>
+    <a class="btn btn-secondary" asp-controller="Familymemberlocations">FamilyMemberLocation</a>
+    <a class="btn btn-secondary" asp-controller="Secondaryfamilymembers">SecondaryFamilyMember</a>
 </div>
 
 <h2>Team/Session</h2>
-<div class="display-flex">
-    <a class="btn btn-info" asp-controller="Sessions">Session</a>
-    <a class="btn btn-info" asp-controller="Teamsessions">TeamSession</a> <!--TODO: FIX Create/Edit/Details/Delete-->
-    <a class="btn btn-info" asp-controller="Teamformations">TeamFormation</a>
-    <a class="btn btn-info" asp-controller="Teammembers">TeamMember</a> <!--TODO: FIX Create/Edit/Details/Delete-->
+<div class="display-flex mb-5">
+    <a class="btn btn-primary" asp-controller="Sessions">Session</a>
+    <a class="btn btn-secondary" asp-controller="Teamsessions">TeamSession</a>
+    <a class="btn btn-primary" asp-controller="Teamformations">TeamFormation</a>
+    <a class="btn btn-secondary" asp-controller="Teammembers">TeamMember</a>
 </div>
 
-<h2>LogEmail</h2>
-<div class="display-flex">
-    <a class="btn btn-info" asp-controller="Logemails">LogEmail</a>
-</div>
-
-<h2></h2>
-<div class="display-flex">
-    <a class="btn btn-info" asp-controller=""></a>
-    <a class="btn btn-info" asp-controller=""></a>
+<h2>Log Email</h2>
+<div class="display-flex mb-5">
+    <a class="btn btn-primary" asp-controller="Logemails">LogEmail</a>
 </div>
