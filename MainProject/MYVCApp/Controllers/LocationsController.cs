@@ -74,7 +74,7 @@ namespace MYVCApp.Controllers
             }
             catch (Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Error creating Location: " + ex.Message;
+                TempData[TempDataHelper.Error] = "Error creating Location: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message : "";
                 return RedirectToAction(nameof(Index));
             }
             return View(location);
@@ -127,6 +127,10 @@ namespace MYVCApp.Controllers
                         throw;
                     }
                 }
+                catch (Exception ex)
+                {
+                    TempData[TempDataHelper.Error] = "Error editing Location: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message : "";
+                }
 
                 return RedirectToAction(nameof(Index));
             }
@@ -173,7 +177,7 @@ namespace MYVCApp.Controllers
             }
             catch(Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Error deleting: " + ex.Message;
+                TempData[TempDataHelper.Error] = "Error deleting: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message : "";
             }
 
             return RedirectToAction(nameof(Index));

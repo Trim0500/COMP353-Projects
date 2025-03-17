@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -28,6 +29,8 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Personnels/Details/5
+        [HttpGet]
+        [Route("Personnels/Details/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Personnel == null)
@@ -46,6 +49,8 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Personnels/Create
+        [HttpGet]
+        [Route("Personnels/Create")]
         public IActionResult Create()
         {
             return View();
@@ -55,13 +60,23 @@ namespace MYVCApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Personnels/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Dob,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Email,Mandate")] Personnel personnel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(personnel);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(personnel);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully created Personnel with ID " + personnel.Id;
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating Personnel: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message: "" ;
                 return RedirectToAction(nameof(Index));
             }
             return View(personnel);
@@ -101,6 +116,7 @@ namespace MYVCApp.Controllers
                 {
                     _context.Update(personnel);
                     await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully edited Personnel with ID " + personnel.Id;
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -112,6 +128,10 @@ namespace MYVCApp.Controllers
                     {
                         throw;
                     }
+                }
+                catch(Exception ex)
+                {
+                    TempData[TempDataHelper.Error] = "Error editing Personnel: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message : "";
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -141,17 +161,26 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Personnel == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Personnel'  is null.");
+                if (_context.Personnel == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Personnel'  is null.");
+                }
+                var personnel = await _context.Personnel.FindAsync(id);
+                if (personnel != null)
+                {
+                    _context.Personnel.Remove(personnel);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = "Successfully deleted Personnel with ID " + personnel.Id;
             }
-            var personnel = await _context.Personnel.FindAsync(id);
-            if (personnel != null)
+            catch(Exception ex)
             {
-                _context.Personnel.Remove(personnel);
+                TempData[TempDataHelper.Error] = "Error deleting: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message : "";
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
