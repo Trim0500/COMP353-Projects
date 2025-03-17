@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -58,12 +59,26 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Dob,Email,SocialSecNum,MedCardNum,City,Province,PhoneNumber,PostalCode")] Familymember familymember)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(familymember);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(familymember);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully created FamilyMember with ID " + familymember.Id;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error creating FamilyMember: State invalid";
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating FamilyMember: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(familymember);
         }
 
@@ -95,26 +110,36 @@ namespace MYVCApp.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(familymember);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FamilymemberExists(familymember.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(familymember);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = "Successfully edited FamilyMember with ID " + familymember.Id;
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!FamilymemberExists(familymember.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error editing FamilyMember: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(familymember);
         }
 
@@ -141,17 +166,27 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Familymembers == null)
+
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Familymembers'  is null.");
+                if (_context.Familymembers == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Familymembers'  is null.");
+                }
+                var familymember = await _context.Familymembers.FindAsync(id);
+                if (familymember != null)
+                {
+                    _context.Familymembers.Remove(familymember);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = "Successfully deleted FamilyMember with ID " + familymember.Id;
             }
-            var familymember = await _context.Familymembers.FindAsync(id);
-            if (familymember != null)
+            catch(Exception ex)
             {
-                _context.Familymembers.Remove(familymember);
+                TempData[TempDataHelper.Error] = ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
