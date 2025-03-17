@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MySqlX.XDevAPI;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -26,10 +28,11 @@ namespace MYVCApp.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Teamsessions/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet]
+        [Route("Teamsessions/{teamformation}/{session}")]
+        public async Task<IActionResult> Details(int teamformation, int session)
         {
-            if (id == null || _context.Teamsessions == null)
+            if (session < 0 || teamformation < 0 || _context.Teamsessions == null)
             {
                 return NotFound();
             }
@@ -37,7 +40,8 @@ namespace MYVCApp.Controllers
             var teamsession = await _context.Teamsessions
                 .Include(t => t.SessionIdFkNavigation)
                 .Include(t => t.TeamFormationIdFkNavigation)
-                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == id);
+                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == teamformation && m.SessionIdFk == session);
+            
             if (teamsession == null)
             {
                 return NotFound();
@@ -47,6 +51,8 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Teamsessions/Create
+        [HttpGet]
+        [Route("Teamsessions/Create")]
         public IActionResult Create()
         {
             ViewData["SessionIdFk"] = new SelectList(_context.Sessions, "Id", "Id");
@@ -58,29 +64,49 @@ namespace MYVCApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Teamsessions/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TeamFormationIdFk,SessionIdFk,Score")] Teamsession teamsession)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(teamsession);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(teamsession);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = String.Format("Successfully created TeamSession {0}/{1}", teamsession.TeamFormationIdFk, teamsession.SessionIdFk);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error creating TeamSession: State invalid";
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating TeamSession: " + ExceptionFormatter.GetFullMessage(ex); 
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["SessionIdFk"] = new SelectList(_context.Sessions, "Id", "Id", teamsession.SessionIdFk);
             ViewData["TeamFormationIdFk"] = new SelectList(_context.Teamformations, "Id", "Id", teamsession.TeamFormationIdFk);
             return View(teamsession);
         }
 
-        // GET: Teamsessions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet]
+        [Route("Teamsessions/{teamformation}/{session}/Edit")]
+        public async Task<IActionResult> Edit(int teamformation, int session)
         {
-            if (id == null || _context.Teamsessions == null)
+            if (teamformation < 0 || session < 0 || _context.Teamsessions == null)
             {
                 return NotFound();
             }
 
-            var teamsession = await _context.Teamsessions.FindAsync(id);
+            var teamsession = await _context.Teamsessions
+                .Include(t => t.SessionIdFkNavigation)
+                .Include(t => t.TeamFormationIdFkNavigation)
+                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == teamformation && m.SessionIdFk == session);
+
             if (teamsession == null)
             {
                 return NotFound();
@@ -94,43 +120,53 @@ namespace MYVCApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Teamsessions/{teamformation}/{session}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TeamFormationIdFk,SessionIdFk,Score")] Teamsession teamsession)
+        public async Task<IActionResult> Edit([Bind("TeamFormationIdFk,SessionIdFk,Score")] Teamsession teamsession)
         {
-            if (id != teamsession.TeamFormationIdFk)
+            try
             {
-                return NotFound();
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(teamsession);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = String.Format("Successfully edited TeamSession {0}/{1}", teamsession.TeamFormationIdFk, teamsession.SessionIdFk);
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!TeamsessionExists(teamsession.TeamFormationIdFk))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error editing TeamSession: State invalid";
+                }
             }
-
-            if (ModelState.IsValid)
+            catch(Exception ex)
             {
-                try
-                {
-                    _context.Update(teamsession);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TeamsessionExists(teamsession.TeamFormationIdFk))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                TempData[TempDataHelper.Error] = "Error editing TeamSession: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["SessionIdFk"] = new SelectList(_context.Sessions, "Id", "Id", teamsession.SessionIdFk);
             ViewData["TeamFormationIdFk"] = new SelectList(_context.Teamformations, "Id", "Id", teamsession.TeamFormationIdFk);
             return View(teamsession);
         }
 
-        // GET: Teamsessions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [Route("Teamsessions/{teamformation}/{session}/Delete")]
+        public async Task<IActionResult> Delete(int teamformation, int session)
         {
-            if (id == null || _context.Teamsessions == null)
+            if (teamformation < 0 || session < 0 || _context.Teamsessions == null)
             {
                 return NotFound();
             }
@@ -138,7 +174,8 @@ namespace MYVCApp.Controllers
             var teamsession = await _context.Teamsessions
                 .Include(t => t.SessionIdFkNavigation)
                 .Include(t => t.TeamFormationIdFkNavigation)
-                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == id);
+                .FirstOrDefaultAsync(m => m.TeamFormationIdFk == teamformation && m.SessionIdFk == session);
+
             if (teamsession == null)
             {
                 return NotFound();
@@ -147,22 +184,36 @@ namespace MYVCApp.Controllers
             return View(teamsession);
         }
 
-        // POST: Teamsessions/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("Teamsessions/{teamformation}/{session}/Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int teamformation, int session)
         {
-            if (_context.Teamsessions == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Teamsessions'  is null.");
+                if (_context.Teamsessions == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Teamsessions'  is null.");
+                }
+
+                var teamsession = await _context.Teamsessions
+                    .Include(t => t.SessionIdFkNavigation)
+                    .Include(t => t.TeamFormationIdFkNavigation)
+                    .FirstOrDefaultAsync(m => m.TeamFormationIdFk == teamformation && m.SessionIdFk == session);
+
+                if (teamsession != null)
+                {
+                    _context.Teamsessions.Remove(teamsession);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = String.Format("Successfully deleted TeamSession {0}/{1}", teamsession.TeamFormationIdFk, teamsession.SessionIdFk);
             }
-            var teamsession = await _context.Teamsessions.FindAsync(id);
-            if (teamsession != null)
+            catch (Exception ex)
             {
-                _context.Teamsessions.Remove(teamsession);
+                TempData[TempDataHelper.Error] = "Error deleting TeamSession: " + ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
