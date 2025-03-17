@@ -73,6 +73,15 @@ CREATE TABLE FamilyMemberLocation
     PRIMARY KEY(location_id_fk, family_member_id_fk, start_date)
 );
 
+DELIMITER //
+CREATE TRIGGER start_date_check
+BEFORE INSERT ON FamilyMemberLocation FOR EACH ROW
+BEGIN
+	IF NEW.start_date IS NULL THEN
+		SET NEW.start_date = now();
+	END IF;
+END//
+
 CREATE TABLE SecondaryFamilyMember
 (
 	primary_family_member_id_fk INT,
