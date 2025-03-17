@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -59,12 +60,26 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,EventType,EventDateTime,LocationIdFk")] Session session)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(session);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(session);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully created Session with ID " + session.Id;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error creating Session: State invalid";
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating Session: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id", session.LocationIdFk);
             return View(session);
         }
@@ -98,26 +113,36 @@ namespace MYVCApp.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(session);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SessionExists(session.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(session);
+                        TempData[TempDataHelper.Success] = "Successfully edited Session with ID " + session.Id; 
+                        await _context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!SessionExists(session.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+                    return RedirectToAction(nameof(Index));
                 }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error editing Session: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id", session.LocationIdFk);
             return View(session);
         }
@@ -133,6 +158,7 @@ namespace MYVCApp.Controllers
             var session = await _context.Sessions
                 .Include(s => s.LocationIdFkNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (session == null)
             {
                 return NotFound();
@@ -146,17 +172,26 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Sessions == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Sessions'  is null.");
+                if (_context.Sessions == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Sessions'  is null.");
+                }
+                var session = await _context.Sessions.FindAsync(id);
+                if (session != null)
+                {
+                    _context.Sessions.Remove(session);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = "Successfully deleted Session with ID " + id;
             }
-            var session = await _context.Sessions.FindAsync(id);
-            if (session != null)
+            catch (Exception ex)
             {
-                _context.Sessions.Remove(session);
+                TempData[TempDataHelper.Error] = "Error deleting Session: " + ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 

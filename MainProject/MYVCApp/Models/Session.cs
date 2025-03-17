@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MYVCApp.Models
 {
@@ -11,6 +12,8 @@ namespace MYVCApp.Models
         }
 
         public int Id { get; set; }
+
+        [MaxLength(20)]
         public string? EventType { get; set; }
         public DateTime? EventDateTime { get; set; }
         public int? LocationIdFk { get; set; }
