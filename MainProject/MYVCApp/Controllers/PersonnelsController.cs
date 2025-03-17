@@ -76,7 +76,7 @@ namespace MYVCApp.Controllers
             }
             catch(Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Error creating Personnel: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message: "" ;
+                TempData[TempDataHelper.Error] = "Error creating Personnel: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
             return View(personnel);
@@ -131,7 +131,7 @@ namespace MYVCApp.Controllers
                 }
                 catch(Exception ex)
                 {
-                    TempData[TempDataHelper.Error] = "Error editing Personnel: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message : "";
+                    TempData[TempDataHelper.Error] = "Error editing Personnel: " + ExceptionFormatter.GetFullMessage(ex);
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -178,7 +178,7 @@ namespace MYVCApp.Controllers
             }
             catch(Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Error deleting: " + ex.Message + ex.InnerException != null ? ex.InnerException.Message : "";
+                TempData[TempDataHelper.Error] = "Error deleting: " + ExceptionFormatter.GetFullMessage(ex);
             }
 
             return RedirectToAction(nameof(Index));

@@ -44,7 +44,7 @@ CREATE TABLE PersonnelLocation
     start_date DATE,
     end_date DATE,
     role VARCHAR(50),
-    PRIMARY KEY (personnel_id_fk, location_id_fk),
+    PRIMARY KEY (personnel_id_fk, location_id_fk, start_date),
     FOREIGN KEY (personnel_id_fk) REFERENCES Personnel(id) ON DELETE CASCADE,
     FOREIGN KEY (location_id_fk) REFERENCES Location(id) ON DELETE CASCADE
 );

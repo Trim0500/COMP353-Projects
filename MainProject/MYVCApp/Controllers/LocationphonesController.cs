@@ -28,7 +28,7 @@ namespace MYVCApp.Controllers
         }
 
         // GET: Locationphones1/Details/5
-        [Route("{location}/{phone}")]
+        [Route("Locationphones/{location}/{phone}")]
         public async Task<IActionResult> Details(int location, string phone)
         {
             if (location < 0 || phone == null || _context.Locationphones == null)
@@ -61,9 +61,6 @@ namespace MYVCApp.Controllers
         [Route("Locationphones/Create")]
         public async Task<IActionResult> Create([Bind("LocationIdFk,PhoneNumber")] Locationphone locationphone)
         {
-            var errors = ModelState.Values.SelectMany(v => v.Errors)
-                               .Select(e => e.ErrorMessage)
-                               .ToList();
             try
             {
                 if (ModelState.IsValid)
@@ -79,13 +76,13 @@ namespace MYVCApp.Controllers
             }
             catch (Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Creation failed: " + ex.Message;
+                TempData[TempDataHelper.Error] = "Creation failed: " + ExceptionFormatter.GetFullMessage(ex);
             }
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        [Route("{location}/{phone}/Delete")]
+        [Route("Personnellocations/{location}/{phone}/Delete")]
         public async Task<IActionResult> Delete(int location, string phone)
         {
             if (location < 0 || phone == null || _context.Locationphones == null)
@@ -104,7 +101,7 @@ namespace MYVCApp.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [Route("{location}/{phone}/Delete")]
+        [Route("Personnellocations/{location}/{phone}/Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int location, string phone)
         {
@@ -129,7 +126,7 @@ namespace MYVCApp.Controllers
             }
             catch (Exception ex)
             {
-                TempData[TempDataHelper.Error] = "Deletion Failed: " + ex.Message;
+                TempData[TempDataHelper.Error] = "Deletion Failed: " + ExceptionFormatter.GetFullMessage(ex);
             }
 
             return RedirectToAction(nameof(Index));

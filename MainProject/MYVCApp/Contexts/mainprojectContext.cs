@@ -412,7 +412,7 @@ namespace MYVCApp.Contexts
 
             modelBuilder.Entity<Personnellocation>(entity =>
             {
-                entity.HasKey(e => new { e.PersonnelIdFk, e.LocationIdFk })
+                entity.HasKey(e => new { e.PersonnelIdFk, e.LocationIdFk, e.StartDate })
                     .HasName("PRIMARY");
 
                 entity.ToTable("personnellocation");
