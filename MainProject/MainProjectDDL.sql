@@ -77,7 +77,7 @@ CREATE TABLE FamilyMemberLocation
 
 CREATE TABLE SecondaryFamilyMember
 (
-	primary_family_member_id_fk INT,
+	primary_family_member_id_fk INT UNIQUE,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     phone_number CHAR(10),

@@ -4,14 +4,26 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>SecondaryFamilyMembers - List</h1>
+
+<partial name="TempDataPartial"></partial>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimaryFamilyMemberIdFk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.PhoneNumber)
             </th>
@@ -19,14 +31,22 @@
                 @Html.DisplayNameFor(model => model.RelationshipToPrimary)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PrimaryFamilyMemberIdFkNavigation)
+                Action
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrimaryFamilyMemberIdFk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PhoneNumber)
             </td>
@@ -34,12 +54,9 @@
                 @Html.DisplayFor(modelItem => item.RelationshipToPrimary)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PrimaryFamilyMemberIdFkNavigation.Id)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    <a asp-controller="Secondaryfamilymembers" asp-action="details" asp-route-primary="@item.PrimaryFamilyMemberIdFk" asp-route-firstname="@item.FirstName" asp-route-lastname="@item.LastName">Details</a>
+                    <a asp-controller="Secondaryfamilymembers" asp-action="edit" asp-route-primary="@item.PrimaryFamilyMemberIdFk" asp-route-firstname="@item.FirstName" asp-route-lastname="@item.LastName">Edit</a>
+                    <a asp-controller="Secondaryfamilymembers" asp-action="delete" asp-route-primary="@item.PrimaryFamilyMemberIdFk" asp-route-firstname="@item.FirstName" asp-route-lastname="@item.LastName">Delete</a>
             </td>
         </tr>
 }
