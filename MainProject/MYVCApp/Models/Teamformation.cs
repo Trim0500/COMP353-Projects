@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MYVCApp.Models
 {
@@ -12,6 +13,8 @@ namespace MYVCApp.Models
         }
 
         public int Id { get; set; }
+        
+        [MaxLength(50)]
         public string? Name { get; set; }
         public int? CaptainIdFk { get; set; }
         public int? LocationIdFk { get; set; }

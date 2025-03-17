@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
+using MYVCApp.Helpers;
 using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
@@ -38,6 +39,7 @@ namespace MYVCApp.Controllers
                 .Include(t => t.CaptainIdFkNavigation)
                 .Include(t => t.LocationIdFkNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (teamformation == null)
             {
                 return NotFound();
@@ -61,12 +63,26 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,CaptainIdFk,LocationIdFk")] Teamformation teamformation)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(teamformation);
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    _context.Add(teamformation);
+                    await _context.SaveChangesAsync();
+                    TempData[TempDataHelper.Success] = "Successfully created TeamFormation with ID " + teamformation.Id;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    TempData[TempDataHelper.Error] = "Error creating TeamFormation: State invalid";
+                }
+            }
+            catch(Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error creating TeamFormation: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["CaptainIdFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn", teamformation.CaptainIdFk);
             ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id", teamformation.LocationIdFk);
             return View(teamformation);
@@ -102,26 +118,40 @@ namespace MYVCApp.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(teamformation);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        _context.Update(teamformation);
+                        await _context.SaveChangesAsync();
+                        TempData[TempDataHelper.Success] = "Successfully edited TeamFormation with ID " + teamformation.Id;
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!TeamformationExists(teamformation.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!TeamformationExists(teamformation.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    TempData[TempDataHelper.Error] = "Error editing TeamFormation: State invalid";
                 }
+            }
+            catch (Exception ex)
+            {
+                TempData[TempDataHelper.Error] = "Error editing TeamFormation: " + ExceptionFormatter.GetFullMessage(ex);
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["CaptainIdFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn", teamformation.CaptainIdFk);
             ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id", teamformation.LocationIdFk);
             return View(teamformation);
@@ -139,6 +169,7 @@ namespace MYVCApp.Controllers
                 .Include(t => t.CaptainIdFkNavigation)
                 .Include(t => t.LocationIdFkNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (teamformation == null)
             {
                 return NotFound();
@@ -152,17 +183,26 @@ namespace MYVCApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Teamformations == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Teamformations'  is null.");
+                if (_context.Teamformations == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Teamformations'  is null.");
+                }
+                var teamformation = await _context.Teamformations.FindAsync(id);
+                if (teamformation != null)
+                {
+                    _context.Teamformations.Remove(teamformation);
+                }
+
+                await _context.SaveChangesAsync();
+                TempData[TempDataHelper.Success] = "Successfully edited TeamFormation with ID " + teamformation.Id;
             }
-            var teamformation = await _context.Teamformations.FindAsync(id);
-            if (teamformation != null)
+            catch (Exception ex)
             {
-                _context.Teamformations.Remove(teamformation);
+                TempData[TempDataHelper.Error] = "Error deleting TeamFormation: " + ExceptionFormatter.GetFullMessage(ex);
             }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
