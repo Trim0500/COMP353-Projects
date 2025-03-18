@@ -114,10 +114,41 @@ DELIMITER //
 CREATE TRIGGER validate_club_member
 BEFORE INSERT ON ClubMember FOR EACH ROW
 BEGIN
+	DECLARE locationID INT;
+    DECLARE iterationCount INT;
+    DECLARE currentCount INT DEFAULT 0;
+    
+    SET locationID = (SELECT location_id_fk FROM FamilyMemberLocation WHERE family_member_id_fk = NEW.family_member_id_fk AND end_date IS NULL);
+    
+    SET iterationCount = (SELECT COUNT(1) FROM locationID);
+
 	IF (year(now()) - year(NEW.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(NEW.dob, '%m%d')) < 11 OR
 		year(now()) - year(NEW.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(NEW.dob, '%m%d')) >= 18) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Age must be >= 11 and < 18';
 	END IF;
+    
+    WHILE currentCount < iterationCount DO
+    BEGIN
+		IF (SELECT SUM(ClubMemberCount) + 1 FROM (
+													SELECT COUNT(1) AS ClubMemberCount FROM ClubMember 
+													WHERE family_member_id_fk = NEW.family_member_id_fk AND is_active = 1
+													UNION ALL
+													SELECT COUNT(CM.cmn) AS ClubMemberCount FROM FamilyMemberLocation FML
+													JOIN FamilyMember FM ON FML.family_member_id_fk = FM.family_member_id_fk AND FML.location_id_fk = locationID
+													JOIN ClubMember CM ON FM.id = CM.family_member_id_fk AND CM.is_active = 1
+													GROUP BY FML.location_id_fk
+													LIMIT 1 OFFSET currentCount
+													) AS LocationMemberCount
+				) > (
+						SELECT capacity FROM Location 
+						WHERE id = locationID
+                        LIMIT 1 OFFSET currentCount
+				) THEN
+			SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: A location the respective family member is currently at is full';
+		END IF;
+        
+        SET currentCount = currentCount + 1;
+	END WHILE;
 END //
 
 CREATE TABLE ClubMemberLocation
