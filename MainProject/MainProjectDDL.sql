@@ -271,6 +271,17 @@ CREATE TABLE Session
     FOREIGN KEY(location_id_fk) REFERENCES Location(id)
 );
 
+DELIMITER //
+CREATE TRIGGER validate_session
+BEFORE INSERT ON Session FOR EACH ROW
+BEGIN
+	IF NEW.event_type NOT IN ('Game','Training') THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Session]: Unknown event type, must be either Game or Training';
+	ELSEIF (NEW.event_type,NEW.event_date_time,NEW.location_id_fk) IN (SELECT event_type, event_date_time, location_id_fk FROM Session) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Session]: Cannot add in the same event at the specified location, change the values';
+	END IF;
+END //
+
 CREATE TABLE TeamSession
 (
 	team_formation_id_fk INT,
