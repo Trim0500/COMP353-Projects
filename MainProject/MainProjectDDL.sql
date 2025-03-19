@@ -12,6 +12,17 @@ CREATE TABLE Location
     website_url VARCHAR(255),
     capacity INT
 );
+
+DELIMITER //
+CREATE TRIGGER validate_location
+BEFORE INSERT ON Location FOR EACH ROW
+BEGIN
+	IF NEW.type != 'Head' AND NEW.type != 'Branch' THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Location]: Unknown location type, enter a Head or Branch location';
+	ELSEIF NEW.type = ANY (SELECT type FROM Location WHERE type = 'Head') THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Location]: A head location already exists, enter a new branch';
+	END IF;
+END //
     
 CREATE TABLE LocationPhone 
 (
