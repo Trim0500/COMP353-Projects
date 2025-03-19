@@ -272,3 +272,61 @@ VALUES (1, 1, 85),
 	(14, 17, 100),
 	(19, 20, 85),
 	(20, 20, 100);
+
+-- Outside hitters (IDs 6-10)
+INSERT INTO TeamMember (team_formation_id_fk, cmn_fk, role, assignment_date_time)
+VALUES
+(6, 6, "outside hitter", "2023-01-10 18:00:00"),
+(7, 7, "outside hitter", "2023-01-10 18:00:00"),
+(8, 8, "outside hitter", "2023-01-10 18:00:00"),
+(9, 9, "outside hitter", "2023-01-10 18:00:00"),
+(10, 10, "outside hitter", "2023-01-10 18:00:00");
+
+-- All rounders (team members who have filled every role)
+INSERT INTO TeamMember (team_formation_id_fk, cmn_fk, role, assignment_date_time)
+VALUES
+(1, 1, "outside hitter", "2023-01-10 18:00:00"),
+(2, 1, "opposite", "2023-01-11 18:00:00"),
+(3, 1, "setter", "2023-01-12 18:00:00"),
+(4, 1, "middle blocker", "2023-01-13 18:00:00"),
+(5, 1, "libero", "2023-01-14 18:00:00"),
+(6, 1, "defensive specialist", "2023-01-15 18:00:00"),
+(7, 1, "serving specialist", "2023-01-16 18:00:00"),
+
+(2, 2, "outside hitter", "2023-01-10 18:00:00"),
+(3, 2, "opposite", "2023-01-11 18:00:00"),
+(4, 2, "setter", "2023-01-12 18:00:00"),
+(5, 2, "middle blocker", "2023-01-13 18:00:00"),
+(6, 2, "libero", "2023-01-14 18:00:00"),
+(7, 2, "defensive specialist", "2023-01-15 18:00:00"),
+(8, 2, "serving specialist", "2023-01-16 18:00:00"),
+
+(3, 3, "outside hitter", "2023-01-10 18:00:00"),
+(4, 3, "opposite", "2023-01-11 18:00:00"),
+(5, 3, "setter", "2023-01-12 18:00:00"),
+(6, 3, "middle blocker", "2023-01-13 18:00:00"),
+(7, 3, "libero", "2023-01-14 18:00:00"),
+(8, 3, "defensive specialist", "2023-01-15 18:00:00"),
+(9, 3, "serving specialist", "2023-01-16 18:00:00"),
+
+(4, 4, "outside hitter", "2023-01-10 18:00:00"),
+(5, 4, "opposite", "2023-01-11 18:00:00"),
+(6, 4, "setter", "2023-01-12 18:00:00"),
+(7, 4, "middle blocker", "2023-01-13 18:00:00"),
+(8, 4, "libero", "2023-01-14 18:00:00"),
+(9, 4, "defensive specialist", "2023-01-15 18:00:00"),
+(10, 4, "serving specialist", "2023-01-16 18:00:00"),
+
+(5, 5, "outside hitter", "2023-01-10 18:00:00"),
+(6, 5, "opposite", "2023-01-11 18:00:00"),
+(7, 5, "setter", "2023-01-12 18:00:00"),
+(8, 5, "middle blocker", "2023-01-13 18:00:00"),
+(9, 5, "libero", "2023-01-14 18:00:00"),
+(10, 5, "defensive specialist", "2023-01-15 18:00:00"),
+(1, 5, "serving specialist", "2023-01-16 18:00:00");
+
+-- Filling teams up to minimum required team members (3)
+INSERT INTO TeamMember (team_formation_id_fk, cmn_fk, role, assignment_date_time)
+VALUES
+(1, 4, "libero", "2023-01-10 18:00:00"),
+(2, 4, "libero", "2023-01-11 18:00:00");
