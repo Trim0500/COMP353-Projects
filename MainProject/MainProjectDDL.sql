@@ -57,6 +57,15 @@ CREATE TABLE Personnel
     mandate VARCHAR(10)
 );
 
+DELIMITER //
+CREATE TRIGGER validate_personnel
+BEFORE INSERT ON Personnel FOR EACH ROW
+BEGIN
+	IF NEW.mandate NOT IN ('Paid','Volunteer') THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Personnel]: Unkown mandate, must be Paid or Volunteer';
+	END IF;
+END //
+
 CREATE TABLE PersonnelLocation
 (
 	personnel_id_fk INT,
