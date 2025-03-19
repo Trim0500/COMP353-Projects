@@ -195,6 +195,26 @@ CREATE TABLE Payment
     FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn)
 );
 
+DELIMITER //
+CREATE TRIGGER validate_payment
+BEFORE INSERT ON Payment FOR EACH ROW
+BEGIN
+	IF NEW.method NOT IN ('Cash','Debit','Credit') THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: Unkown payment method, must be Cash, Debit or Credit Card';
+	ELSEIF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: The selected effective year is invalid, make sure that the effective year is the same or next immediate year';
+	ELSEIF (
+			SELECT SUM(amount) + NEW.amount FROM Payment
+            WHERE cmn_fk = NEW.cmn_fk AND effectiveDate = NEW.effectiveDate
+            GROUP BY cmn_fk, effectiveDate
+            HAVING COUNT(paymentDate) = 3
+			) < 100 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: The last payment installment for this user and membership year does not reach 100, raise the amount';
+    ELSEIF (SELECT COUNT(1) FROM Payment WHERE cmn_fk = NEW.cmn_fk AND effectiveDate = NEW.effectiveDate) = 4 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: This user has already made all the payments they need';
+	END IF;
+END //
+
 CREATE TABLE TeamFormation
 (
 	id INT AUTO_INCREMENT PRIMARY KEY,
