@@ -168,6 +168,19 @@ ORDER BY LocationNames, CM.cmn;
 -- should include the club member’s membership number, first name, last name, age, phone number, email and current location name. The results should be displayed sorted
 -- in ascending order by location name then by club membership number.
 
+SELECT * FROM TeamMember;
+
+SELECT * FROM
+(SELECT cmn_fk FROM (SELECT DISTINCT cmn_fk FROM TeamMember WHERE ROLE = "outside hitter") AS OutsideHitters WHERE cmn_fk NOT IN (SELECT DISTINCT cmn_fk FROM TeamMember WHERE ROLE != "outside hitter")) AS OutsideHittersOnly
+JOIN ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn;
+
+SELECT LocationId, FamilyMemberId, name FROM (
+(SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId FROM FamilyMemberLocation WHERE end_date IS NULL ORDER BY family_member_id_fk) AS FML
+JOIN
+(SELECT id, name FROM Location) AS L
+ON L.id = FML.LocationId) GROUP BY FamilyMemberId;
+
+
 -- Query 14
 -- Get a report on all active club members who have been assigned at least once to every role throughout all the formation team game sessions. The club member must be
 -- assigned to at least one formation game session as an outside hitter, opposite, setter, middle blocker, libero, defensive specialist, and serving specialist. The list should
@@ -213,6 +226,5 @@ SELECT CM.first_name, CM.last_name, CM.phone_number, CM.email, DATE_ADD(dob, INT
         )
 ) AS 'latest role'
 FROM ClubMember CM
-ORDER BY 'last location name' ASC, 'latest role' ASC, CM.first_name ASC, CM.last_name ASC;
 ORDER BY 'last location name' ASC, 'latest role' ASC, CM.first_name ASC, CM.last_name ASC;
 
