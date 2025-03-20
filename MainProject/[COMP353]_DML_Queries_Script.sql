@@ -162,6 +162,25 @@ WHERE CM.is_active = 1
 HAVING COUNT(TM.cmn_fk) = 0
 ORDER BY LocationNames, CM.cmn;
 
+-- Query 13:
+-- Get a report on all active club members who have only been assigned as outside hitter in all the formation team sessions they have been assigned to. They must be assigned
+-- to at least one formation session as an outside hitter. They should have never been assigned to any formation session with a role different than outside hitter. The list
+-- should include the club member’s membership number, first name, last name, age, phone number, email and current location name. The results should be displayed sorted
+-- in ascending order by location name then by club membership number.
+
+-- Query 14
+-- Get a report on all active club members who have been assigned at least once to every role throughout all the formation team game sessions. The club member must be
+-- assigned to at least one formation game session as an outside hitter, opposite, setter, middle blocker, libero, defensive specialist, and serving specialist. The list should
+-- include the club member’s membership number, first name, last name, age, phone number, email and current location name. The results should be displayed sorted in
+-- ascending order by location name then by club membership number.
+
+-- Query 15
+-- For the given location, get the list of all family members who have currently active club members associated with them and are also captains for the same location.
+-- Information includes first name, last name, and phone number of the family member. A family member is considered to be a captain if she/he is assigned as a captain to at
+-- least one team formation session in the same location.
+
+
+
 -- Query 17: Get a report of all the personnel who were treasurer of the club at least once or is currently a treasurer of the club.
 -- 				The report should include the treasurer’s first name, last name, start date as a treasurer and last date as treasurer. If last date as treasurer is null means that the personnel is the current treasurer of the club.
 -- 				 Results should be displayed sorted in ascending order by first name then by last name then by start date as a treasurer.
