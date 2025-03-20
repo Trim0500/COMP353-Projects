@@ -170,14 +170,25 @@ ORDER BY LocationNames, CM.cmn;
 
 SELECT * FROM TeamMember;
 
-SELECT * FROM
+SELECT 
+	cmn, first_name, last_name, Age, phone_number, email, LocationsList 
+FROM
+(
+	SELECT 
+		ClubMember.cmn, ClubMember.first_name, ClubMember.last_name, year(now()) - year(ClubMember.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(ClubMember.dob, '%m%d')) AS 'Age', phone_number, email, family_member_id_fk AS FamilyMemberId 
+	FROM
 (SELECT cmn_fk FROM (SELECT DISTINCT cmn_fk FROM TeamMember WHERE ROLE = "outside hitter") AS OutsideHitters WHERE cmn_fk NOT IN (SELECT DISTINCT cmn_fk FROM TeamMember WHERE ROLE != "outside hitter")) AS OutsideHittersOnly
-JOIN ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn;
-
-SELECT LocationId, FamilyMemberId, name FROM (
-(SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId FROM FamilyMemberLocation WHERE end_date IS NULL ORDER BY family_member_id_fk) AS FML
+JOIN ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn) AS ClubMemberReport JOIN (SELECT FML.FamilyMemberId, GROUP_CONCAT(L.LocationName SEPARATOR ', ') as LocationsList FROM (
+(SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId FROM FamilyMemberLocation WHERE end_date IS NULL) AS FML
 JOIN
-(SELECT id, name FROM Location) AS L
+(SELECT id, name AS LocationName FROM Location) AS L
+ON L.id = FML.LocationId) GROUP BY FamilyMemberId) AS FamilyMemberLocationsList ON FamilyMemberLocationsList.FamilyMemberId = ClubMemberReport.FamilyMemberId;
+
+
+SELECT FML.FamilyMemberId, GROUP_CONCAT(L.LocationName SEPARATOR ', ') as LocationsList FROM (
+(SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId FROM FamilyMemberLocation WHERE end_date IS NULL) AS FML
+JOIN
+(SELECT id, name AS LocationName FROM Location) AS L
 ON L.id = FML.LocationId) GROUP BY FamilyMemberId;
 
 
