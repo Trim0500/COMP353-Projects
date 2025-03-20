@@ -168,28 +168,64 @@ ORDER BY LocationNames, CM.cmn;
 -- should include the club member’s membership number, first name, last name, age, phone number, email and current location name. The results should be displayed sorted
 -- in ascending order by location name then by club membership number.
 
-SELECT * FROM TeamMember;
-
-SELECT 
-	cmn, first_name, last_name, Age, phone_number, email, LocationsList 
+SELECT cmn, first_name, last_name, Age, phone_number, email, LocationsList 
 FROM
 (
-	SELECT 
-		ClubMember.cmn, ClubMember.first_name, ClubMember.last_name, year(now()) - year(ClubMember.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(ClubMember.dob, '%m%d')) AS 'Age', phone_number, email, family_member_id_fk AS FamilyMemberId 
+	SELECT ClubMember.cmn, ClubMember.first_name, ClubMember.last_name, year(now()) - year(ClubMember.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(ClubMember.dob, '%m%d')) AS 'Age', phone_number, email, family_member_id_fk AS FamilyMemberId 
 	FROM
-(SELECT cmn_fk FROM (SELECT DISTINCT cmn_fk FROM TeamMember WHERE ROLE = "outside hitter") AS OutsideHitters WHERE cmn_fk NOT IN (SELECT DISTINCT cmn_fk FROM TeamMember WHERE ROLE != "outside hitter")) AS OutsideHittersOnly
-JOIN ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn) AS ClubMemberReport JOIN (SELECT FML.FamilyMemberId, GROUP_CONCAT(L.LocationName SEPARATOR ', ') as LocationsList FROM (
-(SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId FROM FamilyMemberLocation WHERE end_date IS NULL) AS FML
-JOIN
-(SELECT id, name AS LocationName FROM Location) AS L
-ON L.id = FML.LocationId) GROUP BY FamilyMemberId) AS FamilyMemberLocationsList ON FamilyMemberLocationsList.FamilyMemberId = ClubMemberReport.FamilyMemberId;
+	(
+		SELECT cmn_fk 
+        FROM 
+			(
+				SELECT DISTINCT cmn_fk 
+                FROM TeamMember WHERE ROLE = "outside hitter"
+			) AS OutsideHitters 
+			WHERE cmn_fk NOT IN 
+            (
+				SELECT DISTINCT cmn_fk 
+				FROM TeamMember 
+                WHERE ROLE != "outside hitter"
+			)
+		) AS OutsideHittersOnly
+		JOIN ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn
+) AS ClubMemberReport 
+JOIN 
+(
+	SELECT FML.FamilyMemberId, GROUP_CONCAT(L.LocationName SEPARATOR ', ') AS LocationsList 
+	FROM 
+		(
+			(
+				SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId 
+				FROM FamilyMemberLocation 
+				WHERE end_date IS NULL
+			) AS FML
+			JOIN
+			(
+				SELECT id, name AS LocationName 
+				FROM Location
+			) AS L
+			ON L.id = FML.LocationId
+		) GROUP BY FamilyMemberId
+) AS FamilyMemberLocationsList ON FamilyMemberLocationsList.FamilyMemberId = ClubMemberReport.FamilyMemberId
+ORDER BY LocationsList ASC, cmn ASC;
 
-
-SELECT FML.FamilyMemberId, GROUP_CONCAT(L.LocationName SEPARATOR ', ') as LocationsList FROM (
-(SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId FROM FamilyMemberLocation WHERE end_date IS NULL) AS FML
-JOIN
-(SELECT id, name AS LocationName FROM Location) AS L
-ON L.id = FML.LocationId) GROUP BY FamilyMemberId;
+/*USE THIS FOR QUERIES THAT NEED TO BE ORDERED BY CLUB MEMBER LOCATION*/
+SELECT 
+	FML.FamilyMemberId, GROUP_CONCAT(L.LocationName SEPARATOR ', ') 
+    AS LocationsList 
+FROM 
+	(
+		(
+			SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId FROM FamilyMemberLocation WHERE end_date IS NULL
+		) 
+		AS FML
+		JOIN
+		(
+			SELECT id, name AS LocationName FROM Location
+		) AS L
+		ON L.id = FML.LocationId
+	) 
+GROUP BY FamilyMemberId;
 
 
 -- Query 14
@@ -197,7 +233,25 @@ ON L.id = FML.LocationId) GROUP BY FamilyMemberId;
 -- assigned to at least one formation game session as an outside hitter, opposite, setter, middle blocker, libero, defensive specialist, and serving specialist. The list should
 -- include the club member’s membership number, first name, last name, age, phone number, email and current location name. The results should be displayed sorted in
 -- ascending order by location name then by club membership number.
+SELECT cmn_fk FROM
+	(
+		SELECT cmn_fk FROM
+		(
+			SELECT DISTINCT cmn_fk FROM TeamMember AS oh WHERE role = "outside hitter"
+			UNION ALL
+			SELECT DISTINCT cmn_fk FROM TeamMember AS s WHERE role = "setter"
+			UNION ALL
+			SELECT DISTINCT cmn_fk FROM TeamMember AS mb WHERE role = "middle blocker"
+			UNION ALL
+			SELECT DISTINCT cmn_fk FROM TeamMember AS l WHERE role = "libero"
+			UNION ALL
+			SELECT DISTINCT cmn_fk FROM TeamMember AS ds WHERE role = "defensive specialist"
+			UNION ALL
+			SELECT DISTINCT cmn_fk FROM TeamMember AS ss WHERE role = "serving specialist"
+		) AS UnionAll
+	) AS AllRoles GROUP BY cmn_fk HAVING COUNT(*) = 6
 
+    
 -- Query 15
 -- For the given location, get the list of all family members who have currently active club members associated with them and are also captains for the same location.
 -- Information includes first name, last name, and phone number of the family member. A family member is considered to be a captain if she/he is assigned as a captain to at
