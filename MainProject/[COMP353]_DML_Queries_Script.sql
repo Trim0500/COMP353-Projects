@@ -282,6 +282,15 @@ GROUP BY FamilyMemberId) AS FamilyMemberReport ON FamilyMemberReport.FamilyMembe
 -- least one team formation session in the same location.
 SET @LocationId = 1;
 
+#Family members associated with the given location that have active club members
+SELECT * FROM
+(SELECT * FROM FamilyMemberLocation WHERE location_id_fk = @LocationId) AS FMSL JOIN (SELECT * FROM ClubMember WHERE is_active = 1) as CM ON FMSL.family_member_id_fk = CM.family_member_id_fk;
+
+#Captains of teams from that location
+SELECT * FROM (SELECT * FROM TeamFormation WHERE location_id_fk = @LocationId) AS TFSL JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = TFSL.captain_id_fk;
+
+
+
 -- Query 17: Get a report of all the personnel who were treasurer of the club at least once or is currently a treasurer of the club.
 -- 				The report should include the treasurer’s first name, last name, start date as a treasurer and last date as treasurer. If last date as treasurer is null means that the personnel is the current treasurer of the club.
 -- 				 Results should be displayed sorted in ascending order by first name then by last name then by start date as a treasurer.
