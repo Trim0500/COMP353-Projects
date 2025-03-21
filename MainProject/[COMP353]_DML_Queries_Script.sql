@@ -95,39 +95,43 @@ SET @endDate = '2025-03-31';
 
 SELECT
 	L.name AS 'LocationName',
-    COUNT(
+    SUM(
 		CASE
 			WHEN S.event_type = 'training' THEN 1
             ELSE 0
         END
     ) AS 'TrainingSessions',
-    (
-		SELECT COUNT(DISTINCT TM.cmn_fk)
-		FROM Session s
-        JOIN TeamSession TS ON s.id = TS.session_id_fk
-        JOIN TeamFormation TF ON TS.team_formation_id_fk = TF.id
-        JOIN TeamMember TM ON TF.id = TM.team_formation_id_fk
-        WHERE s.location_id_fk = L.id AND s.event_type = 'training'
-        GROUP BY s.id
-	) AS 'PlayersInTrainingSession',
-    COUNT(
+	(SELECT SUM(SessionPlayerCount)
+		FROM (
+				SELECT COUNT(DISTINCT TM.cmn_fk) AS SessionPlayerCount
+				FROM Session s
+				JOIN TeamSession TS ON s.id = TS.session_id_fk
+				JOIN TeamFormation TF ON TS.team_formation_id_fk = TF.id
+				JOIN TeamMember TM ON TF.id = TM.team_formation_id_fk
+				WHERE s.location_id_fk = L.id AND s.event_type = 'training'
+				GROUP BY s.id
+			) AS TotalPlayersAtLocation
+    ) AS TotalTrainingSessionPlayers,
+    SUM(
 		CASE
 			WHEN S.event_type = 'game' THEN 1
             ELSE 0
         END
     ) AS 'GameSessions',
-    (
-		SELECT COUNT(DISTINCT TM.cmn_fk)
-		FROM Session s
-        JOIN TeamSession TS ON s.id = TS.session_id_fk
-        JOIN TeamFormation TF ON TS.team_formation_id_fk = TF.id
-        JOIN TeamMember TM ON TF.id = TM.team_formation_id_fk
-        WHERE s.location_id_fk = L.id AND s.event_type = 'game'
-        GROUP BY s.id
-	) AS 'PlayersInGameSession'
+    (SELECT SUM(SessionPlayerCount)
+		FROM (
+				SELECT COUNT(DISTINCT TM.cmn_fk) AS SessionPlayerCount
+				FROM Session s
+				JOIN TeamSession TS ON s.id = TS.session_id_fk
+				JOIN TeamFormation TF ON TS.team_formation_id_fk = TF.id
+				JOIN TeamMember TM ON TF.id = TM.team_formation_id_fk
+				WHERE s.location_id_fk = L.id AND s.event_type = 'game'
+				GROUP BY s.id
+			) AS TotalPlayersAtLocation
+	) AS TotalGameSessionPlayers
 FROM Location L
 JOIN Session S ON L.id = S.location_id_fk
-WHERE date_format(S.event_date_time, '%Y-%M-%d') >= @startDate AND date_format(S.event_date_time, '%Y-%M-%d') <= @endDate
+WHERE date_format(S.event_date_time, '%Y-%m-%d') >= @startDate AND date_format(S.event_date_time, '%Y-%m-%d') <= @endDate
 GROUP BY L.id, L.name
 HAVING GameSessions >= 2
 ORDER BY GameSessions DESC;
