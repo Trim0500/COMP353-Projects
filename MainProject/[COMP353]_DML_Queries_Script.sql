@@ -284,10 +284,29 @@ SET @LocationId = 1;
 
 #Family members associated with the given location that have active club members
 SELECT * FROM
-(SELECT * FROM FamilyMemberLocation WHERE location_id_fk = @LocationId) AS FMSL JOIN (SELECT * FROM ClubMember WHERE is_active = 1) as CM ON FMSL.family_member_id_fk = CM.family_member_id_fk;
+(
+	SELECT DISTINCT FMSL.family_member_id_fk 
+	FROM
+	(
+		SELECT * 
+		FROM FamilyMemberLocation 
+		WHERE location_id_fk = @LocationId
+	) AS FMSL 
+	JOIN 
+	(
+		SELECT * 
+		FROM ClubMember 
+		WHERE is_active = 1
+	) AS CM ON FMSL.family_member_id_fk = CM.family_member_id_fk
+) AS FMWithLocationActiveCM
+JOIN
+(
+	SELECT * 
+	FROM FamilyMember
+) AS FM ON FMWithLocationActiveCM.family_member_id_fk = FM.id;
 
 #Captains of teams from that location
-SELECT * FROM (SELECT * FROM TeamFormation WHERE location_id_fk = @LocationId) AS TFSL JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = TFSL.captain_id_fk;
+SELECT TFSL.id, TFSL.name, CM.first_name, CM.last_name, phone_number, med_card_num, social_sec_num FROM (SELECT * FROM TeamFormation WHERE location_id_fk = @LocationId) AS TFSL JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = TFSL.captain_id_fk;
 
 
 
