@@ -265,8 +265,7 @@ FROM
 	(
 		(
 			SELECT location_id_fk AS LocationId, family_member_id_fk as FamilyMemberId FROM FamilyMemberLocation WHERE end_date IS NULL
-		) 
-		AS FML
+		) AS FML
 		JOIN
 		(
 			SELECT id, name AS LocationName FROM Location
@@ -281,8 +280,7 @@ GROUP BY FamilyMemberId) AS FamilyMemberReport ON FamilyMemberReport.FamilyMembe
 -- For the given location, get the list of all family members who have currently active club members associated with them and are also captains for the same location.
 -- Information includes first name, last name, and phone number of the family member. A family member is considered to be a captain if she/he is assigned as a captain to at
 -- least one team formation session in the same location.
-
-
+SET @LocationId = 1;
 
 -- Query 17: Get a report of all the personnel who were treasurer of the club at least once or is currently a treasurer of the club.
 -- 				The report should include the treasurer’s first name, last name, start date as a treasurer and last date as treasurer. If last date as treasurer is null means that the personnel is the current treasurer of the club.
@@ -318,3 +316,5 @@ SELECT CM.first_name, CM.last_name, CM.phone_number, CM.email, DATE_ADD(dob, INT
 FROM ClubMember CM
 ORDER BY 'last location name' ASC, 'latest role' ASC, CM.first_name ASC, CM.last_name ASC;
 
+select * from FamilyMember;
+select * from ClubMember;
