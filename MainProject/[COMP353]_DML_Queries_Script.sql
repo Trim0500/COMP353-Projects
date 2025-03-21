@@ -283,41 +283,49 @@ GROUP BY FamilyMemberId) AS FamilyMemberReport ON FamilyMemberReport.FamilyMembe
 SET @LocationId = 1;
 
 #Family members associated with the given location that have active club members
-(SELECT family_member_id_fk, first_name, last_name, phone_number, med_card_num, social_sec_num FROM
+SELECT CaptainReport.first_name, CaptainReport.last_name, CaptainReport.phone_number FROM
 (
-	SELECT DISTINCT FMSL.family_member_id_fk 
-	FROM
+	SELECT family_member_id_fk, first_name, last_name, phone_number, med_card_num, social_sec_num FROM
+	(
+		SELECT DISTINCT FMSL.family_member_id_fk 
+		FROM
+		(
+			SELECT * 
+			FROM FamilyMemberLocation 
+			WHERE location_id_fk = @LocationId
+		) AS FMSL 
+		JOIN 
+		(
+			SELECT * 
+			FROM ClubMember 
+			WHERE is_active = 1
+		) AS CM ON FMSL.family_member_id_fk = CM.family_member_id_fk
+	) AS FMWithLocationActiveCM
+	JOIN
 	(
 		SELECT * 
-		FROM FamilyMemberLocation 
+		FROM FamilyMember
+	) AS FM ON FMWithLocationActiveCM.family_member_id_fk = FM.id
+) AS FamilyMemberReport
+JOIN
+#Captains of teams from that location
+(
+	SELECT TFSL.id, TFSL.name, CM.first_name, CM.last_name, phone_number, med_card_num, social_sec_num 
+	FROM 
+	(
+		SELECT * 
+		FROM TeamFormation 
 		WHERE location_id_fk = @LocationId
-	) AS FMSL 
+	) AS TFSL 
 	JOIN 
 	(
 		SELECT * 
-		FROM ClubMember 
-		WHERE is_active = 1
-	) AS CM ON FMSL.family_member_id_fk = CM.family_member_id_fk
-) AS FMWithLocationActiveCM
-JOIN
-(
-	SELECT * 
-	FROM FamilyMember
-) AS FM ON FMWithLocationActiveCM.family_member_id_fk = FM.id);
-
-#Captains of teams from that location
-(SELECT TFSL.id, TFSL.name, CM.first_name, CM.last_name, phone_number, med_card_num, social_sec_num 
-FROM 
-(
-	SELECT * 
-    FROM TeamFormation 
-    WHERE location_id_fk = @LocationId
-) AS TFSL 
-JOIN 
-(
-	SELECT * 
-    FROM ClubMember
-) AS CM ON CM.cmn = TFSL.captain_id_fk);
+		FROM ClubMember
+	) AS CM ON CM.cmn = TFSL.captain_id_fk
+) AS CaptainReport ON FamilyMemberReport.first_name = CaptainReport.first_name 
+					AND FamilyMemberReport.last_name = CaptainReport.last_name 
+                    AND FamilyMemberReport.med_card_num = CaptainReport.med_card_num
+                    AND FamilyMemberReport.social_sec_num = CaptainReport.social_sec_num;
 
 
 
