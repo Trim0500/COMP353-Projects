@@ -110,6 +110,17 @@ CREATE TABLE ClubMember
     FOREIGN KEY (family_member_id_fk) REFERENCES FamilyMember(id) ON DELETE CASCADE
 );
 
+CREATE TABLE ClubMemberLocation
+(
+	location_id_fk INT,
+    cmn_fk INT,
+    start_date DATE,
+    end_date DATE,
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id),
+    FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn),
+    PRIMARY KEY(location_id_fk, cmn_fk, start_date)
+);
+
 CREATE TABLE Payment
 (
 	id INT AUTO_INCREMENT PRIMARY KEY,
