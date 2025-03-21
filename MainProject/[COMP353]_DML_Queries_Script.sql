@@ -67,17 +67,19 @@ SELECT
 FROM ClubMember CM
 WHERE CM.is_active = 1 AND
 	(
-		SELECT COUNT(1)
+		SELECT COUNT(FML.location_id_fk)
 		FROM FamilyMemberLocation FML
         Where CM.family_member_id_fk = FML.family_member_id_fk
         GROUP BY FML.family_member_id_fk
 	) >= 3 AND
     (
-		Select COUNT(1)
-        FROM Payment
-        WHERE cmn_fk = CM.cmn
-        GROUP BY effectiveDate
-        HAVING SUM(amount) >= 100.00
+		SELECT COUNT(1) FROM (
+								SELECT COUNT(1)
+								FROM Payment
+								WHERE cmn_fk = CM.cmn
+								GROUP BY effectiveDate
+								HAVING SUM(amount) >= 100.00
+                                ) AS FulfilledPayments
     ) <= 3
 ORDER BY CM.cmn;
 
