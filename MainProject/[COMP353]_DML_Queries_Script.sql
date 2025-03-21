@@ -283,7 +283,7 @@ GROUP BY FamilyMemberId) AS FamilyMemberReport ON FamilyMemberReport.FamilyMembe
 SET @LocationId = 1;
 
 #Family members associated with the given location that have active club members
-SELECT * FROM
+(SELECT family_member_id_fk, first_name, last_name, phone_number, med_card_num, social_sec_num FROM
 (
 	SELECT DISTINCT FMSL.family_member_id_fk 
 	FROM
@@ -303,10 +303,21 @@ JOIN
 (
 	SELECT * 
 	FROM FamilyMember
-) AS FM ON FMWithLocationActiveCM.family_member_id_fk = FM.id;
+) AS FM ON FMWithLocationActiveCM.family_member_id_fk = FM.id);
 
 #Captains of teams from that location
-SELECT TFSL.id, TFSL.name, CM.first_name, CM.last_name, phone_number, med_card_num, social_sec_num FROM (SELECT * FROM TeamFormation WHERE location_id_fk = @LocationId) AS TFSL JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = TFSL.captain_id_fk;
+(SELECT TFSL.id, TFSL.name, CM.first_name, CM.last_name, phone_number, med_card_num, social_sec_num 
+FROM 
+(
+	SELECT * 
+    FROM TeamFormation 
+    WHERE location_id_fk = @LocationId
+) AS TFSL 
+JOIN 
+(
+	SELECT * 
+    FROM ClubMember
+) AS CM ON CM.cmn = TFSL.captain_id_fk);
 
 
 
