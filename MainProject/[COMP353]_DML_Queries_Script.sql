@@ -164,8 +164,7 @@ SELECT
     ) AS 'LocationNames'
 FROM ClubMember CM
 LEFT JOIN TeamMember TM ON CM.cmn = TM.cmn_fk
-WHERE CM.is_active = 1
-HAVING COUNT(TM.cmn_fk) = 0
+WHERE CM.is_active = 1 AND (SELECT COUNT(TM.cmn_fk)) < 1
 ORDER BY LocationNames, CM.cmn;
 
 -- Query 13:
