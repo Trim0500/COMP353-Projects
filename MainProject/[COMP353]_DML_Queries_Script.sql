@@ -56,6 +56,155 @@ SELECT * FROM TeamFormation;
 
 DELETE FROM TeamFormation WHERE id = 0;
 
+-- Query 7
+-- Get complete details for every location in the system. Details include address, city,
+-- province, postal-code, phone number, web address, type (Head, Branch), capacity,
+-- general manager name, and the number of club members associated with that location.
+-- The results should be displayed sorted in ascending order by Province, then by city
+SELECT DISTINCT
+    l.id,
+    l.address,
+    l.city,
+    l.province,
+    l.postal_code AS "postal code",
+    l.website_url AS "website",
+    l.type,
+    l.capacity,
+    ph.phone_number AS "phone number",
+    ( -- Count of active members at this location
+	SELECT COUNT(DISTINCT cm.cmn)
+	FROM ClubMember cm
+	JOIN FamilyMember fm ON fm.id = cm.family_member_id_fk
+        JOIN FamilyMemberLocation fml ON fm.id = fml.family_member_id_fk
+	WHERE fml.location_id_fk = l.id
+	AND ( -- Condition for members to be considered active
+		SELECT SUM(p.amount) 
+		FROM Payment p 
+		WHERE p.cmn_fk = cm.cmn 
+		AND (YEAR(p.effectiveDate) = 2024 OR YEAR(p.effectiveDate) = 2025)
+		GROUP BY p.cmn_fk
+	) >= 100.00
+    ) AS "number of active members",
+    ( -- General manager first name
+	SELECT pr.first_name 
+	FROM Personnel pr 
+	JOIN PersonnelLocation pl ON pr.id = pl.personnel_id_fk
+	WHERE pl.location_id_fk = l.id
+	AND pl.role = "General Manager"
+	LIMIT 1
+	) AS "general manager first name",
+    ( -- General manager last name
+	SELECT pr.last_name 
+	FROM Personnel pr 
+	JOIN PersonnelLocation pl ON pr.id = pl.personnel_id_fk
+	WHERE pl.location_id_fk = l.id
+	AND pl.role = "General Manager" 
+        LIMIT 1
+	) AS "general manager last name"
+FROM Location l
+JOIN LocationPhone ph ON l.id = ph.location_id_fk
+ORDER BY l.province ASC, l.city ASC;
+
+-- Query 8
+-- For a given family member, get details of all the locations that she/he was/is associated
+-- with, the secondary family member and all the club members associated with the
+-- primary family member. Information includes first name, last name and phone number
+-- of the secondary family member, and for every associated club member, the location
+-- name, the club membership number, first-name, last-name, date of birth, Social
+-- Security Number, Medicare card number, telephone number, address, city, province,
+-- postal-code, and relationship with the secondary family member.
+SELECT 
+    l.name AS "location name",
+    cm.cmn AS "club member number",
+    cm.first_name AS "club member first name",
+    cm.last_name AS "club member last name",
+    cm.dob AS "club member birthday",
+    cm.social_sec_num AS "club member social security number",
+    cm.med_card_num AS "club member medical card number",
+    cm.phone_number AS "club member phone number",
+    cm.address AS "club member address",
+    cm.city AS "club member city",
+    cm.province AS "club member province",
+    cm.postal_code AS "club member postal code",
+    cm.secondary_relationship AS "club member secondary relationship",
+    (
+	SELECT sfm.first_name
+        FROM SecondaryFamilyMember sfm
+        WHERE sfm.primary_family_member_id_fk = fm.id
+    ) AS "secondary family member first name",
+    (
+	SELECT sfm.last_name
+        FROM SecondaryFamilyMember sfm
+        WHERE sfm.primary_family_member_id_fk = fm.id
+    )AS "secondary family member last name",
+    (
+	SELECT sfm.phone_number
+        FROM SecondaryFamilyMember sfm
+        WHERE sfm.primary_family_member_id_fk = fm.id
+    )AS "secondary family member phone number",
+    (
+	SELECT sfm.relationship_to_primary
+        FROM SecondaryFamilyMember sfm
+        WHERE sfm.primary_family_member_id_fk = fm.id
+    ) AS "secondary family member relationship to primary"
+FROM FamilyMember fm
+JOIN ClubMember cm ON cm.family_member_id_fk = fm.id
+JOIN FamilyMemberLocation fml ON fml.family_member_id_fk = fm.id
+JOIN Location l ON l.id = fml.location_id_fk
+WHERE fm.first_name = "Paul" AND fm.last_name = "Denton"; -- User defined first and last name
+
+-- Query 9
+-- For a given location and week, get details of all the teams’ formations recorded in the
+-- system. Details include, head coach first name and last name, start time of the training
+-- or game session, address of the session, nature of the session (training or game), the
+-- teams name, the score (if the session is in the future, then score will be null), and the
+-- first name, last name and role (goalkeeper, defender, etc.) of every player in the team.
+-- Results should be displayed sorted in ascending order by the start day then by the start
+-- time of the session.
+SELECT
+    ( -- Head coach first name
+	SELECT pr.first_name 
+	FROM Personnel pr 
+	JOIN PersonnelLocation pl ON pr.id = pl.personnel_id_fk
+	WHERE pl.location_id_fk = l.id
+	AND pl.role = "Coach"
+	LIMIT 1
+    ) AS "head coach first name",
+    ( -- Head coach first name
+	SELECT pr.last_name 
+	FROM Personnel pr 
+	JOIN PersonnelLocation pl ON pr.id = pl.personnel_id_fk
+	WHERE pl.location_id_fk = l.id
+	AND pl.role = "Coach"
+	LIMIT 1
+    ) AS "head coach last name",
+    s.event_date_time,
+    l.address, 
+    s.event_type,
+    tf.name as "team name",
+    (
+	SELECT ts.score
+        FROM TeamSession ts
+        WHERE ts.team_formation_id_fk = tf.id
+        AND ts.session_id_fk = s.id
+    ) as "score",
+    (
+	SELECT cm.first_name
+        FROM ClubMember cm
+        WHERE cm.cmn = tm.cmn_fk
+    ) as "player first name",
+    (
+	SELECT cm.last_name
+        FROM ClubMember cm
+        WHERE cm.cmn = tm.cmn_fk
+    ) as "player last name",
+    tm.role
+FROM TeamFormation tf
+JOIN Location l ON (l.id = tf.location_id_fk AND l.name = "MYVC HQ") -- User defined location name
+JOIN Session s ON (s.location_id_fk = l.id AND (s.event_date_time >= '2023-01-01 00:00:00' OR s.event_date_time >= '2026-01-01 00:00:00')) -- User defined time period (temp 3 year span, should be one week)
+JOIN TeamMember tm ON tm.team_formation_id_fk = tf.id
+ORDER BY s.event_date_time ASC;
+
 -- Query 10: Get details of club members who are currently active and have been associated with at least three different locations and are members for at most three years.
 -- 				Details include Club membership number, first name and last name.
 -- 				Results should be displayed sorted in ascending order by club membership number.
