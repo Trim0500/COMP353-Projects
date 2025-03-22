@@ -1,3 +1,31 @@
+-- Query 1
+-- Create/Delete/Edit/Display a Location.
+INSERT INTO Location (id, type, name, postal_code, province, address, city, website_url, capacity)
+VALUE (); -- user specified
+
+DELETE FROM Location
+WHERE id = 0; -- user specified
+
+UPDATE Location
+SET name = 'user specified'
+WHERE id = 0; -- user specified
+
+SELECT * FROM Location;
+
+-- Query 2
+-- Create/Delete/Edit/Display a Personnel.
+INSERT INTO Personnel (id, first_name, last_name, dob, social_sec_num, med_card_num, phone_number, city, province, postal_code, email, mandate)
+VALUE (); -- user specified
+
+DELETE FROM Personnel
+WHERE id = 0; -- user specified
+
+UPDATE Personnel
+SET first_name = 'user specified', last_name = 'user specified'
+WHERE id = 0; -- user specified
+
+SELECT * FROM Personnel;
+
 -- Query 3: CRUD for FamilyMember (Primary/Secondary)
 
 ALTER TABLE FamilyMember AUTO_INCREMENT = 1;
