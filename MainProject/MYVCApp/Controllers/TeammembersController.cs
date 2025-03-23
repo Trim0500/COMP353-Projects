@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -69,15 +71,19 @@ namespace MYVCApp.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    //TODO: 
+                    List<string> validationResult = await TeamFormationMemberAdditionHelper.Validate(teammember, _context);
 
-                    //GET TEAM FORMATION
+                    if (validationResult.Count != 0)
+                    {
+                        StringBuilder errors = new StringBuilder();
 
-                    //CHECK ITS FIRST OR ASYNC GENDER
-
-                    //IF IT'S NOT THE SAME, THROW
-
-                    //
+                        errors.AppendLine("Validation error(s): ");
+                        foreach(string s in validationResult)
+                        {
+                            errors.AppendLine(s);
+                        }
+                        throw new InvalidOperationException(errors.ToString());
+                    }
 
                     _context.Add(teammember);
                     await _context.SaveChangesAsync();
