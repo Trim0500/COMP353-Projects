@@ -29,7 +29,9 @@ VALUES
 ("Napoleon", "Bonaparte", "2013-01-01", "napoleon@revolutionmail.fr", "234795432", "BCDE23456689", "Montreal", "QC", "5141251234", "H3H6M1"),
 ("Maximilien", "Robespierre", "2009-01-01", "max@revolutionmail.fr", "234575432", "ABCD12345378", "Montreal", "QC", "5145901234", "H3H4M1"),
 ("Jean-Paul", "Marat", "2008-01-01", "jp@revolutionmail.com", "234535437", "BCDE23456189", "Montreal", "QC", "5140051234", "H3H7M1"),
-("Elton", "John", "2011-01-01", "elton@johnmail.com", "234515732", "ABCD12345078", "Montreal", "QC", "5145550234", "Z3H1M1");
+("Elton", "John", "2011-01-01", "elton@johnmail.com", "234515732", "ABCD12345078", "Montreal", "QC", "5145550234", "Z3H1M1"),
+("Cho", "Haseul", "2000-02-02", "chaseul@bbc.kr", "234515121", "AACD12345078", "Boisbriand", "QC", "5140120012", "A2F2F1"), #11 Family member + Club member
+("Choi", "Yerim", "2001-01-02", "cyerim@bbc.kr", "431515121", "1ACD12345078", "Terrebonne", "QC", "5141121012", "B6F2F1"); # 12 Family member + Club member
 
 INSERT INTO SecondaryFamilyMember (primary_family_member_id_fk, first_name, last_name, phone_number, relationship_to_primary)
 VALUES
@@ -61,16 +63,20 @@ VALUES
 (5, 1, "2017-01-01", null),
 (5, 2, "2020-01-01", null),
 (5, 3, "2020-01-01", null),
-(6, 1, "2022-01-01", null),
+(6, 1, "2022-01-01", null)
 (6, 2, "2022-01-01", "2025-01-01"),
+(6, 5, '2025-01-01', NULL),
 (7, 4, "2023-01-01", null),
 (7, 7, "2023-01-01", "2025-01-01"),
 (8, 7, "2023-01-01", null),
 (8, 1, "2019-01-01", "2025-01-01"),
 (9, 5, "2018-01-01", null),
 (9, 4, "2019-01-01", null),
-(10, 3, "2023-01-01", null),
-(10, 7, "2023-01-01", null);
+(10, 3, "2023-01-01", null)
+(10, 5, '2022-01-01', '2023-01-01'),
+(10, 7, "2023-01-01", null),
+(11, 1, "2023-01-01", null),
+(12, 1, "2023-01-01", null);
 
 ALTER TABLE Session AUTO_INCREMENT = 1;
 
@@ -181,37 +187,12 @@ VALUES ('Cotton', 'Joe', '2012-10-03', 'Gegagedigedagedago@yahoo.com', 157.48, 1
        ('William', 'Dubois', '2011-06-23', 'william.dubois@example.com', 158.52, 135.00, '212456789', '123456789013', '5145552122', 'Montreal', 'QC', 'H2X1L4', '1616 Rue Sainte-Famille', 'Consistent serves, needs mobility.', 0, 2, 'nephew', 'nephew'),
        ('Élodie', 'Roy', '2004-03-17', 'elodie.roy@example.com', 178.00, 165.90, '323567890', '234567890123', '5145553233', 'Montreal', 'QC', 'H3C2M5', '1717 Rue Saint-Urbain', 'Great vertical jump, strong in defense.', 0, 3, 'cousin', 'cousin'),
        ('Thomas', 'Lévesque', '2015-09-09', 'thomas.levesque@example.com', 140.31, 95.63, '434678901', '345678901234', '5145554344', 'Montreal', 'QC', 'H4A3N6', '1818 Rue Saint-Antoine', 'Energetic but lacks discipline.', 0, 1, 'nephew', 'nephew'),
-       ('Léa', 'Bélanger', '2010-10-20', 'lea.belanger@example.com', 168.00, 145.12, '545789012', '456789012345', '5145555455', 'Montreal', 'QC', 'H5A4P7', '1919 Rue Saint-Hubert', 'Balanced skill set, improving leadership.', 0, 5, 'niece', 'granddaughter');
+       ('Léa', 'Bélanger', '2010-10-20', 'lea.belanger@example.com', 168.00, 145.12, '545789012', '456789012345', '5145555455', 'Montreal', 'QC', 'H5A4P7', '1919 Rue Saint-Hubert', 'Balanced skill set, improving leadership.', 0, 5, 'niece', 'granddaughter'),
+       ("Cho", "Haseul", "2010-02-02", "chaseul@bbc.kr",  121, 121, "234515121", "AACD12345078", "5140120012", "Boisbriand", "QC",  "A2F2F1", "121 Rue St Jean", "Is being just luminous", 1, 1, "daughter", "friend"), #25 Family member + Club member
+	   ("Choi", "Yerim", "2011-01-02", "cyerim@bbc.kr", 121, 121, "431515121", "1ACD12345078", "5141121012","Terrebonne", "QC",  "B6F2F1", "121 Rue St Charles", "Is also luminous", 1, 1, "niece", "friend"), #26 Family member + Club member
+       ("Kim", "Jiwoo", "2010-02-02", "chuu@bbc.kr",  121, 121, "234515122", "AACD12345079", "5140120013", "l'Assomption", "QC",  "A2F2F2", "122 Rue St Jean", "Consistent with serving", 1, 11, "daughter", "friend"), #27 Associated with Club/Family Member
+	   ("Im", "Yeojin", "2011-01-02", "iyeojin@bbc.kr", 121, 121, "431515122", "1ACD12345079", "5141121013","Repentigny", "QC",  "B6F2F2", "122 Rue St Charles", "is very smort", 1, 12, "niece", "friend"); #28 Associated with Club/Family Member
 
-DELIMITER $$
-
-DROP PROCEDURE IF EXISTS insert_into_club_member_location $$
-
-CREATE PROCEDURE insert_into_club_member_location()
-
-BEGIN
-	DECLARE maxCMN INT DEFAULT 0;
-    DECLARE increment INT DEFAULT 1;
-    
-	SET maxCMN = (SELECT MAX(cmn) FROM ClubMember);
-    
-    WHILE (increment <= maxCMN) DO
-		INSERT INTO ClubMemberLocation
-        SELECT
-			location_id_fk,
-			CM.cmn AS cmn_fk,
-			start_date,
-			end_date
-		FROM FamilyMemberLocation FML
-		JOIN FamilyMember FM ON FML.family_member_id_fk = FM.id
-		JOIN ClubMember CM ON FM.id = CM.family_member_id_fk AND CM.cmn = increment
-		WHERE FML.end_date IS NULL;
-                
-		SET increment = increment + 1;
-    END WHILE;
-END $$
-
-CALL insert_into_club_member_location();
 
 INSERT INTO TeamFormation (name,captain_id_fk,location_id_fk)
 VALUES ('Altean Army',1,1),
@@ -233,8 +214,10 @@ VALUES ('Altean Army',1,1),
 	('My Team',10,3),
 	('Enemy Team',3,3),
 	('Spetsnaz',7,4),
-	('SEALs',10,7);
-
+	('SEALs',10,7),
+    ('Idarui Sonyeo', 25, 1), #21 Family/Club Member Team Captain
+    ('ARTMS', 26, 1); #22 Family/Club Member Team Captain
+    
 INSERT INTO TeamSession (team_formation_id_fk, session_id_fk, score)
 VALUES (1, 1, 85),
 	(2, 1, 100),
@@ -329,49 +312,16 @@ VALUES
 INSERT INTO TeamMember (team_formation_id_fk, cmn_fk, role, assignment_date_time)
 VALUES
 (1, 4, "libero", "2023-01-10 18:00:00"),
-(2, 4, "libero", "2023-01-11 18:00:00");
-
-INSERT INTO TeamMember (team_formation_id_fk, cmn_fk, role, assignment_date_time)
-VALUES
-(11, 1, "serving specialist", "2023-02-10 18:00:00"),
-(11, 2, "defensive specialist", "2023-02-11 18:00:00"),
-(11, 3, "middle blocker", "2023-02-11 18:00:00"),
-
-(12, 2, "serving specialist", "2023-02-12 18:00:00"),
-(12, 3, "defensive specialist", "2023-02-12 18:00:00"),
-(12, 4, "middle blocker", "2023-02-12 18:00:00"),
-
-(13, 3, "serving specialist", "2023-02-13 18:00:00"),
-(13, 4, "defensive specialist", "2023-02-13 18:00:00"),
-(13, 5, "middle blocker", "2023-02-13 18:00:00"),
-
-(14, 4, "serving specialist", "2023-03-10 18:00:00"),
-(14, 5, "defensive specialist", "2023-03-11 18:00:00"),
-(14, 1, "middle blocker", "2023-03-11 18:00:00"),
-
-(15, 5, "serving specialist", "2023-04-10 18:00:00"),
-(15, 1, "defensive specialist", "2023-04-11 18:00:00"),
-(15, 2, "middle blocker", "2023-04-11 18:00:00"),
-
-(16, 1, "serving specialist", "2023-04-10 18:00:00"),
-(16, 3, "defensive specialist", "2023-04-11 18:00:00"),
-(16, 5, "middle blocker", "2023-04-11 18:00:00"),
-
-(17, 2, "serving specialist", "2023-04-20 18:00:00"),
-(17, 4, "defensive specialist", "2023-04-20 18:00:00"),
-(17, 1, "middle blocker", "2023-04-20 18:00:00"),
-
-(18, 3, "serving specialist", "2023-05-13 18:00:00"),
-(18, 5, "defensive specialist", "2023-05-13 18:00:00"),
-(18, 2, "middle blocker", "2023-05-13 18:00:00"),
-
-(19, 4, "serving specialist", "2023-07-10 18:00:00"),
-(19, 1, "defensive specialist", "2023-07-11 18:00:00"),
-(19, 3, "middle blocker", "2023-07-12 18:00:00"),
-
-(20, 2, "serving specialist", "2023-11-10 18:00:00"),
-(20, 4, "defensive specialist", "2023-11-11 18:00:00"),
-(20, 5, "middle blocker", "2023-11-11 18:00:00");
+(2, 4, "libero", "2023-01-11 18:00:00"),
+(21, 4, "libero", "2024-01-11 18:00:00"),
+(21, 25, "defensive specialist", "2024-01-10 18:00:00"),
+(22, 25, "serving specialist", "2024-01-11 18:00:00"),
+(21, 26, "defensive specialist", "2024-01-12 18:00:00"),
+(22, 26, "serving specialist", "2024-01-13 18:00:00"),
+(21, 27, "defensive specialist", "2024-01-14 18:00:00"),
+(22, 27, "serving specialist", "2024-01-15 18:00:00"),
+(21, 28, "defensive specialist", "2024-01-16 18:00:00"),
+(22, 28, "serving specialist", "2024-01-17 18:00:00");
 
 -- Filling Payment up to minimum required 
 INSERT INTO Payment (amount, paymentDate, effectiveDate, method, cmn_fk) VALUES
@@ -404,4 +354,8 @@ INSERT INTO Payment (amount, paymentDate, effectiveDate, method, cmn_fk) VALUES
     (100.00, '2023-01-01', '2024-01-01', 'Cash', 2),
     (100.00, '2023-01-01', '2024-01-01', 'Cash', 3),
     (100.00, '2023-01-01', '2024-01-01', 'Debit', 4),
-    (100.00, '2023-01-01', '2024-01-01', 'Debit', 5);
+    (100.00, '2023-01-01', '2024-01-01', 'Debit', 5),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 25),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 26),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 27),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 28);
