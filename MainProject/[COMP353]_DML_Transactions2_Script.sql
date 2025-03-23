@@ -63,7 +63,7 @@ VALUES
 (5, 1, "2017-01-01", null),
 (5, 2, "2020-01-01", null),
 (5, 3, "2020-01-01", null),
-(6, 1, "2022-01-01", null)
+(6, 1, "2022-01-01", null),
 (6, 2, "2022-01-01", "2025-01-01"),
 (6, 5, '2025-01-01', NULL),
 (7, 4, "2023-01-01", null),
@@ -72,7 +72,7 @@ VALUES
 (8, 1, "2019-01-01", "2025-01-01"),
 (9, 5, "2018-01-01", null),
 (9, 4, "2019-01-01", null),
-(10, 3, "2023-01-01", null)
+(10, 3, "2023-01-01", null),
 (10, 5, '2022-01-01', '2023-01-01'),
 (10, 7, "2023-01-01", null),
 (11, 1, "2023-01-01", null),
@@ -163,35 +163,35 @@ VALUES (1,1,'2017-01-01',null,'General Manager'),
 
 ALTER TABLE ClubMember AUTO_INCREMENT = 1;
 
-INSERT INTO ClubMember (first_name, last_name, dob, email, height, weight, social_sec_num, med_card_num, phone_number, city, province, postal_code, address, progress_report, is_active, family_member_id_fk, primary_relationship, secondary_relationship)
-VALUES ('Cotton', 'Joe', '2012-10-03', 'Gegagedigedagedago@yahoo.com', 157.48, 160.00, '437022223', '648492359553', '5147585160', 'Montreal', 'QC', 'H3H2P2', '6354 Boardfish Road', 'Needs to lose weight', 1, 3, 'nephew', 'nephew'),
-       ('Julia', 'Himenez', '2010-03-10', 'JHarmony@googleplus.com', 160.34, 125.00, '439238588', '892748374776', '5142398475', 'Montreal', 'QC', 'H3H2P4', '12317 Hirani Lane', 'Very good at volleyball!', 1, 4, 'daughter', 'grand-daughter'),
-       ('John', 'Chena', '2008-04-12', 'UCantSeeMe@WWE.com', 182.88, 200.00, '434848584', '283934393293', '5146869348', 'Montreal', 'QC', 'G0A1H0', '4572 Champ Street', 'Very muscular, hard to find, and already balding', 1, 6, 'son', 'grandson'),
-       ('Mario', 'Mario', '2008-02-26', 'Wahoo@wahoo.com', 155.00, 154.00, '121334325', '903923903445', '5147823456', 'Laval', 'QC', 'H7A0A1', '1234 Mushroom Kingdom', 'Jumps incredibly high, has a mild shroom addiction', 1, 10, 'cousin', 'cousin'),
-       ('Luigi', 'Mario', '2009-10-10', 'Wahoo2@wahoo.com', 180.00, 154.00, '121334236', '903923903545', '5147829072', 'Laval', 'QC', 'H7A0A1', '1234 Mushroom Kingdom', 'Jumps even higher than his brother, same addiciton', 1, 10, 'cousin', 'cousin'),
-       ('Alex', 'Tremblay', '2000-05-15', 'alex.tremblay@example.com', 180.00, 165.34, '123456789', '123456654321', '5145551234', 'Montreal', 'QC', 'H2X1Y4', '123 Rue St-Denis', 'Good spiker, improving on defense.', 0, 3, 'brother', 'brother'),
-       ('Marie', 'Lefebvre', '1995-08-22', 'marie.lefebvre@example.com', 165.12, 136.68, '987654321', '654321789123', '5145555678', 'Montreal', 'QC', 'H3Z2J1', '456 Av. des Pins', 'Strong setter with excellent game sense.', 0, 7, 'cousin', 'cousin'),
-       ('Julien', 'Bergeron', '1998-12-10', 'julien.bergeron@example.com', 175.56, 176.37, '321549876', '789123574829', '5145559012', 'Montreal', 'QC', 'H4B3K5', '789 Blvd. René-Lévesque', 'Powerful hitter but needs work on stamina.', 0, 2, 'brother', 'brother'),
-       ('Sophie', 'Ducharme', '1996-03-28', 'sophie.ducharme@example.com', 170.32, 149.91, '456789123', '234567689345', '5145553456', 'Montreal', 'QC', 'H5A4M2', '101 Rue Sainte-Catherine', 'Great libero with fast reflexes.', 0, 9, 'sister', 'daughter'),
-       ('Étienne', 'Gagnon', '1999-07-04', 'etienne.gagnon@example.com', 185.16, 187.39, '789123456', '345678362782', '5145557890', 'Montreal', 'QC', 'H6C5N3', '202 Av. du Parc', 'Versatile player, excels in blocking.', 0, 5, 'cousin', 'cousin'),
-       ('Lucas', 'Beaulieu', '2010-06-12', 'lucas.beaulieu@example.com', 165.45, 140.00, '112456789', '123456789012', '5145551122', 'Montreal', 'QC', 'H3B1A4', '300 Rue Sherbrooke', 'Developing setter with good agility.', 0, 1, 'cousin', 'cousin'),
-       ('Émilie', 'Chartrand', '2012-09-25', 'emilie.chartrand@example.com', 150.40, 110.00, '223567890', '234567890124', '5145552233', 'Montreal', 'QC', 'H3C2B5', '123 Rue de la Montagne', 'Quick reflexes but needs power.', 0, 5, 'niece', 'granddaughter'),
-       ('Antoine', 'Desrosiers', '2008-02-17', 'antoine.desrosiers@example.com', 170.12, 160.50, '334678901', '345678901235', '5145553344', 'Montreal', 'QC', 'H4A3C6', '456 Rue Sainte-Catherine', 'Strong attacker, improving technique.', 0, 3, 'nephew', 'nephew'),
-       ('Camille', 'Fournier', '2011-11-03', 'camille.fournier@example.com', 155.11, 120.22, '445789012', '456789012346', '5145554455', 'Montreal', 'QC', 'H2X4D7', '789 Boulevard René-Lévesque', 'Excellent defense, needs serve work.', 0, 2, 'daughter', 'niece'),
-       ('Mathis', 'Lavoie', '2006-04-29', 'mathis.lavoie@example.com', 180.10, 175.59, '556890123', '567890123456', '5145555566', 'Montreal', 'QC', 'H1Y5E8', '1010 Rue Sherbrooke', 'All-rounder, great blocking skills.', 0, 7, 'cousin', 'cousin'),
-       ('Sophie', 'Pelletier', '2009-07-19', 'sophie.pelletier@example.com', 162.91, 130.83, '667901234', '678901234567', '5145556677', 'Montreal', 'QC', 'H3T6F9', '1111 Avenue du Parc', 'Developing spiker, solid stamina.', 0, 4, 'niece', 'granddaughter'),
-       ('Noah', 'Gauthier', '2013-01-08', 'noah.gauthier@example.com', 145.00, 100.00, '778012345', '789012345678', '5145557788', 'Montreal', 'QC', 'H3Z7G0', '1212 Rue Saint-Denis', 'Young player with great potential.', 0, 6, 'son', 'grandson'),
-       ('Isabelle', 'Morin', '2005-12-14', 'isabelle.morin@example.com', 172.00, 150.00, '889123456', '890123456789', '5145558899', 'Montreal', 'QC', 'H4G8H1', '1313 Rue de la Commune', 'Smart playmaker, solid court awareness.', 0, 9, 'cousin', 'cousin'),
-       ('Gabriel', 'Côté', '2014-05-30', 'gabriel.cote@example.com', 138.00, 90.00, '990234567', '901234567890', '5145559900', 'Montreal', 'QC', 'H5H9J2', '1414 Rue Notre-Dame', 'Promising skills, needs experience.', 0, 8, 'son', 'grandson'),
-       ('Chloé', 'Bouchard', '2007-08-11', 'chloe.bouchard@example.com', 160.67, 125.15, '101345678', '012345678901', '5145551011', 'Montreal', 'QC', 'H3B0K3', '1515 Rue Saint-Laurent', 'Fast reactions, improving accuracy.', 0, 10, 'daughter', 'granddaughter'),
-       ('William', 'Dubois', '2011-06-23', 'william.dubois@example.com', 158.52, 135.00, '212456789', '123456789013', '5145552122', 'Montreal', 'QC', 'H2X1L4', '1616 Rue Sainte-Famille', 'Consistent serves, needs mobility.', 0, 2, 'nephew', 'nephew'),
-       ('Élodie', 'Roy', '2004-03-17', 'elodie.roy@example.com', 178.00, 165.90, '323567890', '234567890123', '5145553233', 'Montreal', 'QC', 'H3C2M5', '1717 Rue Saint-Urbain', 'Great vertical jump, strong in defense.', 0, 3, 'cousin', 'cousin'),
-       ('Thomas', 'Lévesque', '2015-09-09', 'thomas.levesque@example.com', 140.31, 95.63, '434678901', '345678901234', '5145554344', 'Montreal', 'QC', 'H4A3N6', '1818 Rue Saint-Antoine', 'Energetic but lacks discipline.', 0, 1, 'nephew', 'nephew'),
-       ('Léa', 'Bélanger', '2010-10-20', 'lea.belanger@example.com', 168.00, 145.12, '545789012', '456789012345', '5145555455', 'Montreal', 'QC', 'H5A4P7', '1919 Rue Saint-Hubert', 'Balanced skill set, improving leadership.', 0, 5, 'niece', 'granddaughter'),
-       ("Cho", "Haseul", "2010-02-02", "chaseul@bbc.kr",  121, 121, "234515121", "AACD12345078", "5140120012", "Boisbriand", "QC",  "A2F2F1", "121 Rue St Jean", "Is being just luminous", 1, 1, "daughter", "friend"), #25 Family member + Club member
-	   ("Choi", "Yerim", "2011-01-02", "cyerim@bbc.kr", 121, 121, "431515121", "1ACD12345078", "5141121012","Terrebonne", "QC",  "B6F2F1", "121 Rue St Charles", "Is also luminous", 1, 1, "niece", "friend"), #26 Family member + Club member
-       ("Kim", "Jiwoo", "2010-02-02", "chuu@bbc.kr",  121, 121, "234515122", "AACD12345079", "5140120013", "l'Assomption", "QC",  "A2F2F2", "122 Rue St Jean", "Consistent with serving", 1, 11, "daughter", "friend"), #27 Associated with Club/Family Member
-	   ("Im", "Yeojin", "2011-01-02", "iyeojin@bbc.kr", 121, 121, "431515122", "1ACD12345079", "5141121013","Repentigny", "QC",  "B6F2F2", "122 Rue St Charles", "is very smort", 1, 12, "niece", "friend"); #28 Associated with Club/Family Member
+INSERT INTO ClubMember (first_name, last_name, dob, email, height, weight, social_sec_num, med_card_num, phone_number, city, province, postal_code, address, progress_report, is_active, family_member_id_fk, primary_relationship, secondary_relationship, gender)
+VALUES ('Cotton', 'Joe', '2012-10-03', 'Gegagedigedagedago@yahoo.com', 157.48, 160.00, '437022223', '648492359553', '5147585160', 'Montreal', 'QC', 'H3H2P2', '6354 Boardfish Road', 'Needs to lose weight', 1, 3, 'Other', 'Other', 'M'),
+       ('Julia', 'Himenez', '2010-03-10', 'JHarmony@googleplus.com', 160.34, 125.00, '439238588', '892748374776', '5142398475', 'Montreal', 'QC', 'H3H2P4', '12317 Hirani Lane', 'Very good at volleyball!', 1, 4, 'Mother', 'Grandmother', 'F'),
+       ('John', 'Chena', '2008-04-12', 'UCantSeeMe@WWE.com', 182.88, 200.00, '434848584', '283934393293', '5146869348', 'Montreal', 'QC', 'G0A1H0', '4572 Champ Street', 'Very muscular, hard to find, and already balding', 1, 6, 'Father', 'Grandfather', 'M'),
+       ('Mario', 'Mario', '2008-02-26', 'Wahoo@wahoo.com', 155.00, 154.00, '121334325', '903923903445', '5147823456', 'Laval', 'QC', 'H7A0A1', '1234 Mushroom Kingdom', 'Jumps incredibly high, has a mild shroom addiction', 1, 10, 'Other', 'Other', 'M'),
+       ('Luigi', 'Mario', '2009-10-10', 'Wahoo2@wahoo.com', 180.00, 154.00, '121334236', '903923903545', '5147829072', 'Laval', 'QC', 'H7A0A1', '1234 Mushroom Kingdom', 'Jumps even higher than his brother, same addiciton', 1, 10, 'Other', 'Other', 'M'),
+       ('Alex', 'Tremblay', '2000-05-15', 'alex.tremblay@example.com', 180.00, 165.34, '123456789', '123456654321', '5145551234', 'Montreal', 'QC', 'H2X1Y4', '123 Rue St-Denis', 'Good spiker, improving on defense.', 0, 3, 'Other', 'Other', 'M'),
+       ('Marie', 'Lefebvre', '1995-08-22', 'marie.lefebvre@example.com', 165.12, 136.68, '987654321', '654321789123', '5145555678', 'Montreal', 'QC', 'H3Z2J1', '456 Av. des Pins', 'Strong setter with excellent game sense.', 0, 7, 'Other', 'Other', 'F'),
+       ('Julien', 'Bergeron', '1998-12-10', 'julien.bergeron@example.com', 175.56, 176.37, '321549876', '789123574829', '5145559012', 'Montreal', 'QC', 'H4B3K5', '789 Blvd. René-Lévesque', 'Powerful hitter but needs work on stamina.', 0, 2, 'Other', 'Other', 'M'),
+       ('Sophie', 'Ducharme', '1996-03-28', 'sophie.ducharme@example.com', 170.32, 149.91, '456789123', '234567689345', '5145553456', 'Montreal', 'QC', 'H5A4M2', '101 Rue Sainte-Catherine', 'Great libero with fast reflexes.', 0, 9, 'Mother', 'Mother', 'F'),
+       ('Étienne', 'Gagnon', '1999-07-04', 'etienne.gagnon@example.com', 185.16, 187.39, '789123456', '345678362782', '5145557890', 'Montreal', 'QC', 'H6C5N3', '202 Av. du Parc', 'Versatile player, excels in blocking.', 0, 5, 'Other', 'Other', 'M'),
+       ('Lucas', 'Beaulieu', '2010-06-12', 'lucas.beaulieu@example.com', 165.45, 140.00, '112456789', '123456789012', '5145551122', 'Montreal', 'QC', 'H3B1A4', '300 Rue Sherbrooke', 'Developing setter with good agility.', 0, 1, 'Other', 'Other', 'M'),
+       ('Émilie', 'Chartrand', '2012-09-25', 'emilie.chartrand@example.com', 150.40, 110.00, '223567890', '234567890124', '5145552233', 'Montreal', 'QC', 'H3C2B5', '123 Rue de la Montagne', 'Quick reflexes but needs power.', 0, 5, 'Aunt', 'Grandmother', 'F'),
+       ('Antoine', 'Desrosiers', '2008-02-17', 'antoine.desrosiers@example.com', 170.12, 160.50, '334678901', '345678901235', '5145553344', 'Montreal', 'QC', 'H4A3C6', '456 Rue Sainte-Catherine', 'Strong attacker, improving technique.', 0, 3, 'Uncle', 'Uncle', 'M'),
+       ('Camille', 'Fournier', '2011-11-03', 'camille.fournier@example.com', 155.11, 120.22, '445789012', '456789012346', '5145554455', 'Montreal', 'QC', 'H2X4D7', '789 Boulevard René-Lévesque', 'Excellent defense, needs serve work.', 0, 2, 'Mother', 'Aunt', 'F'),
+       ('Mathis', 'Lavoie', '2006-04-29', 'mathis.lavoie@example.com', 180.10, 175.59, '556890123', '567890123456', '5145555566', 'Montreal', 'QC', 'H1Y5E8', '1010 Rue Sherbrooke', 'All-rounder, great blocking skills.', 0, 7, 'Other', 'Other', 'M'),
+       ('Sophie', 'Pelletier', '2009-07-19', 'sophie.pelletier@example.com', 162.91, 130.83, '667901234', '678901234567', '5145556677', 'Montreal', 'QC', 'H3T6F9', '1111 Avenue du Parc', 'Developing spiker, solid stamina.', 0, 4, 'Aunt', 'Grandmother', 'F'),
+       ('Noah', 'Gauthier', '2013-01-08', 'noah.gauthier@example.com', 145.00, 100.00, '778012345', '789012345678', '5145557788', 'Montreal', 'QC', 'H3Z7G0', '1212 Rue Saint-Denis', 'Young player with great potential.', 0, 6, 'Father', 'Grandfather', 'F'),
+       ('Isabelle', 'Morin', '2005-12-14', 'isabelle.morin@example.com', 172.00, 150.00, '889123456', '890123456789', '5145558899', 'Montreal', 'QC', 'H4G8H1', '1313 Rue de la Commune', 'Smart playmaker, solid court awareness.', 0, 9, 'Other', 'Other', 'F'),
+       ('Gabriel', 'Côté', '2014-05-30', 'gabriel.cote@example.com', 138.00, 90.00, '990234567', '901234567890', '5145559900', 'Montreal', 'QC', 'H5H9J2', '1414 Rue Notre-Dame', 'Promising skills, needs experience.', 0, 8, 'Father', 'Grandfather', 'M'),
+       ('Chloé', 'Bouchard', '2007-08-11', 'chloe.bouchard@example.com', 160.67, 125.15, '101345678', '012345678901', '5145551011', 'Montreal', 'QC', 'H3B0K3', '1515 Rue Saint-Laurent', 'Fast reactions, improving accuracy.', 0, 10, 'Mother', 'Grandmother', 'F'),
+       ('William', 'Dubois', '2011-06-23', 'william.dubois@example.com', 158.52, 135.00, '212456789', '123456789013', '5145552122', 'Montreal', 'QC', 'H2X1L4', '1616 Rue Sainte-Famille', 'Consistent serves, needs mobility.', 0, 2, 'Other', 'Other', 'M'),
+       ('Élodie', 'Roy', '2004-03-17', 'elodie.roy@example.com', 178.00, 165.90, '323567890', '234567890123', '5145553233', 'Montreal', 'QC', 'H3C2M5', '1717 Rue Saint-Urbain', 'Great vertical jump, strong in defense.', 0, 3, 'Other', 'Other', 'F'),
+       ('Thomas', 'Lévesque', '2015-09-09', 'thomas.levesque@example.com', 140.31, 95.63, '434678901', '345678901234', '5145554344', 'Montreal', 'QC', 'H4A3N6', '1818 Rue Saint-Antoine', 'Energetic but lacks discipline.', 0, 1, 'Uncle', 'Uncle', 'M'),
+       ('Léa', 'Bélanger', '2010-10-20', 'lea.belanger@example.com', 168.00, 145.12, '545789012', '456789012345', '5145555455', 'Montreal', 'QC', 'H5A4P7', '1919 Rue Saint-Hubert', 'Balanced skill set, improving leadership.', 0, 5, 'Aunt', 'Grandmother', 'F'),
+       ("Cho", "Haseul", "2010-02-02", "chaseul@bbc.kr",  121, 121, "234515121", "AACD12345078", "5140120012", "Boisbriand", "QC",  "A2F2F1", "121 Rue St Jean", "Is being just luminous", 1, 1, "Mother", "Friend", 'F'), #25 Family member + Club member
+	   ("Choi", "Yerim", "2011-01-02", "cyerim@bbc.kr", 121, 121, "431515121", "1ACD12345078", "5141121012","Terrebonne", "QC",  "B6F2F1", "121 Rue St Charles", "Is also luminous", 1, 1, "Aunt", "Friend", 'F'), #26 Family member + Club member
+       ("Kim", "Jiwoo", "2010-02-02", "chuu@bbc.kr",  121, 121, "234515122", "AACD12345079", "5140120013", "l'Assomption", "QC",  "A2F2F2", "122 Rue St Jean", "Consistent with serving", 1, 11, "Mother", "Friend", 'F'), #27 Associated with Club/Family Member
+	   ("Im", "Yeojin", "2011-01-02", "iyeojin@bbc.kr", 121, 121, "431515122", "1ACD12345079", "5141121013","Repentigny", "QC",  "B6F2F2", "122 Rue St Charles", "is very smort", 1, 12, "Aunt", "Tutor", 'F'); #28 Associated with Club/Family Member
 
 
 INSERT INTO TeamFormation (name,captain_id_fk,location_id_fk)
@@ -313,7 +313,7 @@ INSERT INTO TeamMember (team_formation_id_fk, cmn_fk, role, assignment_date_time
 VALUES
 (1, 4, "libero", "2023-01-10 18:00:00"),
 (2, 4, "libero", "2023-01-11 18:00:00"),
-(21, 4, "libero", "2024-01-11 18:00:00"),
+(21, 2, "libero", "2024-01-11 18:00:00"),
 (21, 25, "defensive specialist", "2024-01-10 18:00:00"),
 (22, 25, "serving specialist", "2024-01-11 18:00:00"),
 (21, 26, "defensive specialist", "2024-01-12 18:00:00"),
