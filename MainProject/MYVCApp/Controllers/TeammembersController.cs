@@ -69,6 +69,16 @@ namespace MYVCApp.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //TODO: 
+
+                    //GET TEAM FORMATION
+
+                    //CHECK ITS FIRST OR ASYNC GENDER
+
+                    //IF IT'S NOT THE SAME, THROW
+
+                    //
+
                     _context.Add(teammember);
                     await _context.SaveChangesAsync();
                     TempData[TempDataHelper.Success] = String.Format("Successfully created TeamMember {0}/{1}", teammember.CmnFk, teammember.TeamFormationIdFk);
