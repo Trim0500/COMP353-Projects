@@ -1,0 +1,63 @@
+﻿@model IEnumerable<MYVCApp.Models.Personnellocation>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>PersonnelLocations - List</h1>
+
+<partial name="TempDataPartial"></partial>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LocationIdFkNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PersonnelIdFkNavigation)
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LocationIdFkNavigation.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PersonnelIdFkNavigation.Id)
+            </td>
+            <td>
+                <a asp-controller="Personnellocations" asp-action="details" asp-route-location="@item.LocationIdFk" asp-route-personnel="@item.PersonnelIdFk" asp-route-startdate="@item.StartDate">Details</a>
+                <a asp-controller="Personnellocations" asp-action="edit" asp-route-location="@item.LocationIdFk" asp-route-personnel="@item.PersonnelIdFk" asp-route-startdate="@item.StartDate">Edit</a>
+                <a asp-controller="Personnellocations" asp-action="delete" asp-route-location="@item.LocationIdFk" asp-route-personnel="@item.PersonnelIdFk" asp-route-startdate="@item.StartDate">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

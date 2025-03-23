@@ -1,0 +1,55 @@
+﻿@model IEnumerable<MYVCApp.Models.Teammember>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>TeamMembers - List</h1>
+
+<partial name="TempDataPartial"></partial>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CmnFk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamFormationIdFk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignmentDateTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CmnFk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeamFormationIdFk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignmentDateTime)
+            </td>
+            <td>
+                <a asp-controller="Teammembers" asp-action="Details" asp-route-cmn="@item.CmnFk" asp-route-teamformation="@item.TeamFormationIdFk">Details</a>
+                <a asp-controller="Teammembers" asp-action="Edit" asp-route-cmn="@item.CmnFk" asp-route-teamformation="@item.TeamFormationIdFk">Edit</a>
+                <a asp-controller="Teammembers" asp-action="Delete" asp-route-cmn="@item.CmnFk" asp-route-teamformation="@item.TeamFormationIdFk">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

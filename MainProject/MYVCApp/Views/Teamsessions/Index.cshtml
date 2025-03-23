@@ -1,0 +1,51 @@
+﻿@model IEnumerable<MYVCApp.Models.Teamsession>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>TeamSessions - List</h1>
+
+<partial name="TempDataPartial"></partial>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamFormationIdFk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionIdFk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Score)
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TeamFormationIdFk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SessionIdFk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+            <td>
+                <a asp-controller="Teamsessions" asp-action="details" asp-route-teamformation="@item.TeamFormationIdFk" asp-route-session="@item.SessionIdFk">Details</a>
+                <a asp-controller="Teamsessions" asp-action="edit" asp-route-teamformation="@item.TeamFormationIdFk" asp-route-session="@item.SessionIdFk">Edit</a>
+                <a asp-controller="Teamsessions" asp-action="delete" asp-route-teamformation="@item.TeamFormationIdFk" asp-route-session="@item.SessionIdFk">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

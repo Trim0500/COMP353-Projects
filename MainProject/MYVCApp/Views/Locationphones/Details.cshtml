@@ -1,0 +1,17 @@
+﻿@model MYVCApp.Models.Locationphone
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>LocationPhone</h4>
+    <hr />
+    <h5>Location ID: @Model.LocationIdFk</h5>
+    <h5>Location Phone: @Model.PhoneNumber</h5>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
