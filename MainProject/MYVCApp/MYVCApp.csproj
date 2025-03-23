@@ -21,4 +21,8 @@
     <PackageReference Include="MySql.EntityFrameworkCore" Version="6.0.33" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Temp\" />
+  </ItemGroup>
+
 </Project>

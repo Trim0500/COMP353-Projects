@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using MYVCApp.Models;
 
-namespace MYVCApp.Contexts
+namespace MYVCApp.Temp
 {
-    public partial class ApplicationDbContext : DbContext
+    public partial class mainprojectContext : DbContext
     {
-        public ApplicationDbContext()
+        public mainprojectContext()
         {
         }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public mainprojectContext(DbContextOptions<mainprojectContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Clubmember> Clubmembers { get; set; } = null!;
+        public virtual DbSet<Clubmemberlocation> Clubmemberlocations { get; set; } = null!;
         public virtual DbSet<Familymember> Familymembers { get; set; } = null!;
         public virtual DbSet<Familymemberlocation> Familymemberlocations { get; set; } = null!;
         public virtual DbSet<Location> Locations { get; set; } = null!;
@@ -142,6 +142,40 @@ namespace MYVCApp.Contexts
                     .HasForeignKey(d => d.FamilyMemberIdFk)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("clubmember_ibfk_1");
+            });
+
+            modelBuilder.Entity<Clubmemberlocation>(entity =>
+            {
+                entity.HasKey(e => new { e.LocationIdFk, e.CmnFk, e.StartDate })
+                    .HasName("PRIMARY");
+
+                entity.ToTable("clubmemberlocation");
+
+                entity.HasIndex(e => e.CmnFk, "cmn_fk");
+
+                entity.Property(e => e.LocationIdFk).HasColumnName("location_id_fk");
+
+                entity.Property(e => e.CmnFk).HasColumnName("cmn_fk");
+
+                entity.Property(e => e.StartDate)
+                    .HasColumnType("date")
+                    .HasColumnName("start_date");
+
+                entity.Property(e => e.EndDate)
+                    .HasColumnType("date")
+                    .HasColumnName("end_date");
+
+                entity.HasOne(d => d.CmnFkNavigation)
+                    .WithMany(p => p.Clubmemberlocations)
+                    .HasForeignKey(d => d.CmnFk)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("clubmemberlocation_ibfk_2");
+
+                entity.HasOne(d => d.LocationIdFkNavigation)
+                    .WithMany(p => p.Clubmemberlocations)
+                    .HasForeignKey(d => d.LocationIdFk)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("clubmemberlocation_ibfk_1");
             });
 
             modelBuilder.Entity<Familymember>(entity =>
@@ -428,6 +462,10 @@ namespace MYVCApp.Contexts
 
                 entity.Property(e => e.LocationIdFk).HasColumnName("location_id_fk");
 
+                entity.Property(e => e.StartDate)
+                    .HasColumnType("date")
+                    .HasColumnName("start_date");
+
                 entity.Property(e => e.EndDate)
                     .HasColumnType("date")
                     .HasColumnName("end_date");
@@ -435,10 +473,6 @@ namespace MYVCApp.Contexts
                 entity.Property(e => e.Role)
                     .HasMaxLength(50)
                     .HasColumnName("role");
-
-                entity.Property(e => e.StartDate)
-                    .HasColumnType("date")
-                    .HasColumnName("start_date");
 
                 entity.HasOne(d => d.LocationIdFkNavigation)
                     .WithMany(p => p.Personnellocations)
@@ -457,6 +491,9 @@ namespace MYVCApp.Contexts
                     .HasName("PRIMARY");
 
                 entity.ToTable("secondaryfamilymember");
+
+                entity.HasIndex(e => e.PrimaryFamilyMemberIdFk, "primary_family_member_id_fk")
+                    .IsUnique();
 
                 entity.Property(e => e.PrimaryFamilyMemberIdFk).HasColumnName("primary_family_member_id_fk");
 
@@ -478,8 +515,8 @@ namespace MYVCApp.Contexts
                     .HasColumnName("relationship_to_primary");
 
                 entity.HasOne(d => d.PrimaryFamilyMemberIdFkNavigation)
-                    .WithMany(p => p.Secondaryfamilymembers)
-                    .HasForeignKey(d => d.PrimaryFamilyMemberIdFk)
+                    .WithOne(p => p.Secondaryfamilymember)
+                    .HasForeignKey<Secondaryfamilymember>(d => d.PrimaryFamilyMemberIdFk)
                     .HasConstraintName("secondaryfamilymember_ibfk_1");
             });
 

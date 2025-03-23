@@ -58,7 +58,7 @@ namespace MYVCApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Cmn,FirstName,LastName,Dob,Email,Height,Weight,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Address,ProgressReport,IsActive,FamilyMemberIdFk,PrimaryRelationship,SecondaryRelationship")] Clubmember clubmember)
+        public async Task<IActionResult> Create([Bind("Cmn,FirstName,LastName,Dob,Email,Height,Weight,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Address,ProgressReport,IsActive,FamilyMemberIdFk,PrimaryRelationship,SecondaryRelationship,Gender")] Clubmember clubmember)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace MYVCApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Cmn,FirstName,LastName,Dob,Email,Height,Weight,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Address,ProgressReport,IsActive,FamilyMemberIdFk,PrimaryRelationship,SecondaryRelationship")] Clubmember clubmember)
+        public async Task<IActionResult> Edit(int id, [Bind("Cmn,FirstName,LastName,Dob,Email,Height,Weight,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Address,ProgressReport,IsActive,FamilyMemberIdFk,PrimaryRelationship,SecondaryRelationship,Gender")] Clubmember clubmember)
         {
             try
             {

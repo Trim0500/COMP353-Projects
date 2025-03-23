@@ -66,7 +66,10 @@
                 @Html.DisplayNameFor(model => model.SecondaryRelationship)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FamilyMemberIdFkNavigation)
+                @Html.DisplayNameFor(model => model.FamilyMemberIdFk)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
             </th>
             <th>
                 Action
@@ -128,7 +131,10 @@
                 @Html.DisplayFor(modelItem => item.SecondaryRelationship)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FamilyMemberIdFkNavigation.Id)
+                @Html.DisplayFor(modelItem => item.FamilyMemberIdFk)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Cmn">Edit</a> |
