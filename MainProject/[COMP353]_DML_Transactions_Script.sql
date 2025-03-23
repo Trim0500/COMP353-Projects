@@ -331,6 +331,48 @@ VALUES
 (1, 4, "libero", "2023-01-10 18:00:00"),
 (2, 4, "libero", "2023-01-11 18:00:00");
 
+INSERT INTO TeamMember (team_formation_id_fk, cmn_fk, role, assignment_date_time)
+VALUES
+(11, 1, "serving specialist", "2023-02-10 18:00:00"),
+(11, 2, "defensive specialist", "2023-02-11 18:00:00"),
+(11, 3, "middle blocker", "2023-02-11 18:00:00"),
+
+(12, 2, "serving specialist", "2023-02-12 18:00:00"),
+(12, 3, "defensive specialist", "2023-02-12 18:00:00"),
+(12, 4, "middle blocker", "2023-02-12 18:00:00"),
+
+(13, 3, "serving specialist", "2023-02-13 18:00:00"),
+(13, 4, "defensive specialist", "2023-02-13 18:00:00"),
+(13, 5, "middle blocker", "2023-02-13 18:00:00"),
+
+(14, 4, "serving specialist", "2023-03-10 18:00:00"),
+(14, 5, "defensive specialist", "2023-03-11 18:00:00"),
+(14, 1, "middle blocker", "2023-03-11 18:00:00"),
+
+(15, 5, "serving specialist", "2023-04-10 18:00:00"),
+(15, 1, "defensive specialist", "2023-04-11 18:00:00"),
+(15, 2, "middle blocker", "2023-04-11 18:00:00"),
+
+(16, 1, "serving specialist", "2023-04-10 18:00:00"),
+(16, 3, "defensive specialist", "2023-04-11 18:00:00"),
+(16, 5, "middle blocker", "2023-04-11 18:00:00"),
+
+(17, 2, "serving specialist", "2023-04-20 18:00:00"),
+(17, 4, "defensive specialist", "2023-04-20 18:00:00"),
+(17, 1, "middle blocker", "2023-04-20 18:00:00"),
+
+(18, 3, "serving specialist", "2023-05-13 18:00:00"),
+(18, 5, "defensive specialist", "2023-05-13 18:00:00"),
+(18, 2, "middle blocker", "2023-05-13 18:00:00"),
+
+(19, 4, "serving specialist", "2023-07-10 18:00:00"),
+(19, 1, "defensive specialist", "2023-07-11 18:00:00"),
+(19, 3, "middle blocker", "2023-07-12 18:00:00"),
+
+(20, 2, "serving specialist", "2023-11-10 18:00:00"),
+(20, 4, "defensive specialist", "2023-11-11 18:00:00"),
+(20, 5, "middle blocker", "2023-11-11 18:00:00");
+
 -- Filling Payment up to minimum required 
 INSERT INTO Payment (amount, paymentDate, effectiveDate, method, cmn_fk) VALUES
     (100.00, '2021-01-01', '2022-01-01', 'Debit', 1),
