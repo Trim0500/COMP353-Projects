@@ -30,8 +30,11 @@ VALUES
 ("Maximilien", "Robespierre", "2009-01-01", "max@revolutionmail.fr", "234575432", "ABCD12345378", "Montreal", "QC", "5145901234", "H3H4M1"),
 ("Jean-Paul", "Marat", "2008-01-01", "jp@revolutionmail.com", "234535437", "BCDE23456189", "Montreal", "QC", "5140051234", "H3H7M1"),
 ("Elton", "John", "2011-01-01", "elton@johnmail.com", "234515732", "ABCD12345078", "Montreal", "QC", "5145550234", "Z3H1M1"),
-("Cho", "Haseul", "2000-02-02", "chaseul@bbc.kr", "234515121", "AACD12345078", "Boisbriand", "QC", "5140120012", "A2F2F1"), #11 Family member + Club member
-("Choi", "Yerim", "2001-01-02", "cyerim@bbc.kr", "431515121", "1ACD12345078", "Terrebonne", "QC", "5141121012", "B6F2F1"); # 12 Family member + Club member
+("Cho", "Haseul", "2010-02-02", "chaseul@bbc.kr", "234515121", "AACD12345078", "Boisbriand", "QC", "5140120012", "A2F2F1"), #11 Family member + Club member
+("Choi", "Yerim", "2011-01-02", "cyerim@bbc.kr", "431515121", "1ACD12345078", "Terrebonne", "QC", "5141121012", "B6F2F1"), # 12 Family member + Club member
+("Ha", "Sooyoung", "2011-01-02", "hsooyoung@bbc.kr", "431515321", "4ACD12345078", "Longueuil", "QC", "5141121015", "G6F2F1"), # 13 Family member + Club member
+("Jeon", "Heejin", "2011-01-02", "jheejin@bbc.kr", "631515321", "6ACD12345078", "Brossard", "QC", "5142121015", "G8F2F1"), # 14 Family member + Club member
+("Kim", "Hyunjin", "2011-01-02", "khyunjin@bbc.kr", "731515321", "7ACD12345078", "Brossard", "QC", "5142121019", "A8F2F1"); # 15 Family member + Club member
 
 INSERT INTO SecondaryFamilyMember (primary_family_member_id_fk, first_name, last_name, phone_number, relationship_to_primary)
 VALUES
@@ -76,7 +79,10 @@ VALUES
 (10, 5, '2022-01-01', '2023-01-01'),
 (10, 7, "2023-01-01", null),
 (11, 1, "2023-01-01", null),
-(12, 1, "2023-01-01", null);
+(12, 1, "2023-01-01", null),
+(13, 1, "2023-01-01", null),
+(14, 1, "2023-01-01", null),
+(15, 1, "2023-01-01", null);
 
 ALTER TABLE Session AUTO_INCREMENT = 1;
 
@@ -190,9 +196,14 @@ VALUES ('Cotton', 'Joe', '2012-10-03', 'Gegagedigedagedago@yahoo.com', 157.48, 1
        ('Léa', 'Bélanger', '2010-10-20', 'lea.belanger@example.com', 168.00, 145.12, '545789012', '456789012345', '5145555455', 'Montreal', 'QC', 'H5A4P7', '1919 Rue Saint-Hubert', 'Balanced skill set, improving leadership.', 0, 5, 'Aunt', 'Grandmother', 'F'),
        ("Cho", "Haseul", "2010-02-02", "chaseul@bbc.kr",  121, 121, "234515121", "AACD12345078", "5140120012", "Boisbriand", "QC",  "A2F2F1", "121 Rue St Jean", "Is being just luminous", 1, 1, "Mother", "Friend", 'F'), #25 Family member + Club member
 	   ("Choi", "Yerim", "2011-01-02", "cyerim@bbc.kr", 121, 121, "431515121", "1ACD12345078", "5141121012","Terrebonne", "QC",  "B6F2F1", "121 Rue St Charles", "Is also luminous", 1, 1, "Aunt", "Friend", 'F'), #26 Family member + Club member
-       ("Kim", "Jiwoo", "2010-02-02", "chuu@bbc.kr",  121, 121, "234515122", "AACD12345079", "5140120013", "l'Assomption", "QC",  "A2F2F2", "122 Rue St Jean", "Consistent with serving", 1, 11, "Mother", "Friend", 'F'), #27 Associated with Club/Family Member
-	   ("Im", "Yeojin", "2011-01-02", "iyeojin@bbc.kr", 121, 121, "431515122", "1ACD12345079", "5141121013","Repentigny", "QC",  "B6F2F2", "122 Rue St Charles", "is very smort", 1, 12, "Aunt", "Tutor", 'F'); #28 Associated with Club/Family Member
-
+       ("Kim", "Jiwoo", "2010-02-02", "chuu@bbc.kr",  121, 121, "234515122", "AACD12345079", "5140120013", "l'Assomption", "QC",  "A2F2F2", "122 Rue St Jean", "Consistent with serving", 1, 11, "Mother", "Friend", 'F'), #27 Associated with Club/Family member
+	   ("Im", "Yeojin", "2011-01-02", "iyeojin@bbc.kr", 121, 121, "431515122", "1ACD12345079", "5141121013","Repentigny", "QC",  "B6F2F2", "122 Rue St Charles", "is very smort", 1, 12, "Aunt", "Tutor", 'F'), #28 Associated with Club/Family member
+	   ("Ha", "Sooyoung", "2011-01-02", "hsooyoung@bbc.kr", 121, 121, "431515321", "4ACD12345078", "5141121015", "Longueuil", "QC", "G6F2F1", "3700 Rue St Charles", "Great potential", 1, 1, "Friend", "Friend", 'F'), # 29 Family member + Club member
+       ("Jeon", "Heejin", "2011-01-02", "jheejin@bbc.kr", 121, 121, "631515321", "6ACD12345078", "5142121015", "Brossard", "QC", "G8F2F1", "3701 Rue St Charles", "Amazing progress", 1, 1, "Friend", "Friend", 'F'), # 30 Family member + Club member
+	   ("Kim", "Hyunjin", "2011-01-02", "khyunjin@bbc.kr", 121, 121, "731515321", "7ACD12345078", "5142121019","Brossard", "QC", "A8F2F1", "3702 Rue St Charles", "Aspiring professional", 1, 1, "Other", "Other", 'F'), # 31 Family member + Club member
+	   ("Wong", "Kahei", "2011-01-02", "wkahei@bbc.kr", 121, 121, "731515322", "7ACD12345079", "5142121020","Oka", "QC", "A8F2F2", "3703 Rue St Charles", "Amazing teamwork", 1, 13, "Other", "Other", 'F'), #32 Associated with Club/Family member
+       ("Jung", "Jinsoul", "2011-01-02", "jjinsoul@bbc.kr", 121, 121, "731515323", "7ACD12345080", "5142121021","Vaudreuil", "QC", "A8F2F3", "3704 Rue St Charles", "Lit fam", 1, 14, "Other", "Other", 'F'), #33 Associated with Club/Family member
+       ("Kim", "Lip", "2011-01-02", "klip@bbc.kr", 121, 121, "731515324", "7ACD12345081", "5142121022","St-Lazare", "QC", "A8F2F4", "3705 Rue St Charles", "Developing amazing playstyle", 1, 15, "Other", "Other", 'F'); #34 Associated with Club/Family memb
 
 INSERT INTO TeamFormation (name,captain_id_fk,location_id_fk)
 VALUES ('Altean Army',1,1),
@@ -216,7 +227,10 @@ VALUES ('Altean Army',1,1),
 	('Spetsnaz',7,4),
 	('SEALs',10,7),
     ('Idarui Sonyeo', 25, 1), #21 Family/Club Member Team Captain
-    ('ARTMS', 26, 1); #22 Family/Club Member Team Captain
+    ('ARTMS', 26, 1), #22 Family/Club Member Team Captain
+    ('Loossemble', 29, 1), #23 Family/Club Member Team Captain
+    ('Odd Eye Circle', 30, 1), #24 Family/Club Member Team Captain
+    ('YYXY', 31, 1); #25 Family/Club Member Team Captain
     
 INSERT INTO TeamSession (team_formation_id_fk, session_id_fk, score)
 VALUES (1, 1, 85),
