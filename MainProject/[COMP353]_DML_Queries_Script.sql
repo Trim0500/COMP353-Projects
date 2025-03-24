@@ -509,8 +509,6 @@ JOIN
                     AND FamilyMemberReport.med_card_num = CaptainReport.med_card_num
                     AND FamilyMemberReport.social_sec_num = CaptainReport.social_sec_num;
 
-
-
 -- Query 17: Get a report of all the personnel who were treasurer of the club at least once or is currently a treasurer of the club.
 -- 				The report should include the treasurer’s first name, last name, start date as a treasurer and last date as treasurer. If last date as treasurer is null means that the personnel is the current treasurer of the club.
 -- 				 Results should be displayed sorted in ascending order by first name then by last name then by start date as a treasurer.
