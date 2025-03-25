@@ -1,37 +1,45 @@
 ﻿@using System.Reflection
+@using MYVCApp.Helpers
 @model IEnumerable<object>;
 @{
     PropertyInfo[] properties = Model.GetType().GetGenericArguments()[0].GetProperties();
 }
 <h1>Complex Query - Result</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            @foreach(PropertyInfo p in Model.GetType().GetGenericArguments()[0].GetProperties())
-            {
-                <th>@p.Name</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(object o in Model)
-        {
-            <tr>
-                @foreach(PropertyInfo p in properties)
-                {
-                    var propertyValue = @o.GetType().GetProperty(p.Name).GetValue(o);
+<p>@TempData["Query"]</p>
 
-                    if (propertyValue == null)
-                    {
-                        <td><span class="badge bg-secondary">NULL</span></td>
-                    }
-                    else
-                    {
-                        <td>@propertyValue</td>
-                    }
+<partial name="TempDataPartial"></partial>
+
+@if(Model.Count() != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach(PropertyInfo p in Model.GetType().GetGenericArguments()[0].GetProperties())
+                {
+                    <th>@p.Name</th>
                 }
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach(object o in Model)
+            {
+                <tr>
+                    @foreach(PropertyInfo p in properties)
+                    {
+                        var propertyValue = @o.GetType().GetProperty(p.Name).GetValue(o);
+
+                        if (propertyValue == null)
+                        {
+                            <td><span class="badge bg-secondary">NULL</span></td>
+                        }
+                        else
+                        {
+                            <td>@propertyValue</td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
