@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Complex Queries";
-    Dictionary<int, Tuple<string, FormattableString, Type>> dict = MYVCApp.Helpers.ComplexQueryHelper.QUERIES;
+    Dictionary<int, Tuple<string, FormattableString>> dict = MYVCApp.Helpers.ComplexQueryHelper.QUERIES;
 }
 
 <h1>Complex Queries</h1>
@@ -13,6 +13,8 @@
             <h4>Query @key</h4>
             <p>@dict.GetValueOrDefault(key).Item1</p>
             <a class="btn btn-info" asp-controller="ComplexQueries" asp-action="Query" asp-route-number="@key">Execute</a>
+        
+            <hr class="mt-2"/>
         }
     }
 
