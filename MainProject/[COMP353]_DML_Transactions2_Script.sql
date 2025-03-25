@@ -194,7 +194,7 @@ VALUES ('Cotton', 'Joe', '2012-10-03', 'Gegagedigedagedago@yahoo.com', 157.48, 1
        ('Élodie', 'Roy', '2004-03-17', 'elodie.roy@example.com', 178.00, 165.90, '323567890', '234567890123', '5145553233', 'Montreal', 'QC', 'H3C2M5', '1717 Rue Saint-Urbain', 'Great vertical jump, strong in defense.', 0, 3, 'Other', 'Other', 'F'),
        ('Thomas', 'Lévesque', '2015-09-09', 'thomas.levesque@example.com', 140.31, 95.63, '434678901', '345678901234', '5145554344', 'Montreal', 'QC', 'H4A3N6', '1818 Rue Saint-Antoine', 'Energetic but lacks discipline.', 0, 1, 'Uncle', 'Uncle', 'M'),
        ('Léa', 'Bélanger', '2010-10-20', 'lea.belanger@example.com', 168.00, 145.12, '545789012', '456789012345', '5145555455', 'Montreal', 'QC', 'H5A4P7', '1919 Rue Saint-Hubert', 'Balanced skill set, improving leadership.', 0, 5, 'Aunt', 'Grandmother', 'F'),
-       ("Cho", "Haseul", "2010-02-02", "chaseul@bbc.kr",  121, 121, "234515121", "AACD12345078", "5140120012", "Boisbriand", "QC",  "A2F2F1", "121 Rue St Jean", "Is being just luminous", 1, 1, "Mother", "Friend", 'F'), #25 Family member + Club member
+       ("Cho", "Haseul", "2010-02-02", "chaseul@bbc.kr",  121, 121, "234515121", "AACD12345078", "5140120012", "Boisbriand", "QC",  "A2F2F1", "121 Rue St Jean", "Is being just luminous", 1, 1, "Other", "Friend", 'F'), #25 Family member + Club member
 	   ("Choi", "Yerim", "2011-01-02", "cyerim@bbc.kr", 121, 121, "431515121", "1ACD12345078", "5141121012","Terrebonne", "QC",  "B6F2F1", "121 Rue St Charles", "Is also luminous", 1, 1, "Aunt", "Friend", 'F'), #26 Family member + Club member
        ("Kim", "Jiwoo", "2010-02-02", "chuu@bbc.kr",  121, 121, "234515122", "AACD12345079", "5140120013", "l'Assomption", "QC",  "A2F2F2", "122 Rue St Jean", "Consistent with serving", 1, 11, "Mother", "Friend", 'F'), #27 Associated with Club/Family member
 	   ("Im", "Yeojin", "2011-01-02", "iyeojin@bbc.kr", 121, 121, "431515122", "1ACD12345079", "5141121013","Repentigny", "QC",  "B6F2F2", "122 Rue St Charles", "is very smort", 1, 12, "Aunt", "Tutor", 'F'), #28 Associated with Club/Family member
@@ -372,4 +372,10 @@ INSERT INTO Payment (amount, paymentDate, effectiveDate, method, cmn_fk) VALUES
     (100.00, '2021-01-01', '2025-01-01', 'Debit', 25),
     (100.00, '2021-01-01', '2025-01-01', 'Debit', 26),
     (100.00, '2021-01-01', '2025-01-01', 'Debit', 27),
-    (100.00, '2021-01-01', '2025-01-01', 'Debit', 28);
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 28),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 29),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 30),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 31),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 32),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 33),
+    (100.00, '2021-01-01', '2025-01-01', 'Debit', 34);
