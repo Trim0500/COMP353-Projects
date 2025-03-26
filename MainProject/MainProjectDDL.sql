@@ -306,3 +306,45 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: This user has already made all the payments they need';
 	END IF;
 END //
+
+DELIMITER //
+CREATE TRIGGER validate_team_member
+BEFORE INSERT ON TeamMember
+FOR EACH ROW
+BEGIN
+    DECLARE num_members INT;
+    DECLARE team_gender CHAR(1);
+    DECLARE new_member_gender CHAR(1);
+    
+    -- Validate team is not full (8 players maximum)
+    SELECT count(*) INTO num_members
+    FROM TeamMember
+    WHERE team_formation_id_fk = NEW.team_formation_id_fk;
+    IF num_members >= 8 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '[TeamMember]: Team is full.';
+    END IF;
+    
+    SELECT cm.gender INTO new_member_gender
+    FROM ClubMember cm
+    WHERE cm.cmn = NEW.cmn_fk;
+    
+    -- Validate new team member references an existing club member
+    IF new_member_gender IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '[TeamMember]: Club member does not exist and thus cannot be assigned to a team.';
+    END IF;
+    
+    SELECT cm.gender INTO team_gender
+    FROM TeamMember tm
+    JOIN ClubMember cm ON tm.cmn_fk = cm.cmn
+    WHERE tm.team_formation_id_fk = NEW.team_formation_id_fk
+    LIMIT 1;
+    
+    -- Validate new member gender matches the gender of the team
+    IF team_gender IS NOT NULL AND team_gender <> new_member_gender THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '[TeamMember]: Gender mismatch, cannot add member.';
+    END IF;
+END;
+//
