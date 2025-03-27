@@ -360,3 +360,128 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+-- *************** Procedures and event schedulers *******************
+
+DELIMITER //
+CREATE PROCEDURE WeeklyEmailBlast()
+-- Procedure to log weekly emails informing players of the sessions they will be participating in this upcoming week.
+BEGIN
+	DECLARE done INT DEFAULT 0;
+	DECLARE current_cmn INT;
+	DECLARE current_sid INT;
+	DECLARE cur_clubmem CURSOR FOR SELECT cmn FROM ClubMember;
+	DECLARE cur_session CURSOR FOR SELECT id FROM session;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+	IF (SELECT COUNT(*) FROM Session WHERE event_date_time > NOW() AND event_date_time < NOW() + INTERVAL 7 DAY) > 0 THEN    
+		OPEN cur_session;
+		per_session_loop: LOOP
+			FETCH cur_session INTO current_sid;
+			IF done THEN
+				LEAVE per_session_loop;
+			END IF;
+			
+			IF (SELECT COUNT(*) FROM Session WHERE id = current_sid AND (event_date_time > NOW() AND event_date_time < NOW() + INTERVAL 7 DAY)) = 0 THEN
+				ITERATE per_session_loop;
+			END IF;
+			
+			OPEN cur_clubmem;
+			per_clubmem_loop: LOOP
+				FETCH cur_clubmem INTO current_cmn;
+				IF done THEN
+					SET done = 0;
+					LEAVE per_clubmem_loop;
+				END iF;
+				
+				IF (
+				SELECT COUNT(*) FROM TeamMember tm
+				JOIN TeamFormation tf ON tm.team_formation_id_fk = tf.id
+				JOIN TeamSession ts ON tf.id = ts.team_formation_id_fk
+				JOIN Session s ON ts.session_id_fk = s.id
+				WHERE tm.cmn_fk = current_cmn
+				AND s.id = current_sid
+				) > 0 THEN
+					INSERT INTO LogEmail (recipient, delivery_date_time, sender, subject, body)
+					VALUES 
+					((SELECT email FROM ClubMember where cmn = current_cmn),
+					NOW(),
+					"noreply@myvc.ca",
+					CONCAT("MYVC ", (SELECT event_date_time FROM Session WHERE id = current_sid), " ", (SELECT name FROM TeamFormation tf JOIN TeamSession ts ON tf.id = ts.team_formation_id_fk JOIN TeamMember tm ON tm.team_formation_id_fk = tf.id WHERE ts.session_id_fk = current_sid AND tm.cmn_fk = current_cmn), " ", (SELECT event_type FROM Session WHERE id = current_sid)),
+					CONCAT("Hello ", 
+							(SELECT first_name FROM ClubMember WHERE cmn = current_cmn), 
+							" ", 
+							(SELECT first_name FROM ClubMember WHERE cmn = current_cmn), 
+							", this email is a reminder to inform you that you will be playing at ", 
+							(SELECT address FROM Location l JOIN Session s ON l.id = s.location_id_fk WHERE s.id = current_sid),
+							" as ",
+							(SELECT role FROM TeamMember tm JOIN TeamFormation tf ON tm.team_formation_id_fk = tf.id JOIN TeamSession ts ON tf.session_id_fk = ts.session_id_fk WHERE tm.cmn_fk = current_cmn AND ts.session_id_fk = current_sid),
+							". The team captain is ",
+							(SELECT first_name FROM FamilyMember fm JOIN TeamFormation tf ON fm.id = tf.captain_id_fk JOIN TeamSession ts ON tf.id = ts.team_formation_id_fk WHERE ts.session_id_fk = current_sid),
+							" ",
+							(SELECT first_name FROM FamilyMember fm JOIN TeamFormation tf ON fm.id = tf.captain_id_fk JOIN TeamSession ts ON tf.id = ts.team_formation_id_fk WHERE ts.session_id_fk = current_sid),
+							" (",
+							(SELECT email FROM FamilyMember fm JOIN TeamFormation tf ON fm.id = tf.captain_id_fk JOIN TeamSession ts ON tf.id = ts.team_formation_id_fk WHERE ts.session_id_fk = current_sid),
+							"). Session type: ",
+							(SELECT event_type FROM Session WHERE id = current_sid),
+							". Don't forget to have fun!"));
+				END IF;	
+			END LOOP;
+			CLOSE cur_clubmem;
+		END LOOP;
+		CLOSE cur_session;
+	END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE EVENT WeeklyGameScheduleEmail
+ON SCHEDULE EVERY 1 WEEK
+STARTS TIMESTAMP '2025-03-30 00:00:00'
+DO
+CALL WeeklyEmailBlast();
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE PurgeTheElderly()
+-- Procedure to update the status of every club member who has turned 18
+BEGIN
+	DECLARE done INT DEFAULT 0;
+    DECLARE current_cmn INT;
+    DECLARE current_dob DATE;
+    DECLARE cur CURSOR FOR SELECT cmn FROM ClubMember;
+    
+    OPEN cur;
+    
+    clubmem_loop: LOOP
+		FETCH cur INTO current_cmn;
+        
+        IF done THEN
+			LEAVE clubmem_loop;
+		END IF;
+        
+        SET current_dob = (SELECT dob FROM ClubMember WHERE cmn = current_cmn);
+        IF TIMESTAMPDIFF(YEAR, current_dob, NOW()) >= 18 THEN
+			INSERT INTO LogEmail (recipient, delivery_date_time, sender, subject, body)
+            VALUE
+            ((SELECT email FROM ClubMember WHERE cmn = current_cmn),
+            NOW(),
+            "noreply@myvc.ca",
+            "MYVC Notice of Membership Deactivation",
+            CONCAT("Hello ", (SELECT first_name FROM ClubMember WHERE cmn = current_cmn), ", this is a notice that your membership with the Montreal Youth Volleyball Club has been terminated as you are now over our eligible age limit. We hope you had a great time with us and wish you all the best in your future volleyball endeavors!"));
+            UPDATE ClubMember
+            SET is_active = 0
+            WHERE cmn = current_cmn;
+        END IF;
+	END LOOP;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE EVENT MonthlyMembershipPurgeEmail
+ON SCHEDULE EVERY 1 MONTH
+STARTS TIMESTAMP '2025-04-1 00:00:00'
+DO
+CALL PurgeTheElderly();
+//
+DELIMITER ;
