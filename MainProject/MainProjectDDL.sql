@@ -315,9 +315,10 @@ BEGIN
     DECLARE num_members INT;
     DECLARE team_gender CHAR(1);
     DECLARE new_member_gender CHAR(1);
+    DECLARE recent_assignment_exists INT;
     
     -- Validate team is not full (8 players maximum)
-    SELECT count(*) INTO num_members
+    SELECT COUNT(*) INTO num_members
     FROM TeamMember
     WHERE team_formation_id_fk = NEW.team_formation_id_fk;
     IF num_members >= 8 THEN
@@ -346,5 +347,16 @@ BEGIN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[TeamMember]: Gender mismatch, cannot add member.';
     END IF;
+    
+    -- Validate new member is not already on another team
+    SELECT COUNT(*) INTO recent_assignment_exists
+    FROM TeamMember
+    WHERE cmn_fk = NEW.cmn_fk
+    AND assignment_date_time >= NOW() - INTERVAL 3 HOUR;
+    IF recent_assignment_exists > 0 THEN
+	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '[TeamMember]: Member is already on a team. Please wait until 3 hours have elapsed before assigning to a new team.';
+    END IF;
 END;
 //
+DELIMITER ;
