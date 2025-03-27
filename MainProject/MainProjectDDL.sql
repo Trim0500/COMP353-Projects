@@ -461,15 +461,16 @@ BEGIN
     DECLARE current_cmn INT;
     DECLARE current_dob DATE;
     DECLARE cur CURSOR FOR SELECT cmn FROM ClubMember;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
     
     OPEN cur;
     
     clubmem_loop: LOOP
-		FETCH cur INTO current_cmn;
+	FETCH cur INTO current_cmn;
         
         IF done THEN
-			LEAVE clubmem_loop;
-		END IF;
+		LEAVE clubmem_loop;
+	END IF;
         
         SET current_dob = (SELECT dob FROM ClubMember WHERE cmn = current_cmn);
         IF TIMESTAMPDIFF(YEAR, current_dob, NOW()) >= 18 THEN
