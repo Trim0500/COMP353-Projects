@@ -361,6 +361,17 @@ END;
 //
 DELIMITER ;
 
+DELIMITER //
+CREATE TRIGGER validate_team_session
+BEFORE INSERT ON TeamSession FOR EACH ROW
+BEGIN
+	IF NEW.score < 0 OR NEW.score > 100 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamSession]: Invalid score value for the team, must be at least 0 or at most 100';
+	ELSEIF (SELECT COUNT(*) FROM TeamSession WHERE session_id_fk = NEW.session_id_fk) > 1 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamSession]: This session already has 2 teams recorded, change the session for this team';
+	END IF;
+END //
+
 -- *************** Procedures and event schedulers *******************
 
 DELIMITER //
