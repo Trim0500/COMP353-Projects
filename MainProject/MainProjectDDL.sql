@@ -222,7 +222,7 @@ DELIMITER //
 CREATE TRIGGER validate_personnel_location
 BEFORE INSERT ON PersonnelLocation FOR EACH ROW
 BEGIN
-	IF (NEW.role NOT IN ('General Manager','Deputy Manager','Treasurer','Secretary','Admin') AND
+	IF (NEW.role NOT IN ('General Manager','Deputy Manager','Treasurer','Secretary','Admin','Coach','Assistant Coach') AND
 		(SELECT type FROM Location WHERE id = NEW.location_id_fk) = 'Head') OR
         (NEW.role NOT IN ('Manager','Treasurer','Coach','Assistant Coach','Other') AND
 		(SELECT type FROM Location WHERE id = NEW.location_id_fk) = 'Branch') THEN
