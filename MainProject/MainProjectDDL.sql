@@ -83,7 +83,7 @@ CREATE TABLE SecondaryFamilyMember
     last_name VARCHAR(50),
     phone_number CHAR(10),
     relationship_to_primary VARCHAR(20),
-    PRIMARY KEY(primary_family_member_id_fk, first_name, last_name),
+    PRIMARY KEY(primary_family_member_id_fk),
     FOREIGN KEY(primary_family_member_id_fk) REFERENCES FamilyMember(id) ON DELETE CASCADE
 );
 
