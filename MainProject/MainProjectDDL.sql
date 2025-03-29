@@ -114,16 +114,6 @@ CREATE TABLE ClubMember
     CONSTRAINT CHECK (secondary_relationship IN ('Father', 'Mother', 'Grandfather', 'Grandmother', 'Uncle', 'Aunt', 'Tutor', 'Partner', 'Friend', 'Other')),
     CONSTRAINT CHECK (gender IN ('M', 'F'))
 );
-CREATE TABLE ClubMemberLocation
-(
-	location_id_fk INT,
-    cmn_fk INT,
-    start_date DATE,
-    end_date DATE,
-    FOREIGN KEY(location_id_fk) REFERENCES Location(id),
-    FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn),
-    PRIMARY KEY(location_id_fk, cmn_fk, start_date)
-);
 
 CREATE TABLE Payment
 (
