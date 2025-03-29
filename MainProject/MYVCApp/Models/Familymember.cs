@@ -6,13 +6,6 @@ namespace MYVCApp.Models
 {
     public partial class Familymember
     {
-        public Familymember()
-        {
-            Clubmembers = new HashSet<Clubmember>();
-            Familymemberlocations = new HashSet<Familymemberlocation>();
-            Secondaryfamilymembers = new HashSet<Secondaryfamilymember>();
-        }
-
         public int Id { get; set; }
 
         [MaxLength(50)]
@@ -49,8 +42,8 @@ namespace MYVCApp.Models
         public string? PostalCode { get; set; }
 
 
-        public virtual ICollection<Clubmember> Clubmembers { get; set; }
-        public virtual ICollection<Familymemberlocation> Familymemberlocations { get; set; }
-        public virtual ICollection<Secondaryfamilymember> Secondaryfamilymembers { get; set; }
+        public virtual ICollection<Clubmember> Clubmembers { get; set; } = new List<Clubmember>();
+        public virtual ICollection<Familymemberlocation> Familymemberlocations { get; set; } = new List<Familymemberlocation>();
+        public virtual Secondaryfamilymember? Secondaryfamilymember { get; set; }
     }
 }
