@@ -476,6 +476,7 @@ BEGIN
             WHERE cmn = current_cmn;
         END IF;
 	END LOOP;
+	CLOSE cur;
 END //
 DELIMITER ;
 
