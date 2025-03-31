@@ -391,7 +391,7 @@ BEGIN
     SELECT COUNT(*) INTO num_members
     FROM TeamMember
     WHERE team_formation_id_fk = NEW.team_formation_id_fk;
-    IF num_members >= 8 THEN
+    IF NEW.team_formation_id_fk != OLD.team_formation_id_fk AND num_members >= 8 THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[TeamMember]: Team is full.';
     END IF;
@@ -401,7 +401,7 @@ BEGIN
     WHERE cm.cmn = NEW.cmn_fk;
     
     -- Validate new team member references an existing club member
-    IF new_member_gender IS NULL THEN
+    IF NEW.cmn_fk != OLD.cmn_fk AND new_member_gender IS NULL THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[TeamMember]: Club member does not exist and thus cannot be assigned to a team.';
     END IF;
@@ -413,7 +413,7 @@ BEGIN
     LIMIT 1;
     
     -- Validate new member gender matches the gender of the team
-    IF team_gender IS NOT NULL AND team_gender <> new_member_gender THEN
+    IF NEW.team_formation_id_fk != OLD.team_formation_id_fk AND team_gender IS NOT NULL AND team_gender <> new_member_gender THEN
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[TeamMember]: Gender mismatch, cannot add member.';
     END IF;
@@ -423,7 +423,7 @@ BEGIN
     FROM TeamMember
     WHERE cmn_fk = NEW.cmn_fk
     AND assignment_date_time >= NOW() - INTERVAL 3 HOUR;
-    IF recent_assignment_exists > 0 THEN
+    IF NEW.cmn_fk != OLD.cmn_fk AND recent_assignment_exists > 0 THEN
 	SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[TeamMember]: Member is already on a team. Please wait until 3 hours have elapsed before assigning to a new team.';
     END IF;
