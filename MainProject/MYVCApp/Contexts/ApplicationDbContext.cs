@@ -53,7 +53,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Cmn).HasName("PRIMARY");
 
-            entity.ToTable("clubmember");
+            entity.ToTable("ClubMember");
 
             entity.HasIndex(e => e.FamilyMemberIdFk, "family_member_id_fk");
 
@@ -131,7 +131,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("familymember");
+            entity.ToTable("FamilyMember");
 
             entity.HasIndex(e => e.MedCardNum, "med_card_num").IsUnique();
 
@@ -178,7 +178,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => new { e.LocationIdFk, e.FamilyMemberIdFk, e.StartDate }).HasName("PRIMARY");
 
-            entity.ToTable("familymemberlocation");
+            entity.ToTable("FamilyMemberLocation");
 
             entity.HasIndex(e => e.FamilyMemberIdFk, "family_member_id_fk");
 
@@ -204,7 +204,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("location");
+            entity.ToTable("Location");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Address)
@@ -237,7 +237,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => new { e.LocationIdFk, e.PhoneNumber }).HasName("PRIMARY");
 
-            entity.ToTable("locationphone");
+            entity.ToTable("LocationPhone");
 
             entity.Property(e => e.LocationIdFk).HasColumnName("location_id_fk");
             entity.Property(e => e.PhoneNumber)
@@ -254,7 +254,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => new { e.Recipient, e.DeliveryDateTime }).HasName("PRIMARY");
 
-            entity.ToTable("logemail");
+            entity.ToTable("LogEmail");
 
             entity.Property(e => e.Recipient)
                 .HasMaxLength(50)
@@ -277,7 +277,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("payment");
+            entity.ToTable("Payment");
 
             entity.HasIndex(e => e.CmnFk, "cmn_fk");
 
@@ -306,7 +306,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("personnel");
+            entity.ToTable("Personnel");
 
             entity.HasIndex(e => e.MedCardNum, "med_card_num").IsUnique();
 
@@ -357,7 +357,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => new { e.PersonnelIdFk, e.LocationIdFk, e.StartDate }).HasName("PRIMARY");
 
-            entity.ToTable("personnellocation");
+            entity.ToTable("PersonnelLocation");
 
             entity.HasIndex(e => e.LocationIdFk, "location_id_fk");
 
@@ -386,7 +386,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.PrimaryFamilyMemberIdFk).HasName("PRIMARY");
 
-            entity.ToTable("secondaryfamilymember");
+            entity.ToTable("SecondaryFamilyMember");
 
             entity.HasIndex(e => e.PrimaryFamilyMemberIdFk, "primary_family_member_id_fk").IsUnique();
 
@@ -414,7 +414,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("session");
+            entity.ToTable("Session");
 
             entity.HasIndex(e => e.LocationIdFk, "location_id_fk");
 
@@ -437,7 +437,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("teamformation");
+            entity.ToTable("TeamFormation");
 
             entity.HasIndex(e => e.CaptainIdFk, "captain_id_fk");
 
@@ -465,7 +465,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => new { e.TeamFormationIdFk, e.CmnFk }).HasName("PRIMARY");
 
-            entity.ToTable("teammember");
+            entity.ToTable("TeamMember");
 
             entity.HasIndex(e => e.CmnFk, "cmn_fk");
 
@@ -493,7 +493,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => new { e.TeamFormationIdFk, e.SessionIdFk }).HasName("PRIMARY");
 
-            entity.ToTable("teamsession");
+            entity.ToTable("TeamSession");
 
             entity.HasIndex(e => e.SessionIdFk, "session_id_fk");
 
@@ -509,7 +509,7 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.TeamFormationIdFk)
                 .HasConstraintName("teamsession_ibfk_1");
         });
-
+       
         OnModelCreatingPartial(modelBuilder);
     }
 
