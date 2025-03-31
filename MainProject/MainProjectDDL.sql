@@ -166,7 +166,8 @@ CREATE TABLE TeamSession
     score INT,
     PRIMARY KEY(team_formation_id_fk, session_id_fk),
     FOREIGN KEY(team_formation_id_fk) REFERENCES TeamFormation(id) ON DELETE CASCADE,
-    FOREIGN KEY(session_id_fk) REFERENCES Session(id) ON DELETE CASCADE
+    FOREIGN KEY(session_id_fk) REFERENCES Session(id) ON DELETE CASCADE,
+    CONSTRAINT CHECK (score >= 0 AND score <= 100)
 );
 
 CREATE TABLE LogEmail
@@ -431,12 +432,19 @@ END; //
 DELIMITER ;
 
 DELIMITER //
-CREATE TRIGGER validate_team_session
+CREATE TRIGGER validate_team_session_insert
 BEFORE INSERT ON TeamSession FOR EACH ROW
 BEGIN
-	IF NEW.score < 0 OR NEW.score > 100 THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamSession]: Invalid score value for the team, must be at least 0 or at most 100';
-	ELSEIF (SELECT COUNT(*) FROM TeamSession WHERE session_id_fk = NEW.session_id_fk) > 1 THEN
+	IF (SELECT COUNT(*) FROM TeamSession WHERE session_id_fk = NEW.session_id_fk) > 1 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamSession]: This session already has 2 teams recorded, change the session for this team';
+	END IF;
+END //
+
+DELIMITER //
+CREATE TRIGGER validate_team_session_update
+BEFORE UPDATE ON TeamSession FOR EACH ROW
+BEGIN
+	IF (SELECT COUNT(*) FROM TeamSession WHERE session_id_fk = NEW.session_id_fk) > 1 THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamSession]: This session already has 2 teams recorded, change the session for this team';
 	END IF;
 END //
