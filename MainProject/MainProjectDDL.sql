@@ -213,9 +213,9 @@ DELIMITER //
 CREATE TRIGGER validate_location_phone_update
 BEFORE UPDATE ON LocationPhone FOR EACH ROW
 BEGIN
-	IF (NEW.location_id_fk,NEW.phone_number) = ANY (SELECT * FROM LocationPhone) THEN
+	IF (NEW.location_id_fk,NEW.phone_number) != (OLD.location_id_fk,OLD.phone_number) AND (NEW.location_id_fk,NEW.phone_number) = ANY (SELECT * FROM LocationPhone) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[LocationPhone]: This phone number was already assigned to this location, choose another phone number or change the location';
-	ELSEIF NEW.location_id_fk != ANY (SELECT location_id_fk FROM LocationPhone WHERE phone_number = NEW.phone_number) THEN
+	ELSEIF NEW.location_id_fk != OLD.location_id_fk AND NEW.location_id_fk != ANY (SELECT location_id_fk FROM LocationPhone WHERE phone_number = NEW.phone_number) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[LocationPhone]: Cannot enter the same phone number at diffeent locations';
 	END IF;
 END //
