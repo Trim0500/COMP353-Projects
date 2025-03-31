@@ -154,7 +154,8 @@ CREATE TABLE Session
     event_type VARCHAR(20),
     event_date_time DATETIME,
     location_id_fk INT,
-    FOREIGN KEY(location_id_fk) REFERENCES Location(id) ON DELETE CASCADE
+    FOREIGN KEY(location_id_fk) REFERENCES Location(id) ON DELETE CASCADE,
+    CONSTRAINT CHECK (event_type IN ('Game','Training'))
 );
 
 CREATE TABLE TeamSession
@@ -278,12 +279,19 @@ BEGIN
 END //
 	
 DELIMITER //
-CREATE TRIGGER validate_session
+CREATE TRIGGER validate_session_insert
 BEFORE INSERT ON Session FOR EACH ROW
 BEGIN
-	IF NEW.event_type NOT IN ('Game','Training') THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Session]: Unknown event type, must be either Game or Training';
-	ELSEIF (NEW.event_type,NEW.event_date_time,NEW.location_id_fk) IN (SELECT event_type, event_date_time, location_id_fk FROM Session) THEN
+	IF (NEW.event_type,NEW.event_date_time,NEW.location_id_fk) IN (SELECT event_type, event_date_time, location_id_fk FROM Session) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Session]: Cannot add in the same event at the specified location, change the values';
+	END IF;
+END //
+
+DELIMITER //
+CREATE TRIGGER validate_session_update
+BEFORE UPDATE ON Session FOR EACH ROW
+BEGIN
+	IF (NEW.event_type,NEW.event_date_time,NEW.location_id_fk) IN (SELECT event_type, event_date_time, location_id_fk FROM Session) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Session]: Cannot add in the same event at the specified location, change the values';
 	END IF;
 END //
