@@ -35,9 +35,9 @@ CREATE TABLE Personnel
     province CHAR(2),
     postal_code CHAR(6),
     email VARCHAR(50),
-    mandate VARCHAR(10)
+    mandate VARCHAR(10),
+    CONSTRAINT CHECK (mandate IN ('Paid','Volunteer'))
 );
-
 
 CREATE TABLE PersonnelLocation
 (
@@ -216,16 +216,6 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[LocationPhone]: Cannot enter the same phone number at diffeent locations';
 	END IF;
 END //
-
-DELIMITER //
-CREATE TRIGGER validate_personnel
-BEFORE INSERT ON Personnel FOR EACH ROW
-BEGIN
-	IF NEW.mandate NOT IN ('Paid','Volunteer') THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Personnel]: Unkown mandate, must be Paid or Volunteer';
-	END IF;
-END //
-
 
 DELIMITER //
 CREATE TRIGGER validate_personnel_location
