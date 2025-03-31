@@ -10,7 +10,8 @@ CREATE TABLE Location
     address VARCHAR(255),
     city VARCHAR(50),
     website_url VARCHAR(255),
-    capacity INT
+    capacity INT,
+    CONSTRAINT CHECK (type IN ('Head','Branch'))
 );
     
 CREATE TABLE LocationPhone 
@@ -177,12 +178,19 @@ CREATE TABLE LogEmail
 );
 
 DELIMITER //
-CREATE TRIGGER validate_location
+CREATE TRIGGER validate_location_insert
 BEFORE INSERT ON Location FOR EACH ROW
 BEGIN
-	IF NEW.type != 'Head' AND NEW.type != 'Branch' THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Location]: Unknown location type, enter a Head or Branch location';
-	ELSEIF NEW.type = ANY (SELECT type FROM Location WHERE type = 'Head') THEN
+	IF NEW.type = ANY (SELECT type FROM Location WHERE type = 'Head') THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Location]: A head location already exists, enter a new branch';
+	END IF;
+END //
+
+DELIMITER //
+CREATE TRIGGER validate_location_update
+BEFORE UPDATE ON Location FOR EACH ROW
+BEGIN
+	IF NEW.type = ANY (SELECT type FROM Location WHERE type = 'Head') THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Location]: A head location already exists, enter a new branch';
 	END IF;
 END //
