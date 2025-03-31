@@ -124,7 +124,8 @@ CREATE TABLE Payment
     effectiveDate DATE,
     method VARCHAR(10),
     cmn_fk INT,
-    FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn) ON DELETE CASCADE
+    FOREIGN KEY(cmn_fk) REFERENCES ClubMember(cmn) ON DELETE CASCADE,
+    CONSTRAINT CHECK (method IN ('Cash','Debit','Credit'))
 );
 
 CREATE TABLE TeamFormation
@@ -297,12 +298,10 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE TRIGGER validate_payment
+CREATE TRIGGER validate_payment_insert
 BEFORE INSERT ON Payment FOR EACH ROW
 BEGIN
-	IF NEW.method NOT IN ('Cash','Debit','Credit') THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: Unkown payment method, must be Cash, Debit or Credit Card';
-	ELSEIF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
+	IF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: The selected effective year is invalid, make sure that the effective year is the same or next immediate year';
 	ELSEIF (
 			SELECT SUM(amount) + NEW.amount FROM Payment
@@ -316,6 +315,14 @@ BEGIN
 	END IF;
 END //
 
+DELIMITER //
+CREATE TRIGGER validate_payment_update
+BEFORE UPDATE ON Payment FOR EACH ROW
+BEGIN
+	IF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: The selected effective year is invalid, make sure that the effective year is the same or next immediate year';
+	END IF;
+END //
 DELIMITER //
 CREATE TRIGGER validate_team_member
 BEFORE INSERT ON TeamMember
