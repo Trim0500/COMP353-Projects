@@ -84,6 +84,15 @@ SELECT * FROM TeamFormation;
 
 DELETE FROM TeamFormation WHERE id = 0;
 
+-- Query 6: CRUD For Team Member
+
+INSERT INTO TeamMember VALUES (16, 20, 'middle blocker', '2023-01-23 15:23:54');
+
+UPDATE TeamMember SET role = 'defensive specialist'
+WHERE cmn_fk = 20;
+
+DELETE FROM TeamMember WHERE cmn_fk = 20;
+
 -- Query 7
 -- Get complete details for every location in the system. Details include address, city,
 -- province, postal-code, phone number, web address, type (Head, Branch), capacity,
@@ -508,6 +517,48 @@ JOIN
 					AND FamilyMemberReport.last_name = CaptainReport.last_name 
                     AND FamilyMemberReport.med_card_num = CaptainReport.med_card_num
                     AND FamilyMemberReport.social_sec_num = CaptainReport.social_sec_num;
+
+-- Query 16: Get a report of all active club members who have never lost a game in which they
+--	     played. A club member is considered to win a game if she/he has been assigned to a
+--	     game session and is assigned to the team that has a score higher than the score of the
+--	     other team. The club member must be assigned to at least one formation game session.
+--	     Results should include the club member’s membership number, first name, last name,
+--	     age, phone number, email and current location name. The results should be displayed
+--	     sorted in ascending order by location name then by club membership number.
+
+DELIMITER //
+
+DROP function if exists has_only_won;
+
+CREATE function has_only_won(cmn int) returns int
+begin
+
+DECLARE result int;
+
+select count(*) into result
+from (
+    select team_formation_id_fk from TeamMember
+    where cmn_fk = cmn
+    except
+    select TF.id from TeamFormation TF
+    join TeamSession TS on TF.id = TS.team_formation_id_fk
+    where TS.score = 100
+    group by TF.id
+) as test;
+
+return result;
+
+end//
+
+SELECT DISTINCT
+    cmn,
+    first_name,
+    last_name,
+    phone_number,
+    email
+from ClubMember CM
+join TeamMember TM on CM.cmn = TM.cmn_fk
+WHERE has_only_won(cmn) < 1;
 
 -- Query 17: Get a report of all the personnel who were treasurer of the club at least once or is currently a treasurer of the club.
 -- 				The report should include the treasurer’s first name, last name, start date as a treasurer and last date as treasurer. If last date as treasurer is null means that the personnel is the current treasurer of the club.
