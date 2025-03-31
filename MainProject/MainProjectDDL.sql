@@ -193,7 +193,7 @@ DELIMITER //
 CREATE TRIGGER validate_location_update
 BEFORE UPDATE ON Location FOR EACH ROW
 BEGIN
-	IF NEW.type = ANY (SELECT type FROM Location WHERE type = 'Head') THEN
+	IF NEW.type != OLD.type AND NEW.type = ANY (SELECT type FROM Location WHERE type = 'Head') THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Location]: A head location already exists, enter a new branch';
 	END IF;
 END //
