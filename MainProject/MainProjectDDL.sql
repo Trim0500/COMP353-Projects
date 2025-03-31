@@ -218,8 +218,25 @@ BEGIN
 END //
 
 DELIMITER //
-CREATE TRIGGER validate_personnel_location
+CREATE TRIGGER validate_personnel_location_insert
 BEFORE INSERT ON PersonnelLocation FOR EACH ROW
+BEGIN
+	IF (NEW.role NOT IN ('General Manager','Deputy Manager','Treasurer','Secretary','Admin','Coach','Assistant Coach') AND
+		(SELECT type FROM Location WHERE id = NEW.location_id_fk) = 'Head') OR
+        (NEW.role NOT IN ('Manager','Treasurer','Coach','Assistant Coach','Other') AND
+		(SELECT type FROM Location WHERE id = NEW.location_id_fk) = 'Branch') THEN
+		SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = '[PersonnelLocation]: Unkown role for the given location';
+	ELSEIF NEW.role IN (SELECT role FROM PersonnelLocation WHERE role = 'General Manager' AND end_date IS NULL) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PersonnelLocation]: General Manager already exists, change the role';
+	ELSEIF NEW.role IN (SELECT role FROM PersonnelLocation WHERE role = 'Manager' AND location_id_fk = NEW.location_id_fk AND end_date IS NULL) THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PersonnelLocation]: Manager for this location already exists, change the location or the role';
+	END IF;
+END //
+
+DELIMITER //
+CREATE TRIGGER validate_personnel_location_update
+BEFORE UPDATE ON PersonnelLocation FOR EACH ROW
 BEGIN
 	IF (NEW.role NOT IN ('General Manager','Deputy Manager','Treasurer','Secretary','Admin','Coach','Assistant Coach') AND
 		(SELECT type FROM Location WHERE id = NEW.location_id_fk) = 'Head') OR
