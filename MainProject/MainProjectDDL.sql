@@ -320,7 +320,7 @@ DELIMITER //
 CREATE TRIGGER validate_payment_update
 BEFORE UPDATE ON Payment FOR EACH ROW
 BEGIN
-	IF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
+	IF (NEW.effectiveDate != OLD.effectiveDate OR NEW.paymentDate != OLD.paymentDate) AND (year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: The selected effective year is invalid, make sure that the effective year is the same or next immediate year';
 	END IF;
 END //
