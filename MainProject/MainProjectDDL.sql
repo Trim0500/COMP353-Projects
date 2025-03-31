@@ -247,9 +247,9 @@ BEGIN
 		(SELECT type FROM Location WHERE id = NEW.location_id_fk) = 'Branch') THEN
 		SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[PersonnelLocation]: Unkown role for the given location';
-	ELSEIF NEW.role IN (SELECT role FROM PersonnelLocation WHERE role = 'General Manager' AND end_date IS NULL) THEN
+	ELSEIF NEW.role != OLD.role AND NEW.role IN (SELECT role FROM PersonnelLocation WHERE role = 'General Manager' AND end_date IS NULL) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PersonnelLocation]: General Manager already exists, change the role';
-	ELSEIF NEW.role IN (SELECT role FROM PersonnelLocation WHERE role = 'Manager' AND location_id_fk = NEW.location_id_fk AND end_date IS NULL) THEN
+	ELSEIF NEW.role != OLD.role AND NEW.role IN (SELECT role FROM PersonnelLocation WHERE role = 'Manager' AND location_id_fk = NEW.location_id_fk AND end_date IS NULL) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[PersonnelLocation]: Manager for this location already exists, change the location or the role';
 	END IF;
 END //
