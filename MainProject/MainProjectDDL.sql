@@ -444,7 +444,7 @@ DELIMITER //
 CREATE TRIGGER validate_team_session_update
 BEFORE UPDATE ON TeamSession FOR EACH ROW
 BEGIN
-	IF (SELECT COUNT(*) FROM TeamSession WHERE session_id_fk = NEW.session_id_fk) > 1 THEN
+	IF NEW.session_id_fk != OLD.session_id_fk AND (SELECT COUNT(*) FROM TeamSession WHERE session_id_fk = NEW.session_id_fk) > 1 THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamSession]: This session already has 2 teams recorded, change the session for this team';
 	END IF;
 END //
