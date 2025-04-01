@@ -435,6 +435,8 @@ FROM
 			(
 				SELECT DISTINCT cmn_fk FROM TeamMember AS oh WHERE role = "outside hitter"
 				UNION ALL
+				SELECT DISTINCT cmn_fk FROM TeamMember AS op WHERE role = "opposite"
+				UNION ALL
 				SELECT DISTINCT cmn_fk FROM TeamMember AS s WHERE role = "setter"
 				UNION ALL
 				SELECT DISTINCT cmn_fk FROM TeamMember AS mb WHERE role = "middle blocker"
@@ -444,7 +446,7 @@ FROM
 				SELECT DISTINCT cmn_fk FROM TeamMember AS ds WHERE role = "defensive specialist"
 				UNION ALL
 				SELECT DISTINCT cmn_fk FROM TeamMember AS ss WHERE role = "serving specialist"
-			) AS UnionAll GROUP BY cmn_fk HAVING COUNT(*) = 6
+			) AS UnionAll GROUP BY cmn_fk HAVING COUNT(*) = 7
 		) AS AllRolesPlayers
 	JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = AllRolesPlayers.cmn_fk
 ) AS ClubMemberReport
