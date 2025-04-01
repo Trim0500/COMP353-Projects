@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
 
 // FALSE FOR LOCAL, TRUE FOR CONCORDIA DATABASE
-bool isProd = false;
+bool isProd = true;
 //
 
 var builder = WebApplication.CreateBuilder(args);
