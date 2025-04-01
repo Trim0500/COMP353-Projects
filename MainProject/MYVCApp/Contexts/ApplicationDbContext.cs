@@ -514,4 +514,6 @@ public partial class ApplicationDbContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+public DbSet<MYVCApp.Models.StatusViewModel> StatusViewModel { get; set; } = default!;
 }

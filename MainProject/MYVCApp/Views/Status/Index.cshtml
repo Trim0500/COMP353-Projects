@@ -1,0 +1,66 @@
+﻿@model MYVCApp.Models.StatusViewModel
+
+@{
+    ViewData["Title"] = "Status";
+}
+
+<h1>System Status</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Database)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Database)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DataSource)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DataSource)
+
+            @{
+                if (Model.DataSource.Contains("127.0.0") || Model.DataSource.Contains("Local"))
+                {
+                    <span class="badge bg-warning">Local</span>
+                }
+                else
+                {
+                    <span class="badge bg-success">Remote</span>
+                }
+            }
+        </dd>
+        <dt class = "col-sm-2">
+            Status
+        </dt>
+        <dd class = "col-sm-10">
+            @{
+                if (Model.IsConnectionOkay)
+                {
+                    <span class="badge bg-success">Connection OK</span>
+                }
+                else
+                {
+                    <span class="badge bg-error">Connection Failed</span>
+                }
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ErrorMessage)
+        </dt>
+        <dd class="col-sm-10">
+            @{
+                if (Model.IsConnectionOkay)
+                {
+                    <span class="badge bg-success">None</span>
+                }
+                else
+                {
+                    <span class="badge bg-error">@Model.ErrorMessage</span>
+                }
+            }
+        </dd>
+    </dl>
+</div>
