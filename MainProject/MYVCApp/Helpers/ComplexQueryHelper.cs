@@ -92,7 +92,7 @@ namespace MYVCApp.Helpers
                 new Tuple<string, FormattableString>
                 (
                     "Get a report of all active club members who have never lost a game in which they\r\nplayed. A club member is considered to win a game if she/he has been assigned to a\r\ngame session and is assigned to the team that has a score higher than the score of the\r\nother team. The club member must be assigned to at least one formation game session.\r\nThe list should include the club member’s membership number, first name, last name,\r\nage, phone number, email and current location name. The results should be displayed\r\nsorted in ascending order by location name then by club membership number.",
-                    $"" //TODO
+                    $"SELECT DISTINCT\r\n    cmn,\r\n    first_name,\r\n    last_name,\r\n    phone_number,\r\n    email\r\nfrom ClubMember CM\r\njoin TeamMember TM on CM.cmn = TM.cmn_fk\r\nWHERE has_only_won(cmn) < 1;" //TODO
                 )
             },
 

@@ -78,6 +78,7 @@ namespace MYVCApp.Controllers
                         break;
 
                     case 16:
+                        await _context.Database.ExecuteSqlAsync($"DROP FUNCTION IF EXISTS has_only_won;\r\n\r\nCREATE FUNCTION has_only_won(cmn INT) RETURNS INT\r\nREADS SQL DATA\r\nBEGIN\r\n    DECLARE result INT;\r\n\r\n    SELECT COUNT(*) INTO result\r\n    FROM (\r\n        SELECT team_formation_id_fk \r\n        FROM TeamMember \r\n        WHERE cmn_fk = cmn\r\n        AND team_formation_id_fk NOT IN (\r\n            SELECT TF.id \r\n            FROM TeamFormation TF\r\n            JOIN TeamSession TS ON TF.id = TS.team_formation_id_fk\r\n            WHERE TS.score = 100\r\n            GROUP BY TF.id\r\n        )\r\n    ) AS test;\r\n\r\n    RETURN result;\r\nEND;");
                         result = await _context.Database.SqlQuery<Q16Record>(sql).ToListAsync();
                         break;
 
