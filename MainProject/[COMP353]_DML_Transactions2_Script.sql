@@ -297,6 +297,7 @@ VALUES
 (10, 2, "libero", "2023-01-14 18:00:00"),
 (12, 2, "defensive specialist", "2023-01-15 18:00:00"),
 (14, 2, "serving specialist", "2023-01-16 18:00:00"),
+(16, 2, "outside hitter", "2023-01-17 18:00:00"),
 
 (3, 3, "libero", "2023-01-10 18:00:00"),
 (5, 3, "opposite", "2023-01-11 18:00:00"),
@@ -305,6 +306,7 @@ VALUES
 (11, 3, "libero", "2023-01-14 18:00:00"),
 (13, 3, "defensive specialist", "2023-01-15 18:00:00"),
 (15, 3, "serving specialist", "2023-01-16 18:00:00"),
+(17, 3, "outside hitter", "2023-01-17 18:00:00"),
 
 (4, 4, "defensive specialist", "2023-01-10 18:00:00"),
 (6, 4, "opposite", "2023-01-11 18:00:00"),
@@ -313,6 +315,7 @@ VALUES
 (12, 4, "libero", "2023-01-14 18:00:00"),
 (14, 4, "defensive specialist", "2023-01-15 18:00:00"),
 (16, 4, "serving specialist", "2023-01-16 18:00:00"),
+(18, 4, "outside hitter", "2023-01-17 18:00:00"),
 
 (5, 5, "middle blocker", "2023-01-10 18:00:00"),
 (7, 5, "opposite", "2023-01-11 18:00:00"),
@@ -320,7 +323,8 @@ VALUES
 (11, 5, "middle blocker", "2023-01-13 18:00:00"),
 (13, 5, "libero", "2023-01-14 18:00:00"),
 (15, 5, "defensive specialist", "2023-01-15 18:00:00"),
-(17, 5, "serving specialist", "2023-01-16 18:00:00");
+(17, 5, "serving specialist", "2023-01-16 18:00:00"),
+(19, 5, "outside hitter", "2023-01-16 18:00:00");
 
 -- Filling teams up to minimum required team members (3)
 INSERT INTO TeamMember (team_formation_id_fk, cmn_fk, role, assignment_date_time)
@@ -334,16 +338,15 @@ VALUES
 (12, 8, "outside hitter", "2023-02-12 18:00:00"),
 (14, 10, "outside hitter", "2023-03-10 18:00:00"),
 (15, 9, "outside hitter", "2023-04-10 18:00:00"),
-(16, 2, "middle blocker", "2023-04-10 18:00:00"),
-(16, 6, "outside hitter", "2023-04-11 18:00:00"),
+(16, 12, "middle blocker", "2023-04-10 18:00:00"),
+(16, 16, "libero", "2023-04-11 18:00:00"),
 (17, 1, "libero", "2023-04-20 18:00:00"),
-(17, 7, "outside hitter", "2023-04-20 18:00:00"),
-(18, 2, "serving specialist", "2023-05-13 18:00:00"),
-(18, 4, "defensive specialist", "2023-05-13 18:00:00"),
-(18, 6, "outside hitter", "2023-05-13 18:00:00"),
+(17, 17, "defensive specialist", "2023-04-20 18:00:00"),
+(18, 12, "serving specialist", "2023-05-13 18:00:00"),
+(18, 14, "defensive specialist", "2023-05-13 18:00:00"),
 (19, 1, "serving specialist", "2023-07-10 18:00:00"),
 (19, 3, "defensive specialist", "2023-07-11 18:00:00"),
-(19, 5, "middle blocker", "2023-07-12 18:00:00"),
+(19, 15, "middle blocker", "2023-07-12 18:00:00"),
 (20, 2, "serving specialist", "2023-11-10 18:00:00"),
 (20, 4, "defensive specialist", "2023-11-11 18:00:00"),
 (20, 10, "outside hitter", "2023-11-11 18:00:00");
