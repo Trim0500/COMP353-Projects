@@ -118,7 +118,7 @@ SELECT DISTINCT
 		SELECT SUM(p.amount) 
 		FROM Payment p 
 		WHERE p.cmn_fk = cm.cmn 
-		AND (YEAR(p.effectiveDate) = 2024 OR YEAR(p.effectiveDate) = 2025)
+		AND YEAR(p.effectiveDate) = YEAR(now())
 		GROUP BY p.cmn_fk
 	) >= 100.00
     ) AS "number of active members",
