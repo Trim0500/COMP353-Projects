@@ -378,7 +378,7 @@ FROM
                 WHERE ROLE != "outside hitter"
 			)
 		) AS OutsideHittersOnly
-		JOIN ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn
+		JOIN (SELECT * FROM ClubMember WHERE is_active = 1) as ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn
 ) AS ClubMemberReport 
 JOIN 
 (
@@ -448,7 +448,7 @@ FROM
 				SELECT DISTINCT cmn_fk FROM TeamMember AS ss WHERE role = "serving specialist"
 			) AS UnionAll GROUP BY cmn_fk HAVING COUNT(*) = 7
 		) AS AllRolesPlayers
-	JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = AllRolesPlayers.cmn_fk
+	JOIN (SELECT * FROM ClubMember where is_active = 1) AS CM ON CM.cmn = AllRolesPlayers.cmn_fk
 ) AS ClubMemberReport
 JOIN 
 (SELECT 
