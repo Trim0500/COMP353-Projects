@@ -16,12 +16,22 @@ namespace MYVCApp.Controllers
             _context = context_;
         }
 
+        /// <summary>
+        /// Base list for Complex Queries.
+        /// </summary>
+        /// <returns>List view for Complex queries.</returns>
         [HttpGet]
+        [Route("ComplexQueries")]
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Executes a specific query number (8-17)
+        /// </summary>
+        /// <param name="number">The number of the complex query to execute.</param>
+        /// <returns>A view containing the list of outputs with warnings/success/error messages.</returns>
         [HttpGet]
         [Route("ComplexQueries/{number}")]
         public async Task<IActionResult> Query(int number)
