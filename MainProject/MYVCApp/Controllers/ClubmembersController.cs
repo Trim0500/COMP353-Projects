@@ -11,23 +11,41 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles database interactions for ClubMembers.
+    /// </summary>
     public class ClubmembersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected DbContext.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public ClubmembersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Index page for ClubMembers.
+        /// </summary>
+        /// <returns>List view for ClubMember records.</returns>
         [HttpGet]
+        [Route("Clubmembers")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Clubmembers.Include(c => c.FamilyMemberIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
+        /// <summary>
+        /// Gets details view for a ClubMember.
+        /// </summary>
+        /// <param name="id">The primary key of the ClubMember.</param>
+        /// <returns>Form to edit the given ClubMember if exists, 404 if not.</returns>
         [HttpGet]
+        [Route("Clubmembers/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Clubmembers == null)
@@ -46,17 +64,28 @@ namespace MYVCApp.Controllers
             return View(clubmember);
         }
 
+        /// <summary>
+        /// Gets create view for a ClubMember.
+        /// </summary>
+        /// <returns>Form to create a new ClubMember.</returns>
         [HttpGet]
+        [Route("Clubmembers/Create")]
         public IActionResult Create()
         {
             ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id");
             return View();
         }
 
+        /// <summary>
+        /// Creates a new ClubMember instance in the database.
+        /// </summary>
+        /// <param name="clubmember">ClubMember object to be inserted.</param>
+        /// <returns>Redirect to list view upon success, back to the form otherwise.</returns>
         // POST: Clubmembers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Clubmembers/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Cmn,FirstName,LastName,Dob,Email,Height,Weight,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Address,ProgressReport,IsActive,FamilyMemberIdFk,PrimaryRelationship,SecondaryRelationship,Gender")] Clubmember clubmember)
         {
@@ -79,7 +108,13 @@ namespace MYVCApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Edit view for a given ClubMember.
+        /// </summary>
+        /// <param name="id">Primary key for the ClubMember.</param>
+        /// <returns>Edit view for the ClubMember if they exist, 404 otherwise.</returns>
         [HttpGet]
+        [Route("Clubmembers/Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Clubmembers == null)
@@ -96,10 +131,17 @@ namespace MYVCApp.Controllers
             return View(clubmember);
         }
 
+        /// <summary>
+        /// Edits a given ClubMember.
+        /// </summary>
+        /// <param name="id">Primary key of the ClubMember.</param>
+        /// <param name="clubmember">ClubMember form data.</param>
+        /// <returns>Redirect to list view if successful, 404 otherwise.</returns>
         // POST: Clubmembers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Clubmembers/Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Cmn,FirstName,LastName,Dob,Email,Height,Weight,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Address,ProgressReport,IsActive,FamilyMemberIdFk,PrimaryRelationship,SecondaryRelationship,Gender")] Clubmember clubmember)
         {
@@ -146,7 +188,13 @@ namespace MYVCApp.Controllers
             return View(clubmember);
         }
 
+        /// <summary>
+        /// Delete view for a ClubMember.
+        /// </summary>
+        /// <param name="id">Primary key for the ClubMember.</param>
+        /// <returns>The delete confirmation view for the ClubMember if they exist, 404 otherwise.</returns>
         [HttpGet]
+        [Route("Clubmembers/Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Clubmembers == null)
@@ -165,8 +213,14 @@ namespace MYVCApp.Controllers
             return View(clubmember);
         }
 
+        /// <summary>
+        /// Deletes a ClubMember in the database.
+        /// </summary>
+        /// <param name="id">The primary key of the ClubMember.</param>
+        /// <returns>Problem if one occured, redirects to List view otherwise.</returns>
         // POST: Clubmembers/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("Clubmembers/Delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
