@@ -561,7 +561,8 @@ SELECT DISTINCT
     ) AS 'LocationNames'	
 from ClubMember CM
 join TeamMember TM on CM.cmn = TM.cmn_fk
-WHERE has_only_won(cmn) < 1;
+WHERE has_only_won(cmn) < 1
+ORDER BY 'LocationNames' ASC, CM.cmn ASC;
 
 -- Query 17: Get a report of all the personnel who were treasurer of the club at least once or is currently a treasurer of the club.
 -- 				The report should include the treasurer’s first name, last name, start date as a treasurer and last date as treasurer. If last date as treasurer is null means that the personnel is the current treasurer of the club.
