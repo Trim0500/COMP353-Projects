@@ -11,22 +11,41 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles all interactions with PersonnelLocations in the database.
+    /// </summary>
     public class PersonnellocationsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected DbContext.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public PersonnellocationsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Gets the base list view for PersonnelLocations.
+        /// </summary>
+        /// <returns>List view for PersonnelLocations.</returns>
         [HttpGet]
+        [Route("Personnellocations")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Personnellocations.Include(p => p.LocationIdFkNavigation).Include(p => p.PersonnelIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
+        /// <summary>
+        /// Gets details for a given PersonnelLocation record in the system.
+        /// </summary>
+        /// <param name="personnel">The ID of the personnel.</param>
+        /// <param name="location">Their location ID.</param>
+        /// <param name="startDate">Their start date for that location.</param>
+        /// <returns>Details view if it exists, 404 if not.</returns>
         [HttpGet]
         [Route("Personnellocations/{personnel}/{location}/{startdate}")]
         public async Task<IActionResult> Details(int personnel, int location, DateTime startDate)
@@ -48,6 +67,10 @@ namespace MYVCApp.Controllers
             return View(personnellocation);
         }
 
+        /// <summary>
+        /// Gets creation form to create a new PersonnelLocation.
+        /// </summary>
+        /// <returns>Creation form for a new Personnellocation.</returns>
         // GET: Personnellocations/Create
         [HttpGet]
         [Route("Personnellocations/Create")]
@@ -58,6 +81,11 @@ namespace MYVCApp.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Creates a new PersonnelLocation record in the database.
+        /// </summary>
+        /// <param name="personnellocation">The form data.</param>
+        /// <returns>Redirect to list view if successful, back to form otherwise.</returns>
         // POST: Personnellocations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -86,6 +114,13 @@ namespace MYVCApp.Controllers
             return View(personnellocation);
         }
 
+        /// <summary>
+        /// Gets the edit form for a given PersonnelLocation.
+        /// </summary>
+        /// <param name="personnel">The personnel ID.</param>
+        /// <param name="location">The location ID.</param>
+        /// <param name="startdate">Their start date for that location.</param>
+        /// <returns>The edit view if it exists, 404 otherwise.</returns>
         // GET: Personnellocations/Edit/5
         [HttpGet]
         [Route("Personnellocations/{personnel}/{location}/{startdate}/Edit")]
@@ -111,6 +146,11 @@ namespace MYVCApp.Controllers
             return View(personnellocation);
         }
 
+        /// <summary>
+        /// Edits a given PersonnelLocation in the database.
+        /// </summary>
+        /// <param name="personnellocation">The form data.</param>
+        /// <returns>Redirect to list view if successful, back to form if error, 404 if not found.</returns>
         // POST: Personnellocations/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -158,6 +198,13 @@ namespace MYVCApp.Controllers
             return View(personnellocation);
         }
 
+        /// <summary>
+        /// Gets deletion confirmation view for a given PersonnelLocation.
+        /// </summary>
+        /// <param name="personnel">The personnel ID.</param>
+        /// <param name="location">The location ID.</param>
+        /// <param name="startdate">Their start date for that location.</param>
+        /// <returns>Deletion confirmation view if it exists, 404 if not.</returns>
         [HttpGet]
         [Route("Personnellocations/{personnel}/{location}/{startdate}/Delete")]
         public async Task<IActionResult> Delete(int personnel, int location, DateTime startdate)
@@ -179,6 +226,13 @@ namespace MYVCApp.Controllers
             return View(personnellocation);
         }
 
+        /// <summary>
+        /// Deletes a given PersonnelLocation record in the database.
+        /// </summary>
+        /// <param name="personnel">The personnel ID.</param>
+        /// <param name="location">The location ID.</param>
+        /// <param name="startdate">Their start date for that location.</param>
+        /// <returns>Redirect to index if successful, problem if one occured.</returns>
         // POST: Personnellocations/Delete/5
         [HttpPost, ActionName("Delete")]
         [Route("Personnellocations/{personnel}/{location}/{startdate}/Delete")]
