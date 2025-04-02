@@ -418,7 +418,6 @@ FROM
 	) 
 GROUP BY FamilyMemberId;
 
-
 -- Query 14
 -- Get a report on all active club members who have been assigned at least once to every role throughout all the formation team game sessions. The club member must be
 -- assigned to at least one formation game session as an outside hitter, opposite, setter, middle blocker, libero, defensive specialist, and serving specialist. The list should
@@ -448,7 +447,7 @@ FROM
 				SELECT DISTINCT cmn_fk FROM TeamMember AS ss WHERE role = "serving specialist"
 			) AS UnionAll GROUP BY cmn_fk HAVING COUNT(*) = 7
 		) AS AllRolesPlayers
-	JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = AllRolesPlayers.cmn_fk
+	JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = AllRolesPlayers.cmn_fk AND CM.is_active = 1
 ) AS ClubMemberReport
 JOIN 
 (SELECT 
@@ -466,9 +465,7 @@ FROM
 		ON L.id = FML.LocationId
 	) 
 GROUP BY FamilyMemberId) AS FamilyMemberReport ON FamilyMemberReport.FamilyMemberId = ClubMemberReport.cmn_fk;
-;
 
-#
 -- Query 15
 -- For the given location, get the list of all family members who have currently active club members associated with them and are also captains for the same location.
 -- Information includes first name, last name, and phone number of the family member. A family member is considered to be a captain if she/he is assigned as a captain to at
