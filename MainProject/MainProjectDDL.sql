@@ -284,7 +284,7 @@ BEGIN
             (
 				SELECT SUM(amount)
 				FROM Payment
-				WHERE cmn_fk = NEW.cmn AND year(effectiveDate) = year(now)
+				WHERE cmn_fk = NEW.cmn AND year(effectiveDate) = year(now())
 				GROUP BY cmn_fk
 			) < 100.00 THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Cannot set a member to be active without sufficient payments for the current year';
