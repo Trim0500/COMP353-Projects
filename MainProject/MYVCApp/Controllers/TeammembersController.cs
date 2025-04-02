@@ -22,7 +22,7 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Teammembers
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Teammembers.Include(t => t.CmnFkNavigation).Include(t => t.TeamFormationIdFkNavigation);

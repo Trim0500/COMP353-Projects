@@ -20,7 +20,7 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Logemails
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
               return _context.Logemails != null ? 
@@ -48,7 +48,7 @@ namespace MYVCApp.Controllers
             return View(logemail);
         }
 
-        // GET: Logemails/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();

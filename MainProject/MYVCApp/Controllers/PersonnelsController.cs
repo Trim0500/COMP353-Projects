@@ -20,7 +20,7 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Personnels
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
               return _context.Personnel != null ? 
@@ -82,7 +82,7 @@ namespace MYVCApp.Controllers
             return View(personnel);
         }
 
-        // GET: Personnels/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Personnel == null)
@@ -138,7 +138,7 @@ namespace MYVCApp.Controllers
             return View(personnel);
         }
 
-        // GET: Personnels/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Personnel == null)

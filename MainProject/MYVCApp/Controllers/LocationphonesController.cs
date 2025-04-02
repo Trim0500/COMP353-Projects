@@ -20,14 +20,14 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Locationphones1
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Locationphones.Include(l => l.LocationIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Locationphones1/Details/5
+        [HttpGet]
         [Route("Locationphones/{location}/{phone}")]
         public async Task<IActionResult> Details(int location, string phone)
         {

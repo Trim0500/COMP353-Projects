@@ -20,7 +20,7 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Secondaryfamilymembers
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Secondaryfamilymembers.Include(s => s.PrimaryFamilyMemberIdFkNavigation);
@@ -48,7 +48,7 @@ namespace MYVCApp.Controllers
             return View(secondaryfamilymember);
         }
 
-        // GET: Secondaryfamilymembers/Create
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["PrimaryFamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id");

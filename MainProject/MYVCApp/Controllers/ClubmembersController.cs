@@ -20,14 +20,14 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Clubmembers
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Clubmembers.Include(c => c.FamilyMemberIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Clubmembers/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Clubmembers == null)
@@ -46,7 +46,7 @@ namespace MYVCApp.Controllers
             return View(clubmember);
         }
 
-        // GET: Clubmembers/Create
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["FamilyMemberIdFk"] = new SelectList(_context.Familymembers, "Id", "Id");
@@ -79,7 +79,7 @@ namespace MYVCApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Clubmembers/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Clubmembers == null)
@@ -146,7 +146,7 @@ namespace MYVCApp.Controllers
             return View(clubmember);
         }
 
-        // GET: Clubmembers/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Clubmembers == null)

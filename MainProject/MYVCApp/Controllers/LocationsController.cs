@@ -20,7 +20,7 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Locations1
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return _context.Locations != null ?
@@ -28,7 +28,7 @@ namespace MYVCApp.Controllers
                         Problem("Entity set 'ApplicationDbContext.Locations'  is null.");
         }
 
-        // GET: Locations1/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Locations == null)
@@ -80,7 +80,7 @@ namespace MYVCApp.Controllers
             return View(location);
         }
 
-        // GET: Locations1/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Locations == null)
@@ -137,7 +137,7 @@ namespace MYVCApp.Controllers
             return View(location);
         }
 
-        // GET: Locations1/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Locations == null)

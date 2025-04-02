@@ -20,14 +20,14 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Sessions
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Sessions.Include(s => s.LocationIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Sessions/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Sessions == null)
@@ -46,7 +46,7 @@ namespace MYVCApp.Controllers
             return View(session);
         }
 
-        // GET: Sessions/Create
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["LocationIdFk"] = new SelectList(_context.Locations, "Id", "Id");
@@ -84,7 +84,7 @@ namespace MYVCApp.Controllers
             return View(session);
         }
 
-        // GET: Sessions/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Sessions == null)
@@ -147,7 +147,7 @@ namespace MYVCApp.Controllers
             return View(session);
         }
 
-        // GET: Sessions/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Sessions == null)

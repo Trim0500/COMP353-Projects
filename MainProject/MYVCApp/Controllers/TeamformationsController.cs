@@ -20,14 +20,14 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Teamformations
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Teamformations.Include(t => t.CaptainIdFkNavigation).Include(t => t.LocationIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Teamformations/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Teamformations == null)
@@ -48,7 +48,7 @@ namespace MYVCApp.Controllers
             return View(teamformation);
         }
 
-        // GET: Teamformations/Create
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["CaptainIdFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn");
@@ -88,7 +88,7 @@ namespace MYVCApp.Controllers
             return View(teamformation);
         }
 
-        // GET: Teamformations/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Teamformations == null)
@@ -157,7 +157,7 @@ namespace MYVCApp.Controllers
             return View(teamformation);
         }
 
-        // GET: Teamformations/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Teamformations == null)

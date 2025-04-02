@@ -20,14 +20,14 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Payments
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Payments.Include(p => p.CmnFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Payments/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Payments == null)
@@ -46,7 +46,7 @@ namespace MYVCApp.Controllers
             return View(payment);
         }
 
-        // GET: Payments/Create
+        [HttpGet]
         public IActionResult Create()
         {
             ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn");
@@ -84,7 +84,7 @@ namespace MYVCApp.Controllers
             return View(payment);
         }
 
-        // GET: Payments/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Payments == null)
@@ -150,7 +150,7 @@ namespace MYVCApp.Controllers
             return View(payment);
         }
 
-        // GET: Payments/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Payments == null)

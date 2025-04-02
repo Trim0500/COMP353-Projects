@@ -20,14 +20,14 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Personnellocations
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Personnellocations.Include(p => p.LocationIdFkNavigation).Include(p => p.PersonnelIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Personnellocations/Details/5
+        [HttpGet]
         [Route("Personnellocations/{personnel}/{location}/{startdate}")]
         public async Task<IActionResult> Details(int personnel, int location, DateTime startDate)
         {
@@ -158,7 +158,7 @@ namespace MYVCApp.Controllers
             return View(personnellocation);
         }
 
-        // GET: Personnellocations/Delete/5
+        [HttpGet]
         [Route("Personnellocations/{personnel}/{location}/{startdate}/Delete")]
         public async Task<IActionResult> Delete(int personnel, int location, DateTime startdate)
         {

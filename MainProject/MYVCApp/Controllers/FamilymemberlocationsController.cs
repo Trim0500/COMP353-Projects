@@ -20,7 +20,7 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Familymemberlocations
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Familymemberlocations.Include(f => f.FamilyMemberIdFkNavigation).Include(f => f.LocationIdFkNavigation);

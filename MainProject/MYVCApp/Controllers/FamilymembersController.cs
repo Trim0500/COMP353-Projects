@@ -20,7 +20,7 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Familymembers
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
               return _context.Familymembers != null ? 
@@ -28,7 +28,7 @@ namespace MYVCApp.Controllers
                           Problem("Entity set 'ApplicationDbContext.Familymembers'  is null.");
         }
 
-        // GET: Familymembers/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Familymembers == null)
@@ -46,7 +46,7 @@ namespace MYVCApp.Controllers
             return View(familymember);
         }
 
-        // GET: Familymembers/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -82,7 +82,7 @@ namespace MYVCApp.Controllers
             return View(familymember);
         }
 
-        // GET: Familymembers/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Familymembers == null)
@@ -143,7 +143,7 @@ namespace MYVCApp.Controllers
             return View(familymember);
         }
 
-        // GET: Familymembers/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Familymembers == null)

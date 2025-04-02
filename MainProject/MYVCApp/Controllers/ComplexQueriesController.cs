@@ -16,6 +16,7 @@ namespace MYVCApp.Controllers
             _context = context_;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();

@@ -21,7 +21,7 @@ namespace MYVCApp.Controllers
             _context = context;
         }
 
-        // GET: Teamsessions
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Teamsessions.Include(t => t.SessionIdFkNavigation).Include(t => t.TeamFormationIdFkNavigation);
@@ -163,6 +163,7 @@ namespace MYVCApp.Controllers
             return View(teamsession);
         }
 
+        [HttpGet]
         [Route("Teamsessions/{teamformation}/{session}/Delete")]
         public async Task<IActionResult> Delete(int teamformation, int session)
         {

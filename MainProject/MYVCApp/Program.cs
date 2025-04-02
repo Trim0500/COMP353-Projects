@@ -2,13 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using MYVCApp.Contexts;
 
 // FALSE FOR LOCAL, TRUE FOR CONCORDIA DATABASE
-bool isProd = true;
+bool isProd = false;
 //
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSwaggerGen();
+
 var configuration = builder.Configuration;
 
 var appDataConnectionString = "";
@@ -47,5 +49,15 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = "docs";
+    });
+}
 
 app.Run();
