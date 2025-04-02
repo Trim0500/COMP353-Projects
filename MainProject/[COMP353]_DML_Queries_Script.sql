@@ -378,7 +378,7 @@ FROM
                 WHERE ROLE != "outside hitter"
 			)
 		) AS OutsideHittersOnly
-		JOIN ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn
+		JOIN (SELECT * FROM ClubMember) as ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn
 ) AS ClubMemberReport 
 JOIN 
 (
