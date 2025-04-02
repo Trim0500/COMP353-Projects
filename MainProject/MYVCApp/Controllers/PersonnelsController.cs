@@ -11,16 +11,28 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles all interactions with Personnel in the database.
+    /// </summary>
     public class PersonnelsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected DbContext.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public PersonnelsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Personnels
+        /// <summary>
+        /// Gets base list view for Personnel.
+        /// </summary>
+        /// <returns>List view for Personnel.</returns>
+        [HttpGet]
+        [Route("Personnels")]
         public async Task<IActionResult> Index()
         {
               return _context.Personnel != null ? 
@@ -28,6 +40,11 @@ namespace MYVCApp.Controllers
                           Problem("Entity set 'ApplicationDbContext.Personnel'  is null.");
         }
 
+        /// <summary>
+        /// Gets details view for a given Personnel.
+        /// </summary>
+        /// <param name="id">Primary key of that personnel.</param>
+        /// <returns>Details view for the personnel if they exist, 404 otherwise.</returns>
         // GET: Personnels/Details/5
         [HttpGet]
         [Route("Personnels/Details/{id}")]
@@ -48,6 +65,10 @@ namespace MYVCApp.Controllers
             return View(personnel);
         }
 
+        /// <summary>
+        /// Gets creation form for a new Personnel.
+        /// </summary>
+        /// <returns>Creation form for a new Personnel.</returns>
         // GET: Personnels/Create
         [HttpGet]
         [Route("Personnels/Create")]
@@ -56,6 +77,11 @@ namespace MYVCApp.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Creates a new Personnel in the database.
+        /// </summary>
+        /// <param name="personnel">The form data.</param>
+        /// <returns>Redirect to list view if successful, back to form if not.</returns>
         // POST: Personnels/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -82,7 +108,13 @@ namespace MYVCApp.Controllers
             return View(personnel);
         }
 
-        // GET: Personnels/Edit/5
+        /// <summary>
+        /// Gets the edit view for a given personnel.
+        /// </summary>
+        /// <param name="id">The primary key for that personnel.</param>
+        /// <returns>The edit view for that personnel if they exist, 404 otherwise.</returns>
+        [HttpGet]
+        [Route("Personnels/Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Personnel == null)
@@ -98,10 +130,17 @@ namespace MYVCApp.Controllers
             return View(personnel);
         }
 
+        /// <summary>
+        /// Edits a given personnel in the database.
+        /// </summary>
+        /// <param name="id">The primary key for the personnel.</param>
+        /// <param name="personnel">The form data.</param>
+        /// <returns>Redirect to list view if successful, back to edit form if error, 404 if it doesn't exist.</returns>
         // POST: Personnels/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Personnels/Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Dob,SocialSecNum,MedCardNum,PhoneNumber,City,Province,PostalCode,Email,Mandate")] Personnel personnel)
         {
@@ -138,7 +177,13 @@ namespace MYVCApp.Controllers
             return View(personnel);
         }
 
-        // GET: Personnels/Delete/5
+        /// <summary>
+        /// Gets the deletion confirmation view for a given personnel.
+        /// </summary>
+        /// <param name="id">The primary key for that personnel.</param>
+        /// <returns>The deletion confirmation view if it exists, 404 otherwise.</returns>
+        [HttpGet]
+        [Route("Personnels/Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Personnel == null)
@@ -156,8 +201,14 @@ namespace MYVCApp.Controllers
             return View(personnel);
         }
 
+        /// <summary>
+        /// Deletes a given personnel in the database.
+        /// </summary>
+        /// <param name="id">The primary key for the personnel.</param>
+        /// <returns>Redirect to list view if successful, problem if one occurs.</returns>
         // POST: Personnels/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("Personnels/Delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

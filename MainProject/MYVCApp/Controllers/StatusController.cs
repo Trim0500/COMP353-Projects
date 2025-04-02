@@ -6,15 +6,28 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles retrieving and displaying connection status/info.
+    /// </summary>
     public class StatusController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected DbContext.
+        /// </summary>
+        /// <param name="context_">Injected DbContext.</param>
         public StatusController(ApplicationDbContext context_)
         {
             _context = context_;
         }
 
+        /// <summary>
+        /// Retrieves status view for the application.
+        /// </summary>
+        /// <returns>Status view containing connection info, database/hostname.</returns>
+        [HttpGet]
+        [Route("Status")]
         public IActionResult Index()
         {
             var conn = _context.Database.GetDbConnection();

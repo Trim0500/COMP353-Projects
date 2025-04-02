@@ -11,16 +11,28 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles all interactions with LogEmails in the database.
+    /// </summary>
     public class LogemailsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates the controller with injected DbContext.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public LogemailsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Logemails
+        /// <summary>
+        /// Gets base list view for LogEmails.
+        /// </summary>
+        /// <returns>List view for LogEmails.</returns>
+        [HttpGet]
+        [Route("Logemails")]
         public async Task<IActionResult> Index()
         {
               return _context.Logemails != null ? 
@@ -28,6 +40,12 @@ namespace MYVCApp.Controllers
                           Problem("Entity set 'ApplicationDbContext.Logemails'  is null.");
         }
 
+        /// <summary>
+        /// Gets details for a give LogEmail in the system.
+        /// </summary>
+        /// <param name="recipient">The email's recipient.</param>
+        /// <param name="ddt">The email's delivery datetime.</param>
+        /// <returns>Details view if it exists, 404 otherwise.</returns>
         [HttpGet]
         [Route("Logemails/{recipient}/{ddt}")]
         public async Task<IActionResult> Details(string recipient, DateTime ddt)
@@ -48,16 +66,27 @@ namespace MYVCApp.Controllers
             return View(logemail);
         }
 
-        // GET: Logemails/Create
+        /// <summary>
+        /// Gets creation form for a new LogEmail.
+        /// </summary>
+        /// <returns>Creation form for a new LogEmail.</returns>
+        [HttpGet]
+        [Route("Logemails/Create")]
         public IActionResult Create()
         {
             return View();
         }
 
+        /// <summary>
+        /// Creates a new LogEmail in the database.
+        /// </summary>
+        /// <param name="logemail">The form data.</param>
+        /// <returns>Redirect to list view if successful, back to form otherwise.</returns>
         // POST: Logemails/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Logemails/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Recipient,DeliveryDateTime,Sender,Subject,Body")] Logemail logemail)
         {
@@ -84,6 +113,12 @@ namespace MYVCApp.Controllers
             return View(logemail);
         }
 
+        /// <summary>
+        /// Gets the edit view for a given LogEmail record.
+        /// </summary>
+        /// <param name="recipient">The LogEmail's recipient.</param>
+        /// <param name="ddt">Its delivery datetime.</param>
+        /// <returns>The edit form if it exists, 404 otherwise.</returns>
         [HttpGet]
         [Route("Logemails/{recipient}/{ddt}/Edit")]
         public async Task<IActionResult> Edit(string recipient, DateTime ddt)
@@ -103,6 +138,11 @@ namespace MYVCApp.Controllers
             return View(logemail);
         }
 
+        /// <summary>
+        /// Edits a given LogEmail in the system.
+        /// </summary>
+        /// <param name="logemail">The form data.</param>
+        /// <returns>Redirect to List view if successful, 404 if not found, back to form if error.</returns>
         // POST: Logemails/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -147,6 +187,12 @@ namespace MYVCApp.Controllers
             return View(logemail);
         }
 
+        /// <summary>
+        /// Gets the deletion view for a given LogEmail.
+        /// </summary>
+        /// <param name="recipient">The email's recipient.</param>
+        /// <param name="ddt">The email's delivery datetime.</param>
+        /// <returns>The deletion confirmation view if it exists, 404 if not.</returns>
         [HttpGet]
         [Route("Logemails/{recipient}/{ddt}/Delete")]
         public async Task<IActionResult> Delete(string recipient, DateTime ddt)
@@ -167,6 +213,12 @@ namespace MYVCApp.Controllers
             return View(logemail);
         }
 
+        /// <summary>
+        /// Deletes a given LogEmail in the system.
+        /// </summary>
+        /// <param name="recipient">The email's recipient.</param>
+        /// <param name="ddt">The email's delivery datetime.</param>
+        /// <returns>Redirect to list view if successful, Problem if one occurs.</returns>
         [HttpPost, ActionName("Delete")]
         [Route("Logemails/{recipient}/{ddt}/Delete")]
         [ValidateAntiForgeryToken]

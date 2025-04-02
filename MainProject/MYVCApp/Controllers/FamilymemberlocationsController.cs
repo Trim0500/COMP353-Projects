@@ -11,23 +11,41 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles database interactions for FamilyMembers.
+    /// </summary>
     public class FamilymemberlocationsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected DbContext.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public FamilymemberlocationsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Familymemberlocations
+        /// <summary>
+        /// Base list view for FamilyMemberLocations.
+        /// </summary>
+        /// <returns>List view for FamilyMemberLocations.</returns>
+        [HttpGet]
+        [Route("Familymemberlocations")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Familymemberlocations.Include(f => f.FamilyMemberIdFkNavigation).Include(f => f.LocationIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Familymemberlocations/Details/5
+        /// <summary>
+        /// Retrieves a given FamilyMemberLocation
+        /// </summary>
+        /// <param name="familymember">The family member's ID.</param>
+        /// <param name="location">The family member's location ID.</param>
+        /// <param name="startdate">The family member's start date.</param>
+        /// <returns>Details view for the given FamilyMemberLocation, or 404 if it doesn't exist.</returns>
         [HttpGet]
         [Route("Familymemberlocations/{familymember}/{location}/{startdate}")]
         public async Task<IActionResult> Details(int familymember, int location, DateTime startdate)
@@ -50,7 +68,10 @@ namespace MYVCApp.Controllers
             return View(familymemberlocation);
         }
 
-        // GET: Familymemberlocations/Create
+        /// <summary>
+        /// Create view for a new FamilyMemberLocation.
+        /// </summary>
+        /// <returns>FamilyMemberLocation creation form.</returns>
         [HttpGet]
         [Route("Familymemberlocations/Create")]
         public IActionResult Create()
@@ -60,6 +81,11 @@ namespace MYVCApp.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Creates a new FamilyMemberLocation in the database.
+        /// </summary>
+        /// <param name="familymemberlocation">The new record to be created.</param>
+        /// <returns>Redirect back to list view if successful, back to form otherwise.</returns>
         // POST: Familymemberlocations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -92,6 +118,13 @@ namespace MYVCApp.Controllers
             return View(familymemberlocation);
         }
 
+        /// <summary>
+        /// Edit form for a given FamilyMemberLocation.
+        /// </summary>
+        /// <param name="familymember">The ID of the FamilyMember.</param>
+        /// <param name="location">The location ID of the FamilyMember.</param>
+        /// <param name="startdate">The FamilyMember's start date.</param>
+        /// <returns>Edit form for the given family member or 404 if it doesn't exist.</returns>
         [HttpGet]
         [Route("Familymemberlocations/{familymember}/{location}/{startdate}/Edit")]
         public async Task<IActionResult> Edit(int familymember, int location, DateTime startdate)
@@ -116,6 +149,11 @@ namespace MYVCApp.Controllers
             return View(familymemberlocation);
         }
 
+        /// <summary>
+        /// Edits a given FamilyMemberLocation in the database.
+        /// </summary>
+        /// <param name="familymemberlocation">The record to be updated.</param>
+        /// <returns>Redirect to list view if successful, back to form otherwise if failed, 404 if record does not exist.</returns>
         // POST: Familymemberlocations/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -163,7 +201,13 @@ namespace MYVCApp.Controllers
             return View(familymemberlocation);
         }
 
-        // GET: Familymemberlocations/Delete/5
+        /// <summary>
+        /// Deletion form for a given FamilyMemberLocation.
+        /// </summary>
+        /// <param name="familymember">The FamilyMember ID.</param>
+        /// <param name="location">The FamilyMember location ID.</param>
+        /// <param name="startdate">The start date for the FamilyMember.</param>
+        /// <returns>Deletion confirmation form for FamilyMemberLocation.</returns>
         [HttpGet]
         [Route("Familymemberlocations/{familymember}/{location}/{startdate}/Delete")]
         public async Task<IActionResult> Delete(int familymember, int location, DateTime startdate)
@@ -186,7 +230,13 @@ namespace MYVCApp.Controllers
             return View(familymemberlocation);
         }
 
-        // POST: Familymemberlocations/Delete/5
+        /// <summary>
+        /// Deletes a given FamilyMemberLocation in the database.
+        /// </summary>
+        /// <param name="familymember">The FamilyMember's ID.</param>
+        /// <param name="location">The FamilyMember's location ID.</param>
+        /// <param name="startdate">The FamilyMember's start date.</param>
+        /// <returns>Redirects to list view if successful, problem if one occurs.</returns>
         [HttpPost, ActionName("Delete")]
         [Route("Familymemberlocations/{familymember}/{location}/{startdate}/Delete")]
         [ValidateAntiForgeryToken]
