@@ -302,7 +302,18 @@ DELIMITER //
 CREATE TRIGGER validate_payment_insert
 BEFORE INSERT ON Payment FOR EACH ROW
 BEGIN
-	IF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
+	DECLARE age INT;
+    DECLARE paymentMemberDOB DATETIME;
+    
+    SELECT dob INTO paymentMemberDOB
+    FROM ClubMember
+    WHERE cmn = NEW.cmn_fk;
+    
+	SET age = year(now()) - year(paymentMemberDOB) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(paymentMemberDOB, '%m%d'));
+    
+    IF age < 11 OR age >= 18 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: Attempting to add a payment to a member who is not in age range [11,17]';
+	ELSEIF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: The selected effective year is invalid, make sure that the effective year is the same or next immediate year';
 	ELSEIF (
 			SELECT SUM(amount) + NEW.amount FROM Payment
