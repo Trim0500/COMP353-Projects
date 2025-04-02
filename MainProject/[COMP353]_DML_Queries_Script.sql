@@ -549,8 +549,16 @@ SELECT DISTINCT
     cmn,
     first_name,
     last_name,
+    year(now()) - year(ClubMember.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(ClubMember.dob, '%m%d')) AS 'Age',
     phone_number,
-    email
+    email,
+    (
+	SELECT GROUP_CONCAT(L.name ORDER BY L.name SEPARATOR ', ')
+        FROM Location L
+        JOIN FamilyMemberLocation FML ON L.id = FML.location_id_fk
+        WHERE FML.family_member_id_fk = CM.family_member_id_fk
+        GROUP BY FML.family_member_id_fk
+    ) AS 'LocationNames'	
 from ClubMember CM
 join TeamMember TM on CM.cmn = TM.cmn_fk
 WHERE has_only_won(cmn) < 1;
