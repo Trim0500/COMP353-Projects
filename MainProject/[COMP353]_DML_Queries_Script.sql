@@ -219,12 +219,7 @@ SELECT
     l.address, 
     s.event_type,
     tf.name as "team name",
-    (
-	SELECT ts.score
-        FROM TeamSession ts
-        WHERE ts.team_formation_id_fk = tf.id
-        AND ts.session_id_fk = s.id
-    ) as "score",
+    ts.score,
     (
 	SELECT cm.first_name
         FROM ClubMember cm
@@ -237,9 +232,10 @@ SELECT
     ) as "player last name",
     tm.role
 FROM TeamFormation tf
-JOIN Location l ON (l.id = tf.location_id_fk AND l.name = "MYVC HQ") -- User defined location name
-JOIN Session s ON (s.location_id_fk = l.id AND (s.event_date_time >= '2023-01-01 00:00:00' OR s.event_date_time >= '2026-01-01 00:00:00')) -- User defined time period (temp 3 year span, should be one week)
 JOIN TeamMember tm ON tm.team_formation_id_fk = tf.id
+JOIN Location l ON (l.id = tf.location_id_fk AND l.name = "MYVC HQ") -- User defined location name
+JOIN Session s ON (s.location_id_fk = l.id AND (s.event_date_time >= '2025-03-04 00:00:00' OR s.event_date_time >= '2025-03-12 00:00:00')) -- User defined time period
+JOIN TeamSession ts ON ts.session_id_fk = s.id
 ORDER BY s.event_date_time ASC;
 
 -- Query 10: Get details of club members who are currently active and have been associated with at least three different locations and are members for at most three years.
