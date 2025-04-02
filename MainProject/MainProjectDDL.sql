@@ -326,6 +326,30 @@ BEGIN
 END //
 
 DELIMITER //
+CREATE TRIGGER check_active_member_payment
+AFTER INSERT ON Payment FOR EACH ROW
+BEGIN
+	DECLARE newAmount INT;
+    DECLARE currentYear INT;
+    DECLARE newPaymentEffectiveYear INT;
+    
+    SET currentYear = year(now());
+    SET newPaymentEffectiveYear = year(NEW.effectiveDate);
+    
+    SELECT SUM(amount) INTO newAmount
+    FROM Payment
+    WHERE cmn_fk = NEW.cmn_fk AND effectiveDate = NEW.effectiveDate
+    GROUP BY cmn_fk, effectiveDate;
+    
+    IF (NEW.amount >= 100.00 AND newPaymentEffectiveYear = currentYear) OR
+		(newAmount >= 100.00 AND newPaymentEffectiveYear = currentYear) THEN
+        UPDATE ClubMember
+		SET is_active = 1
+		WHERE cmn = NEW.cmn_fk;
+    END IF;
+END //
+
+DELIMITER //
 CREATE TRIGGER validate_team_member_insert
 BEFORE INSERT ON TeamMember
 FOR EACH ROW
