@@ -264,6 +264,8 @@ BEGIN
 
 	IF (age < 11 OR age >= 18) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Age must be >= 11 and < 18';
+	ELSEIF NEW.is_active = 1 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Cannot set a new member to be active without payments';
 	END IF;
 END //
 
@@ -275,8 +277,17 @@ BEGIN
     
     SET age = year(now()) - year(NEW.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(NEW.dob, '%m%d'));
 
-	IF (age < 11 OR age >= 18) THEN
+	IF NEW.dob != OLD.dob AND (age < 11 OR age >= 18) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Age must be >= 11 and < 18';
+	ELSEIF NEW.is_active != OLD.is_active AND
+			NEW.is_active = 1 AND
+            (
+				SELECT SUM(amount)
+				FROM Payment
+				WHERE cmn_fk = NEW.cmn AND year(effectiveDate) = year(now)
+				GROUP BY cmn_fk
+			) < 100.00 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Cannot set a member to be active without sufficient payments for the current year';
 	END IF;
 END //
 	
