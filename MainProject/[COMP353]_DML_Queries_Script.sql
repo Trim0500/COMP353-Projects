@@ -60,8 +60,8 @@ WHERE primary_family_member_id_fk = 10;
 
 ALTER TABLE ClubMember AUTO_INCREMENT = 1;
 
-INSERT INTO ClubMember (first_name,last_name,dob,email,height,weight,social_sec_num,med_card_num,phone_number,city,province,postal_code,address,progress_report,is_active,family_member_id_fk,primary_relationship,secondary_relationship)
-VALUES ('Walhart','The Conq','2012-04-19','wconq@valmail.com',190.5,165.3,'987654321','CONW00020004','4383338256','Valm','VM','W4L1H3','42 Saber Av.','Some Skill...',1,1,"Other","Other");
+INSERT INTO ClubMember (first_name,last_name,dob,email,height,weight,social_sec_num,med_card_num,phone_number,city,province,postal_code,address,progress_report,is_active,family_member_id_fk,primary_relationship,secondary_relationship,gender)
+VALUES ('Walhart','The Conq','2012-04-19','wconq@valmail.com',190.5,165.3,'987654321','CONW00020004','4383338256','Valm','VM','W4L1H3','42 Saber Av.','Some Skill...',0,1,"Other","Other",'M');
 
 SELECT *
 FROM ClubMember;
@@ -118,7 +118,7 @@ SELECT DISTINCT
 		SELECT SUM(p.amount) 
 		FROM Payment p 
 		WHERE p.cmn_fk = cm.cmn 
-		AND (YEAR(p.effectiveDate) = 2024 OR YEAR(p.effectiveDate) = 2025)
+		AND YEAR(p.effectiveDate) = YEAR(now())
 		GROUP BY p.cmn_fk
 	) >= 100.00
     ) AS "number of active members",
@@ -219,12 +219,7 @@ SELECT
     l.address, 
     s.event_type,
     tf.name as "team name",
-    (
-	SELECT ts.score
-        FROM TeamSession ts
-        WHERE ts.team_formation_id_fk = tf.id
-        AND ts.session_id_fk = s.id
-    ) as "score",
+    ts.score,
     (
 	SELECT cm.first_name
         FROM ClubMember cm
@@ -237,9 +232,10 @@ SELECT
     ) as "player last name",
     tm.role
 FROM TeamFormation tf
-JOIN Location l ON (l.id = tf.location_id_fk AND l.name = "MYVC HQ") -- User defined location name
-JOIN Session s ON (s.location_id_fk = l.id AND (s.event_date_time >= '2023-01-01 00:00:00' OR s.event_date_time >= '2026-01-01 00:00:00')) -- User defined time period (temp 3 year span, should be one week)
 JOIN TeamMember tm ON tm.team_formation_id_fk = tf.id
+JOIN Location l ON (l.id = tf.location_id_fk AND l.name = "MYVC HQ") -- User defined location name
+JOIN Session s ON (s.location_id_fk = l.id AND (s.event_date_time >= '2025-03-04 00:00:00' OR s.event_date_time >= '2025-03-12 00:00:00')) -- User defined time period
+JOIN TeamSession ts ON ts.session_id_fk = s.id
 ORDER BY s.event_date_time ASC;
 
 -- Query 10: Get details of club members who are currently active and have been associated with at least three different locations and are members for at most three years.
@@ -378,7 +374,7 @@ FROM
                 WHERE ROLE != "outside hitter"
 			)
 		) AS OutsideHittersOnly
-		JOIN (SELECT * FROM ClubMember) as ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn
+		JOIN (SELECT * FROM ClubMember WHERE is_active = 1) as ClubMember ON OutsideHittersOnly.cmn_fk = ClubMember.cmn
 ) AS ClubMemberReport 
 JOIN 
 (
@@ -418,7 +414,6 @@ FROM
 	) 
 GROUP BY FamilyMemberId;
 
-
 -- Query 14
 -- Get a report on all active club members who have been assigned at least once to every role throughout all the formation team game sessions. The club member must be
 -- assigned to at least one formation game session as an outside hitter, opposite, setter, middle blocker, libero, defensive specialist, and serving specialist. The list should
@@ -448,7 +443,7 @@ FROM
 				SELECT DISTINCT cmn_fk FROM TeamMember AS ss WHERE role = "serving specialist"
 			) AS UnionAll GROUP BY cmn_fk HAVING COUNT(*) = 7
 		) AS AllRolesPlayers
-	JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = AllRolesPlayers.cmn_fk
+	JOIN (SELECT * FROM ClubMember) AS CM ON CM.cmn = AllRolesPlayers.cmn_fk AND CM.is_active = 1
 ) AS ClubMemberReport
 JOIN 
 (SELECT 
@@ -466,9 +461,7 @@ FROM
 		ON L.id = FML.LocationId
 	) 
 GROUP BY FamilyMemberId) AS FamilyMemberReport ON FamilyMemberReport.FamilyMemberId = ClubMemberReport.cmn_fk;
-;
 
-#
 -- Query 15
 -- For the given location, get the list of all family members who have currently active club members associated with them and are also captains for the same location.
 -- Information includes first name, last name, and phone number of the family member. A family member is considered to be a captain if she/he is assigned as a captain to at
