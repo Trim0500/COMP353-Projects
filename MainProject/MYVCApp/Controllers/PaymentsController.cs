@@ -11,23 +11,41 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles interactions for Payments in the database.
+    /// </summary>
     public class PaymentsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected DbContext.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public PaymentsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Gets the base list view for Payment data.
+        /// </summary>
+        /// <returns>List view for Payment data.</returns>
         [HttpGet]
+        [Route("Payments")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Payments.Include(p => p.CmnFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
+        /// <summary>
+        /// Gets the details for a given payment.
+        /// </summary>
+        /// <param name="id">The primary key of the payment.</param>
+        /// <returns>Details view for that payment if it exists, 404 if not.</returns>
         [HttpGet]
+        [Route("Payments/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Payments == null)
@@ -46,17 +64,28 @@ namespace MYVCApp.Controllers
             return View(payment);
         }
 
+        /// <summary>
+        /// Gets creation form for a new Payment.
+        /// </summary>
+        /// <returns>Creation form for new payment record.</returns>
         [HttpGet]
+        [Route("Payments/Create")]
         public IActionResult Create()
         {
             ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn");
             return View();
         }
 
+        /// <summary>
+        /// Creates a new Payment record in the database.
+        /// </summary>
+        /// <param name="payment">The form data.</param>
+        /// <returns>Redirect to list view if successful, back to form if not.</returns>
         // POST: Payments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Payments/Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Amount,PaymentDate,EffectiveDate,Method,CmnFk")] Payment payment)
         {
@@ -84,7 +113,13 @@ namespace MYVCApp.Controllers
             return View(payment);
         }
 
+        /// <summary>
+        /// Gets the edit view for a given payment in the system.
+        /// </summary>
+        /// <param name="id">The primary key of the payment.</param>
+        /// <returns>The edit form if it exists, 404 if not.</returns>
         [HttpGet]
+        [Route("Payments/Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Payments == null)
@@ -101,10 +136,17 @@ namespace MYVCApp.Controllers
             return View(payment);
         }
 
+        /// <summary>
+        /// Edits a given payment record in the database.
+        /// </summary>
+        /// <param name="id">The primary key of the payment.</param>
+        /// <param name="payment">The form data.</param>
+        /// <returns>Redirect to List view if successful, 404 if not found, back to form if error.</returns>
         // POST: Payments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Payments/Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,PaymentDate,EffectiveDate,Method,CmnFk")] Payment payment)
         {
@@ -150,7 +192,13 @@ namespace MYVCApp.Controllers
             return View(payment);
         }
 
+        /// <summary>
+        /// Gets the deletion confirmation view for a payment.
+        /// </summary>
+        /// <param name="id">The primary key of the payment.</param>
+        /// <returns>The deletion confirmation view if it exists, 404 if not.</returns>
         [HttpGet]
+        [Route("Payments/Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Payments == null)
@@ -169,8 +217,14 @@ namespace MYVCApp.Controllers
             return View(payment);
         }
 
+        /// <summary>
+        /// Deletes a given payment in the database.
+        /// </summary>
+        /// <param name="id">The primary key of the payment.</param>
+        /// <returns>Redirect to List view if successful, Problem if one occurs.</returns>
         // POST: Payments/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("Payments/Delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
