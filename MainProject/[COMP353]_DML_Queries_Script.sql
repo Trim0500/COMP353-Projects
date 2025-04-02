@@ -549,7 +549,7 @@ SELECT DISTINCT
     cmn,
     first_name,
     last_name,
-    year(now()) - year(ClubMember.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(ClubMember.dob, '%m%d')) AS 'Age',
+    year(now()) - year(CM.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(CM.dob, '%m%d')) AS 'Age',
     phone_number,
     email,
     (
