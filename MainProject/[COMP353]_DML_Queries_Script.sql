@@ -60,8 +60,8 @@ WHERE primary_family_member_id_fk = 10;
 
 ALTER TABLE ClubMember AUTO_INCREMENT = 1;
 
-INSERT INTO ClubMember (first_name,last_name,dob,email,height,weight,social_sec_num,med_card_num,phone_number,city,province,postal_code,address,progress_report,is_active,family_member_id_fk,primary_relationship,secondary_relationship)
-VALUES ('Walhart','The Conq','2012-04-19','wconq@valmail.com',190.5,165.3,'987654321','CONW00020004','4383338256','Valm','VM','W4L1H3','42 Saber Av.','Some Skill...',1,1,"Other","Other");
+INSERT INTO ClubMember (first_name,last_name,dob,email,height,weight,social_sec_num,med_card_num,phone_number,city,province,postal_code,address,progress_report,is_active,family_member_id_fk,primary_relationship,secondary_relationship,gender)
+VALUES ('Walhart','The Conq','2012-04-19','wconq@valmail.com',190.5,165.3,'987654321','CONW00020004','4383338256','Valm','VM','W4L1H3','42 Saber Av.','Some Skill...',0,1,"Other","Other",'M');
 
 SELECT *
 FROM ClubMember;
