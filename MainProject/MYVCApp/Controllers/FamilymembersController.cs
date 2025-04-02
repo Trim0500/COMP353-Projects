@@ -11,16 +11,28 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles all interactions with FamilyMembers in the database.
+    /// </summary>
     public class FamilymembersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected DbContext.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public FamilymembersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Base list view for FamilyMembers.
+        /// </summary>
+        /// <returns>List view for FamilyMembers.</returns>
         [HttpGet]
+        [Route("Familymembers")]
         public async Task<IActionResult> Index()
         {
               return _context.Familymembers != null ? 
@@ -28,7 +40,13 @@ namespace MYVCApp.Controllers
                           Problem("Entity set 'ApplicationDbContext.Familymembers'  is null.");
         }
 
+        /// <summary>
+        /// Details view for a given FamilyMember.
+        /// </summary>
+        /// <param name="id">The primary key of the FamilyMember record.</param>
+        /// <returns>The details for that FamilyMember, or 404 if it doesn't exist.</returns>
         [HttpGet]
+        [Route("Familymembers/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Familymembers == null)
@@ -46,12 +64,22 @@ namespace MYVCApp.Controllers
             return View(familymember);
         }
 
+        /// <summary>
+        /// Create form for a FamilyMember.
+        /// </summary>
+        /// <returns>Form to create a new FamilyMember object in the database.</returns>
         [HttpGet]
+        [Route("Familymembers/Create")]
         public IActionResult Create()
         {
             return View();
         }
 
+        /// <summary>
+        /// Creates a new FamilyMember record in the database.
+        /// </summary>
+        /// <param name="familymember">The form data.</param>
+        /// <returns>Redirect to list view if successful, returns to form if not.</returns>
         // POST: Familymembers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -82,7 +110,13 @@ namespace MYVCApp.Controllers
             return View(familymember);
         }
 
+        /// <summary>
+        /// Gets edit form for a given family member.
+        /// </summary>
+        /// <param name="id">The primary key of the FamilyMember.</param>
+        /// <returns>Edit form for that family member, or 404 if it does not exist.</returns>
         [HttpGet]
+        [Route("Familymembers/Edit/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Familymembers == null)
@@ -98,10 +132,17 @@ namespace MYVCApp.Controllers
             return View(familymember);
         }
 
+        /// <summary>
+        /// Edits a given FamilyMember in the database.
+        /// </summary>
+        /// <param name="id">The primary key for the FamilyMember.</param>
+        /// <param name="familymember">The form data.</param>
+        /// <returns>Redirects to list if successful, returns to form otherwise.</returns>
         // POST: Familymembers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Familymembers/Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Dob,Email,SocialSecNum,MedCardNum,City,Province,PhoneNumber,PostalCode")] Familymember familymember)
         {
@@ -143,7 +184,13 @@ namespace MYVCApp.Controllers
             return View(familymember);
         }
 
+        /// <summary>
+        /// Gets deletion view for a given FamilyMember.
+        /// </summary>
+        /// <param name="id">The primary key of the FamilyMember.</param>
+        /// <returns>The deletion view if the FamilyMember exists, 404 otherwise.</returns>
         [HttpGet]
+        [Route("Familymembers/Delete/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Familymembers == null)
@@ -161,8 +208,14 @@ namespace MYVCApp.Controllers
             return View(familymember);
         }
 
+        /// <summary>
+        /// Deletes a given FamilyMember from the database.
+        /// </summary>
+        /// <param name="id">The primary key of the FamilyMember.</param>
+        /// <returns>Redirects to list view if successful, problem if it occurs.</returns>
         // POST: Familymembers/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Route("Familymembers/Delete/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
