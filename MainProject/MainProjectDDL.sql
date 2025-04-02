@@ -264,6 +264,8 @@ BEGIN
 
 	IF (age < 11 OR age >= 18) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Age must be >= 11 and < 18';
+	ELSEIF NEW.is_active = 1 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Cannot set a new member to be active without payments';
 	END IF;
 END //
 
@@ -275,8 +277,17 @@ BEGIN
     
     SET age = year(now()) - year(NEW.dob) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(NEW.dob, '%m%d'));
 
-	IF (age < 11 OR age >= 18) THEN
+	IF NEW.dob != OLD.dob AND (age < 11 OR age >= 18) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Age must be >= 11 and < 18';
+	ELSEIF NEW.is_active != OLD.is_active AND
+			NEW.is_active = 1 AND
+            (
+				SELECT SUM(amount)
+				FROM Payment
+				WHERE cmn_fk = NEW.cmn AND year(effectiveDate) = year(now())
+				GROUP BY cmn_fk
+			) < 100.00 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[ClubMember]: Cannot set a member to be active without sufficient payments for the current year';
 	END IF;
 END //
 	
@@ -302,7 +313,18 @@ DELIMITER //
 CREATE TRIGGER validate_payment_insert
 BEFORE INSERT ON Payment FOR EACH ROW
 BEGIN
-	IF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
+	DECLARE age INT;
+    DECLARE paymentMemberDOB DATETIME;
+    
+    SELECT dob INTO paymentMemberDOB
+    FROM ClubMember
+    WHERE cmn = NEW.cmn_fk;
+    
+	SET age = year(now()) - year(paymentMemberDOB) - (DATE_FORMAT(now(), '%m%d') < DATE_FORMAT(paymentMemberDOB, '%m%d'));
+    
+    IF age < 11 OR age >= 18 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: Attempting to add a payment to a member who is not in age range [11,17]';
+	ELSEIF year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1 THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: The selected effective year is invalid, make sure that the effective year is the same or next immediate year';
 	ELSEIF (
 			SELECT SUM(amount) + NEW.amount FROM Payment
@@ -323,6 +345,30 @@ BEGIN
 	IF (NEW.effectiveDate != OLD.effectiveDate OR NEW.paymentDate != OLD.paymentDate) AND (year(NEW.effectiveDate) < year(NEW.paymentDate) OR year(NEW.effectiveDate) - year(NEW.paymentDate) > 1) THEN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[Payment]: The selected effective year is invalid, make sure that the effective year is the same or next immediate year';
 	END IF;
+END //
+
+DELIMITER //
+CREATE TRIGGER check_active_member_payment
+AFTER INSERT ON Payment FOR EACH ROW
+BEGIN
+	DECLARE newAmount INT;
+    DECLARE currentYear INT;
+    DECLARE newPaymentEffectiveYear INT;
+    
+    SET currentYear = year(now());
+    SET newPaymentEffectiveYear = year(NEW.effectiveDate);
+    
+    SELECT SUM(amount) INTO newAmount
+    FROM Payment
+    WHERE cmn_fk = NEW.cmn_fk AND effectiveDate = NEW.effectiveDate
+    GROUP BY cmn_fk, effectiveDate;
+    
+    IF (NEW.amount >= 100.00 AND newPaymentEffectiveYear = currentYear) OR
+		(newAmount >= 100.00 AND newPaymentEffectiveYear = currentYear) THEN
+        UPDATE ClubMember
+		SET is_active = 1
+		WHERE cmn = NEW.cmn_fk;
+    END IF;
 END //
 
 DELIMITER //
@@ -375,6 +421,22 @@ BEGIN
 	SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[TeamMember]: Member is already on a team. Please wait until 3 hours have elapsed before assigning to a new team.';
     END IF;
+
+    --Validate that new member cannot be added to a session where they would be placed in both teams.
+    IF (SELECT COUNT(*) FROM (
+                                select tm.cmn_fk, ts.session_id_fk from TeamMember tm
+                                join TeamFormation tf on tm.team_formation_id_fk = tf.id
+                                join TeamSession ts on tf.id = ts.team_formation_id_fk
+                                group by tm.cmn_fk, ts.session_id_fk
+                                intersect
+                                select NEW.cmn_fk, ts.session_id_fk from TeamMember tm
+                                join TeamFormation tf on NEW.team_formation_id_fk = tf.id
+                                join TeamSession ts on tf.id = ts.team_formation_id_fk
+                                group by tm.cmn_fk, ts.session_id_fk
+                                ) as test
+        ) > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamMember]: Member cannot be added to session as they are a part of both teams';
+    END IF;
 END; //
 
 DELIMITER //
@@ -426,6 +488,22 @@ BEGIN
     IF NEW.cmn_fk != OLD.cmn_fk AND recent_assignment_exists > 0 THEN
 	SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[TeamMember]: Member is already on a team. Please wait until 3 hours have elapsed before assigning to a new team.';
+    END IF;
+
+    --Validate that new member cannot be added to a session where they would be placed in both teams.
+    IF NEW.team_formation_id_fk != OLD.team_formation_id_fk AND (SELECT COUNT(*) FROM (
+                                select tm.cmn_fk, ts.session_id_fk from TeamMember tm
+                                join TeamFormation tf on tm.team_formation_id_fk = tf.id
+                                join TeamSession ts on tf.id = ts.team_formation_id_fk
+                                group by tm.cmn_fk, ts.session_id_fk
+                                intersect
+                                select NEW.cmn_fk, ts.session_id_fk from TeamMember tm
+                                join TeamFormation tf on NEW.team_formation_id_fk = tf.id
+                                join TeamSession ts on tf.id = ts.team_formation_id_fk
+                                group by tm.cmn_fk, ts.session_id_fk
+                                ) as test
+        ) > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamMember]: Member cannot be added to session as they are a part of both teams';
     END IF;
 END; //
 	
