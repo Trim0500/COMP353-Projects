@@ -443,6 +443,22 @@ BEGIN
 	SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = '[TeamMember]: Member is already on a team. Please wait until 3 hours have elapsed before assigning to a new team.';
     END IF;
+
+    --Validate that new member cannot be added to a session where they would be placed in both teams.
+    IF NEW.team_formation_id_fk != OLD.team_formation_id_fk AND (SELECT COUNT(*) FROM (
+                                select tm.cmn_fk, ts.session_id_fk from TeamMember tm
+                                join TeamFormation tf on tm.team_formation_id_fk = tf.id
+                                join TeamSession ts on tf.id = ts.team_formation_id_fk
+                                group by tm.cmn_fk, ts.session_id_fk
+                                intersect
+                                select NEW.cmn_fk, ts.session_id_fk from TeamMember tm
+                                join TeamFormation tf on NEW.team_formation_id_fk = tf.id
+                                join TeamSession ts on tf.id = ts.team_formation_id_fk
+                                group by tm.cmn_fk, ts.session_id_fk
+                                ) as test
+        ) > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '[TeamMember]: Member cannot be added to session as they are a part of both teams';
+    END IF;
 END; //
 	
 DELIMITER ;
