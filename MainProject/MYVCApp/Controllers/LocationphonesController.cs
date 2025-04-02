@@ -11,22 +11,40 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Controller handles LocationPhone objects in the database.
+    /// </summary>
     public class LocationphonesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected context.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public LocationphonesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Gets the list view for LocationPhones.
+        /// </summary>
+        /// <returns>The list view for LocationPhones.</returns>
         [HttpGet]
+        [Route("Locationphones")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Locationphones.Include(l => l.LocationIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
+        /// <summary>
+        /// Gets the details for a given LocationPhone record.
+        /// </summary>
+        /// <param name="location">The ID of the location.</param>
+        /// <param name="phone">The phone number.</param>
+        /// <returns>The details view for that record if it exists, 404 if not.</returns>
         [HttpGet]
         [Route("Locationphones/{location}/{phone}")]
         public async Task<IActionResult> Details(int location, string phone)
@@ -48,7 +66,10 @@ namespace MYVCApp.Controllers
             return View(locationphone);
         }
 
-
+        /// <summary>
+        /// Gets the creation form for a new LocationPhone record.
+        /// </summary>
+        /// <returns>Form to create a new LocationPhone record.</returns>
         [HttpGet]
         [Route("Locationphones/Create")]
         public IActionResult Create()
@@ -57,6 +78,11 @@ namespace MYVCApp.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Creates a new LocationPhone in the database.
+        /// </summary>
+        /// <param name="locationphone">The form data.</param>
+        /// <returns>Redirects to List view.</returns>
         [HttpPost]
         [Route("Locationphones/Create")]
         public async Task<IActionResult> Create([Bind("LocationIdFk,PhoneNumber")] Locationphone locationphone)
@@ -81,6 +107,12 @@ namespace MYVCApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Gets deletion confirmation for a given LocationPhone record in the database.
+        /// </summary>
+        /// <param name="location">The location ID of the record.</param>
+        /// <param name="phone">The phone number for that location.</param>
+        /// <returns>Deletion confirmation view for that LocationPhone, 404 if not found.</returns>
         [HttpGet]
         [Route("Personnellocations/{location}/{phone}/Delete")]
         public async Task<IActionResult> Delete(int location, string phone)
@@ -100,6 +132,12 @@ namespace MYVCApp.Controllers
             return View(locationphone);
         }
 
+        /// <summary>
+        /// Deletes a give LocationPhone record in the database.
+        /// </summary>
+        /// <param name="location">The ID of the location.</param>
+        /// <param name="phone">The phone number for the location.</param>
+        /// <returns>Redirection to List view or Problem if one occurs.</returns>
         [HttpPost, ActionName("Delete")]
         [Route("Personnellocations/{location}/{phone}/Delete")]
         [ValidateAntiForgeryToken]
