@@ -13,22 +13,40 @@ using MYVCApp.Models;
 
 namespace MYVCApp.Controllers
 {
+    /// <summary>
+    /// Handles all interactions with TeamMembers in the database.
+    /// </summary>
     public class TeammembersController : Controller
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Instantiates controller with injected DbContext.
+        /// </summary>
+        /// <param name="context">Injected DbContext.</param>
         public TeammembersController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Gets base list view for TeamMembers.
+        /// </summary>
+        /// <returns>List view for TeamMembers.</returns>
         [HttpGet]
+        [Route("Teammembers")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Teammembers.Include(t => t.CmnFkNavigation).Include(t => t.TeamFormationIdFkNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
+        /// <summary>
+        /// Gets details view for a given TeamMember.
+        /// </summary>
+        /// <param name="cmn">The ID of the club member.</param>
+        /// <param name="teamformation">The ID of the team formation they're part of.</param>
+        /// <returns>The details view for that TeamMember if it exists, 404 otherwise.</returns>
         [HttpGet]
         [Route("Teammembers/{cmn}/{teamformation}")]
         public async Task<IActionResult> Details(int cmn, int teamformation)
@@ -51,8 +69,13 @@ namespace MYVCApp.Controllers
             return View(teammember);
         }
 
+        /// <summary>
+        /// Gets the creation view for a new TeamMember in the database.
+        /// </summary>
+        /// <returns>Creation form for a new TeamMember.</returns>
         // GET: Teammembers/Create
         [HttpGet]
+        [Route("Teammembers/Create")]
         public IActionResult Create()
         {
             ViewData["CmnFk"] = new SelectList(_context.Clubmembers, "Cmn", "Cmn");
@@ -60,11 +83,17 @@ namespace MYVCApp.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Creates a new TeamMember in the database.
+        /// </summary>
+        /// <param name="teammember">Form data.</param>
+        /// <returns>Redirect to index if successful, returns to form otherwise.</returns>
         // POST: Teammembers/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Teammembers/Create")]
         public async Task<IActionResult> Create([Bind("TeamFormationIdFk,CmnFk,Role,AssignmentDateTime")] Teammember teammember)
         {
             try
@@ -106,6 +135,12 @@ namespace MYVCApp.Controllers
             return View(teammember);
         }
 
+        /// <summary>
+        /// Gets Edit view for a given TeamMember.
+        /// </summary>
+        /// <param name="cmn">The ID of the club member.</param>
+        /// <param name="teamformation">The ID of the team formation they're part of.</param>
+        /// <returns>The Edit view for that TeamMember if it exists, 404 otherwise.</returns>
         [HttpGet]
         [Route("Teammembers/{cmn}/{teamformation}/Edit")]
         public async Task<IActionResult> Edit(int cmn, int teamformation)
@@ -129,6 +164,11 @@ namespace MYVCApp.Controllers
             return View(teammember);
         }
 
+        /// <summary>
+        /// Edits a TeamMember in the database.
+        /// </summary>
+        /// <param name="teammember">Form data.</param>
+        /// <returns>Redirect to index if successful, returns to form otherwise.</returns>
         // POST: Teammembers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -175,6 +215,12 @@ namespace MYVCApp.Controllers
             return View(teammember);
         }
 
+        /// <summary>
+        /// Gets deletion confirmation view for a given TeamMember.
+        /// </summary>
+        /// <param name="cmn">The ID of the club member.</param>
+        /// <param name="teamformation">The ID of the team formation they're part of.</param>
+        /// <returns>The deletion confirmation view for that TeamMember if it exists, 404 otherwise.</returns>
         [HttpGet]
         [Route("Teammembers/{cmn}/{teamformation}/Delete")]
         public async Task<IActionResult> Delete(int cmn, int teamformation)
@@ -197,6 +243,12 @@ namespace MYVCApp.Controllers
             return View(teammember);
         }
 
+        /// <summary>
+        /// Edits a TeamMember in the database.
+        /// </summary>
+        /// <param name="cmn">The ID of the club member.</param>
+        /// <param name="teamformation">The ID of the team they're part of.</param>
+        /// <returns>Redirect to index if successful, Problem if one occurs..</returns>
         [HttpPost, ActionName("Delete")]
         [Route("Teammembers/{cmn}/{teamformation}/Delete")]
         [ValidateAntiForgeryToken]
