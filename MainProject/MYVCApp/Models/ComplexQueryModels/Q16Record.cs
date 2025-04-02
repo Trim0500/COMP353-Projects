@@ -18,5 +18,8 @@ namespace MYVCApp.Models.ComplexQueryModels
 
         [Column("email")]
         public string? Email { get; set; }
+
+        [Column("LocationNames")]
+        public string? LocationNames { get; set; }
     }
 }

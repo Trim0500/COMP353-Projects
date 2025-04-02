@@ -460,7 +460,7 @@ FROM
 		) AS L
 		ON L.id = FML.LocationId
 	) 
-GROUP BY FamilyMemberId) AS FamilyMemberReport ON FamilyMemberReport.FamilyMemberId = ClubMemberReport.cmn_fk;
+GROUP BY FamilyMemberId) AS FamilyMemberReport ON FamilyMemberReport.FamilyMemberId = ClubMemberReport.cmn_fk ORDER BY LocationsList ASC, cmn ASC;
 
 -- Query 15
 -- For the given location, get the list of all family members who have currently active club members associated with them and are also captains for the same location.
@@ -521,11 +521,11 @@ JOIN
 --	     age, phone number, email and current location name. The results should be displayed
 --	     sorted in ascending order by location name then by club membership number.
 
+DROP function if exists has_only_won;
 DELIMITER //
 
-DROP function if exists has_only_won;
-
 CREATE function has_only_won(cmn int) returns int
+DETERMINISTIC READS SQL DATA
 begin
 
 DECLARE result int;
