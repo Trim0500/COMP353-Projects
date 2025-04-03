@@ -13,6 +13,9 @@ namespace MYVCApp.Models.ComplexQueryModels
         [Column("last_name")]
         public string? LastName { get; set; }
 
+        [Column("Age")]
+        public int? Age { get; set; }
+
         [Column("phone_number")]
         public string? PhoneNumber { get; set; }
 
