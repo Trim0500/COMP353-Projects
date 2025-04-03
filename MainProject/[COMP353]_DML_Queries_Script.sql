@@ -91,6 +91,8 @@ INSERT INTO TeamMember VALUES (16, 20, 'middle blocker', '2023-01-23 15:23:54');
 UPDATE TeamMember SET role = 'defensive specialist'
 WHERE cmn_fk = 20;
 
+SELECT * FROM TeamMember;
+
 DELETE FROM TeamMember WHERE cmn_fk = 20;
 
 -- Query 7
